@@ -11,7 +11,7 @@ body {
 }
 .header-area {
   position: relative;
-  background-color: #f46d43;
+  background-color: #ea7e5d;
   height: 100px;
   z-index: 100;
   -webkit-transition: all .5s ease 0s;
@@ -325,7 +325,7 @@ body {
 }
 
 body{
-    background-color: #f46d43;
+    background-color: #ea7e5d;
     color: #f9f5eb;
     height: 100vh;
     position: absolute;
@@ -356,7 +356,7 @@ input{
 
 .classinput{
     width: 100%;
-    background-color: #f46d43;
+    background-color: #ea7e5d;
     border-width: 3px;
     border-color:#f9f5eb;
     position: relative; 
