@@ -21,16 +21,16 @@
 /* Property details - rating */
 
 .rating-section {
-  width: 400px;
-  height: 250px;
+  width: 360px;
+  height: 260px;
   margin: 0;
   padding: 20px;
   background-color: #fff;
-  border-radius: 5px;
+  border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: relative;
   bottom: 270px;
-  left: 40px;
+  left: 60px;
 }
 
 .card {
@@ -76,6 +76,8 @@
 .login-first {
   text-align: center;
   margin-top: 20px;
+  position: relative;
+  left: 15px;
 }
 
 .login-first a {
