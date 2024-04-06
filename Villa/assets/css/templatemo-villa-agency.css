@@ -1826,3 +1826,8 @@ body {
     margin-right: 100px;
   }
 }
+.info-table-and-button-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
