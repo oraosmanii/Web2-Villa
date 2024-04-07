@@ -204,7 +204,7 @@ https://templatemo.com/tm-591-villa-agency
       private $bedrooms;
       private $bathrooms;
       private $area;
-      private $type;
+      private $type="Apartment";
 
 
       function __construct($country, $city, $date, $imgpath, $price,$bedrooms,$bathrooms,$area){
@@ -284,24 +284,23 @@ https://templatemo.com/tm-591-villa-agency
           
           // Process the data as needed
           // For example, you can print the split data
+
+          $type=strtoupper(trim($data[8]));
           
-          switch(strtoupper($data[8])){
-            case "VILLA":
+          switch($type){
+            case 'VILLA':
                 $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
                 break;
-            case "APARTMENT":
+            case 'APARTMENT':
               $booking = new Apartment($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
               break;
-            case "PENTHOUSE":
+            case 'PENTHOUSE':
               $booking = new Penthouse($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
               break;
             default:
-              echo "<script>
-                console.log({$data[8]})
-              </script>";
               echo "Invalid creation";
           } 
-          $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
+          // $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
 
               echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 adv'>
               <div class='item'> 
