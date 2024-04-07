@@ -61,6 +61,46 @@
         <button type="submit" class="submit" id="signupButton">Sign Up</button>
         <h3>Already have an account? <i><a href="#" id="loginLink">Login!</a></i> </h3>
     </form>
+    <?php
+    session_start();
+    if(isset($_SESSION['error'])) {
+        echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+        unset($_SESSION['error']);
+    }
+    ?>
+    <?php
+//session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $fullname = $_POST['fullname'];
+    $username = $_POST['newUsername'];
+    $password = $_POST['newPassword'];
+    $confirm_password = $_POST['confirmPassword'];
+    $gender = $_POST['gender'];
+
+    
+    if (!preg_match("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/", $password)) {
+        
+        $_SESSION['error'] = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.";
+        header("Location: login.php#signupLink");
+        exit();
+    }
+
+    
+    if ($password !== $confirm_password) {
+        
+        $_SESSION['error'] = "Passwords do not match. Please try again.";
+        header("Location: login.php#signupLink");
+        exit();
+    }
+
+    
+    echo "Signup Successful!<br>";
+    echo "Full Name: $fullname<br>";
+    echo "Username: $username<br>";
+    echo "Gender: $gender<br>";
+}
+?>
    
 </div>
 
