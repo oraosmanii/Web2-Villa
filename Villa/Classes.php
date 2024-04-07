@@ -37,7 +37,7 @@ class Bookings {
 
     }
 
-    class Villa extends Bookings{
+class Villa extends Bookings{
       private $bedrooms;
       private $bathrooms;
       private $area;
@@ -71,7 +71,7 @@ class Bookings {
 
     }
 
-    class Apartment extends Bookings{
+class Apartment extends Bookings{
       private $bedrooms;
       private $bathrooms;
       private $area;
@@ -106,7 +106,7 @@ class Bookings {
 
     }
 
-    class Penthouse extends Bookings{
+class Penthouse extends Bookings{
       private $bedrooms;
       private $bathrooms;
       private $area;
