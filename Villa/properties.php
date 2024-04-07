@@ -78,12 +78,8 @@ https://templatemo.com/tm-591-villa-agency
                     <ul class="nav">
                       <li><a href="index.php">Home</a></li>
                       <li><a href="properties.php" class="active">Properties</a></li>
-          
-                     
                       <li><a href="lease.php">Lease your villa</a></li>
                       <li><a href="mybookings.php">My Bookings</a></li>
-
-
                       <li><a href="login.php">Log in | Sign up</a></li>
                       
                   </ul>   
@@ -306,7 +302,7 @@ https://templatemo.com/tm-591-villa-agency
 
               echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
               <div class='item'> 
-              <a href='property-details.php'><img src='{$booking->get_image()}' alt=''></a>
+              <a href='property-details.php'><img src='{$booking->get_image()}' height='300' alt=''></a>
               <span class='category'>{$booking->get_type()}</span> 
               <h6>$ {$booking->get_price()}</h6>
             <h4><a href='property-details.php'>{$booking->get_country()} {$booking->get_city()}</a></h4>
