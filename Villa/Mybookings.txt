@@ -1,0 +1,4 @@
+Albania, Tirane, 2024/03/21, ./assets/images/City1/BedroomCity1.jpg, 99, 3, 2, 154,penthouse
+Czech Rpublic, Prague, 2024/03/21, ./assets/images/City1/CityHouse1.jpg, 45, 3, 2, 154,villa
+Kosovo, Prishtina, 2024/05/31, ./assets/images/City1/SallonCity.jpg, 50, 3, 2, 154,apartment
+Austria, Wien, 2024/03/21, ./assets/images/City1/CityHouse1.jpg, 100, 3, 2, 154,villa
