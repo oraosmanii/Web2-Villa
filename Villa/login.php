@@ -16,7 +16,7 @@
 
     <form action="#">
          <!-- ***** Logo Start ***** -->
-         <a href="index.html" class="logo1">
+         <a href="index.php" class="logo1">
             <h1>Villa</h1>
         </a> <br> <br>
         <h2>Welcome</h2>
@@ -34,7 +34,7 @@
 
 <div id="signup-form" class="cont cont1">
     <form id="signup" action="#">
-        <a href="index.html" class="logo1">
+        <a href="index.php" class="logo1">
             <h1>Villa</h1>
         </a> 
         <h2>Sign Up</h2>

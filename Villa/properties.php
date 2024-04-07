@@ -70,19 +70,19 @@ https://templatemo.com/tm-591-villa-agency
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
+                    <a href="index.php" class="logo">
                         <h1>Villa</h1>
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="index.html">Home</a></li>
+                      <li><a href="index.php">Home</a></li>
                       <li><a href="properties.php" class="active">Properties</a></li>
           
                      
-                      <li><a href="lease.html">Lease your villa</a></li>
+                      <li><a href="lease.php">Lease your villa</a></li>
 
-                      <li><a href="login.html">Log in | Sign up</a></li>
+                      <li><a href="login.php">Log in | Sign up</a></li>
                       
                   </ul>   
                     <a class='menu-trigger'>
@@ -304,17 +304,17 @@ https://templatemo.com/tm-591-villa-agency
 
               echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
               <div class='item'> 
-              <a href='property-details.html'><img src='{$booking->get_image()}' alt=''></a>
+              <a href='property-details.php'><img src='{$booking->get_image()}' alt=''></a>
               <span class='category'>{$booking->get_type()}</span> 
               <h6>$ {$booking->get_price()}</h6>
-            <h4><a href='property-details.html'>{$booking->get_country()} {$booking->get_city()}</a></h4>
+            <h4><a href='property-details.php'>{$booking->get_country()} {$booking->get_city()}</a></h4>
             <ul>
               <li>Bedrooms: <span>{$booking->get_bedrooms()}</span></li>
               <li>Bathrooms: <span>{$booking->get_bathrooms()}</span></li>
               <li>Area: <span>{$booking->get_area()}m2</span></li>
             </ul>
             <div class='main-button'>
-              <a href='schedule.html'>Book Now</a>
+              <a href='schedule.php'>Book Now</a>
             </div>
             </div>
             </div>";
@@ -335,145 +335,145 @@ https://templatemo.com/tm-591-villa-agency
 
 
           <!-- <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-01.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-01.jpg" alt=""></a>
             <span class="category">Luxury Villa</span>
             <h6>$2264</h6>
-            <h4><a href="property-details.html">18 Old Street Miami, OR 97219</a></h4>
+            <h4><a href="property-details.php">18 Old Street Miami, OR 97219</a></h4>
             <ul>
               <li>Bedrooms: <span>8</span></li>
               <li>Bathrooms: <span>8</span></li>
               <li>Area: <span>545m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 str">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-02.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-02.jpg" alt=""></a>
             <span class="category">Luxury Villa</span>
             <h6>$1180</h6>
-            <h4><a href="property-details.html">54 New Street Florida, OR 27001</a></h4>
+            <h4><a href="property-details.php">54 New Street Florida, OR 27001</a></h4>
             <ul>
               <li>Bedrooms: <span>6</span></li>
               <li>Bathrooms: <span>5</span></li>
               <li>Area: <span>450m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 adv rac">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-03.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-03.jpg" alt=""></a>
             <span class="category">Luxury Villa</span>
             <h6>$1460</h6>
-            <h4><a href="property-details.html">26 Mid Street Portland, OR 38540</a></h4>
+            <h4><a href="property-details.php">26 Mid Street Portland, OR 38540</a></h4>
             <ul>
               <li>Bedrooms: <span>5</span></li>
               <li>Bathrooms: <span>4</span></li>
               <li>Area: <span>225m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 str">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-04.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-04.jpg" alt=""></a>
             <span class="category">Apartment</span>
             <h6>$584</h6>
-            <h4><a href="property-details.html">12 Hope Street Portland, OR 12650</a></h4>
+            <h4><a href="property-details.php">12 Hope Street Portland, OR 12650</a></h4>
             <ul>
               <li>Bedrooms: <span>4</span></li>
               <li>Bathrooms: <span>3</span></li>
               <li>Area: <span>125m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 rac str">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-05.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-05.jpg" alt=""></a>
             <span class="category">Penthouse</span>
             <h6>$925</h6>
-            <h4><a href="property-details.html">34 Hope Street Portland, OR 42680</a></h4>
+            <h4><a href="property-details.php">34 Hope Street Portland, OR 42680</a></h4>
             <ul>
               <li>Bedrooms: <span>4</span></li>
               <li>Bathrooms: <span>4</span></li>
               <li>Area: <span>180m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 rac adv">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-06.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-06.jpg" alt=""></a>
             <span class="category">Modern Condo</span>
             <h6>$450</h6>
-            <h4><a href="property-details.html">22 Hope Street Portland, OR 16540</a></h4>
+            <h4><a href="property-details.php">22 Hope Street Portland, OR 16540</a></h4>
             <ul>
               <li>Bedrooms: <span>3</span></li>
               <li>Bathrooms: <span>2</span></li>
               <li>Area: <span>165m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 rac str">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-03.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-03.jpg" alt=""></a>
             <span class="category">Luxury Villa</span>
             <h6>$980</h6>
-            <h4><a href="property-details.html">14 Mid Street Miami, OR 36450</a></h4>
+            <h4><a href="property-details.php">14 Mid Street Miami, OR 36450</a></h4>
             <ul>
               <li>Bedrooms: <span>8</span></li>
               <li>Bathrooms: <span>8</span></li>
               <li>Area: <span>550m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 rac adv">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-02.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-02.jpg" alt=""></a>
             <span class="category">Luxury Villa</span>
             <h6>$1520</h6>
-            <h4><a href="property-details.html">26 Old Street Miami, OR 12870</a></h4>
+            <h4><a href="property-details.php">26 Old Street Miami, OR 12870</a></h4>
             <ul>
               <li>Bedrooms: <span>12</span></li>
               <li>Bathrooms: <span>15</span></li>
               <li>Area: <span>380m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 rac adv">
           <div class="item">
-            <a href="property-details.html"><img src="assets/images/property-01.jpg" alt=""></a>
+            <a href="property-details.php"><img src="assets/images/property-01.jpg" alt=""></a>
             <span class="category">Luxury Villa</span>
             <h6>$3145</h6>
-            <h4><a href="property-details.html">34 New Street Miami, OR 24650</a></h4>
+            <h4><a href="property-details.php">34 New Street Miami, OR 24650</a></h4>
             <ul>
               <li>Bedrooms: <span>10</span></li>
               <li>Bathrooms: <span>12</span></li>
               <li>Area: <span>860m2</span></li>
             </ul>
             <div class="main-button">
-              <a href="schedule.html">Book Now</a>
+              <a href="schedule.php">Book Now</a>
             </div>
           </div> -->
         </div>
