@@ -178,7 +178,7 @@ const sampleItems = [
           <div style="margin-right: 20px;">
             <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
           </div>
-          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove</button>
+          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Cancel Booking</button>
         `;
         cartItemsContainer.appendChild(itemElement);
       }
@@ -223,7 +223,7 @@ const sampleItems = [
           <div style="margin-right: 20px;">
             <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
           </div>
-          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove</button>
+          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove Listing</button>
         `;
         listItemsContainer.appendChild(itemElement);
       }
