@@ -71,19 +71,19 @@ https://templatemo.com/tm-591-villa-agency
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
+                    <a href="index.php" class="logo">
                         <h1>Villa</h1>
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="index.html">Home</a></li>
+                      <li><a href="index.php">Home</a></li>
                       <li><a href="properties.php">Properties</a></li>
           
                      
-                      <li><a href="lease.html">Lease your villa</a></li>
+                      <li><a href="lease.php">Lease your villa</a></li>
 
-                      <li><a href="login.html">Log in | Sign up</a></li>
+                      <li><a href="login.php">Log in | Sign up</a></li>
                       
                   </ul>   
                     <a class='menu-trigger'>

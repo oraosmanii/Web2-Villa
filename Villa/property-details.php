@@ -71,17 +71,17 @@ https://templatemo.com/tm-591-villa-agency
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
+                    <a href="index.php" class="logo">
                         <h1>Villa</h1>
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="index.html">Home</a></li>
+                      <li><a href="index.php">Home</a></li>
                       <li><a href="properties.php">Properties</a></li>
-                      <li><a href="lease.html">Lease your villa</a></li>
-                      <li><a href="mybookings.html">My Bookings</a></li>
-                      <li><a href="login.html">Log in | Sign up</a></li>
+                      <li><a href="lease.php">Lease your villa</a></li>
+                      <li><a href="mybookings.php">My Bookings</a></li>
+                      <li><a href="login.php">Log in | Sign up</a></li>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>
@@ -145,7 +145,7 @@ https://templatemo.com/tm-591-villa-agency
             </div>
             
             <div class="icon-button" style="text-align: center; margin-top: 50px; height: 100px;">
-              <a href="schedule.html" style="font-size: 23px;"><i class="fa fa-calendar"></i> Book Now</a>
+              <a href="schedule.php" style="font-size: 23px;"><i class="fa fa-calendar"></i> Book Now</a>
             </div>
           </div>
 
@@ -171,7 +171,7 @@ https://templatemo.com/tm-591-villa-agency
                     <label for="star1"></label>
                   </div>
                   <div class="login-first">
-                    <a href="login.html">Log in first to rate</a>
+                    <a href="login.php">Log in first to rate</a>
                   </div>
                   <button type="submit" class="btn btn-danger" style="position: relative; bottom: 30px;">Submit</button>
                 </form>
