@@ -30,7 +30,7 @@ https://templatemo.com/tm-591-villa-agency
 
 <body>
 
-  <!-- ***** Preloader Start ***** -->
+  <!-- ***** Preloader Start *****
   <div id="js-preloader" class="js-preloader">
     <div class="preloader-inner">
       <span class="dot"></span>
@@ -40,7 +40,7 @@ https://templatemo.com/tm-591-villa-agency
         <span></span>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- ***** Preloader End ***** -->
 
   <div class="sub-header">
@@ -123,6 +123,7 @@ https://templatemo.com/tm-591-villa-agency
         </div> -->
 
         <?php
+        include "Classes.php";
         if(isset($_GET['info'])) {
           // Decode the encoded information
           $info= urldecode($_GET['info']);
@@ -136,43 +137,44 @@ https://templatemo.com/tm-591-villa-agency
             <div class='row'>
               <div class='col-lg-8'>
                 <div class='main-image'>
-                  <img src='{$page->get_image()}' alt=''>
+                  <img src='{$page->get_image()}' alt='' height='490'>
                 </div>
                 <div class='main-content'>
-                  <span class='category'>{}</span>
-                  <h4>18 New Street Miami, OR 24560</h4>
+                  <span class='category'>{$page->get_type()}</span>
+                  <h4>{$page->get_country()} {$page->get_city()}</h4>
                   <p>Step into the comfort of modern living with <strong>our premier real estate offerings</strong>. Our carefully curated selections bring you the finest homes that blend luxury with coziness, designed to exceed your expectations. With an eye for exceptional properties, we ensure that every listing provides a unique glimpse into the lifestyle you desire.<br><br></p>
       
                   <p>Browse our collection to find your sanctuary amidst the city's hustle or a tranquil retreat in the countryside. Our team is here to provide <strong>tailored support</strong>, ensuring a smooth transition into your new home. Trust in our expertise to navigate the market and secure your future residence with confidence.</p>
                   
                   </div> 
-              </div>";
+              </div>
+              <div class='col-lg-4'>
+          <div class='info-table-and-button-wrapper'>
+            <div class='info-table'>
+              <ul>
+                <li>
+                  <img src='assets/images/info-icon-01.png' alt='' style='max-width: 52px;'>
+                  <h4>{$page->get_area()} m2<br><span>Total Flat Space</span></h4>
+                </li>
+                <li>
+                  <img src='assets/images/info-icon-02.png' alt='' style='max-width: 52px;'>
+                  <h4>{$page->get_bedrooms()}<br><span>Bedrooms</span></h4>
+                </li>
+                <li>
+                  <img src='assets/images/info-icon-04.png' alt='' style='max-width: 52px;'>
+                  <h4>{$page->get_bathrooms()}<br><span>Bathrooms</span></h4>
+                </li>
+                <li>
+                  <img src='assets/images/info-icon-03.png' alt='' style='max-width: 52px;'>
+                  <h4>$ {$page->get_price()}<br><span>Price</span></h4>
+                </li>
+              </ul>
+            </div>";
       } else {
           echo "Information not provided";
       }
         ?>
-        <div class="col-lg-4">
-          <div class="info-table-and-button-wrapper">
-            <div class="info-table">
-              <ul>
-                <li>
-                  <img src="assets/images/info-icon-01.png" alt="" style="max-width: 52px;">
-                  <h4>545 m2<br><span>Total Flat Space</span></h4>
-                </li>
-                <li>
-                  <img src="assets/images/info-icon-02.png" alt="" style="max-width: 52px;">
-                  <h4>8<br><span>Bedrooms</span></h4>
-                </li>
-                <li>
-                  <img src="assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
-                  <h4>8<br><span>Bathrooms</span></h4>
-                </li>
-                <li>
-                  <img src="assets/images/info-icon-03.png" alt="" style="max-width: 52px;">
-                  <h4>$2264<br><span>Price</span></h4>
-                </li>
-              </ul>
-            </div>
+        
             
             <div class="icon-button" style="text-align: center; margin-top: 50px; height: 100px;">
               <a href="schedule.php" style="font-size: 23px;"><i class="fa fa-calendar"></i> Book Now</a>
