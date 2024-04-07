@@ -304,7 +304,7 @@ https://templatemo.com/tm-591-villa-agency
 
               echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
               <div class='item'> 
-              <a href='property-details.html'><img src='{$booking->get_image()}' alt=''></a>
+              <a href='property-details.html'><img src='{$booking->get_image()}' height='300' alt=''></a>
               <span class='category'>{$booking->get_type()}</span> 
               <h6>$ {$booking->get_price()}</h6>
             <h4><a href='property-details.html'>{$booking->get_country()} {$booking->get_city()}</a></h4>
