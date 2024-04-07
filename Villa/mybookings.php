@@ -99,8 +99,8 @@ https://templatemo.com/tm-591-villa-agency
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <span class="breadcrumb"><a href="#">Bookings</a> / listings</span>
-          <h3>My Bookings</h3>
+          <span class="breadcrumb">Bookings / listings</span>
+          <h3>My Bookings & Listings</h3>
         </div>
       </div>
     </div>
@@ -110,20 +110,21 @@ https://templatemo.com/tm-591-villa-agency
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <h2 class="mb-4">Booking Cart</h2>
-          <div class="cart-items" id="cart-items">
+          <h2 class="mb-4">My Bookings:</h2>
+          <div class="booked-items" id="booked-items">
             <!-- Booking items will be dynamically added here -->
+          </div>
+        </div>
+      <hr>
+        <div class="col-md-12">
+          <h2 class="mb-4">My Listings:</h2>
+          <div class="listed-items" id="listed-items">
+            <!-- Listed items will be dynamically added here -->
           </div>
         </div>
       </div>
     </div>
   </section>
-  
-
-  
-
-  
-
 
   <footer>
     <div class="container">
@@ -144,67 +145,12 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
+
   <script>
-// document.addEventListener('DOMContentLoaded', function () {
-//   const cartItemsContainer = document.getElementById('cart-items');
-//   let subtotal = 0;
 
-//   // Sample items with a booking date
-//   const sampleItems = [
-//     { id: 1, name: 'Booking Option 1', price: 99, img: 'https://via.placeholder.com/100', bookedOn: '2024-04-07' },
-//     { id: 2, name: 'Booking Option 2', price: 149, img: 'https://via.placeholder.com/100', bookedOn: '2024-04-06' },
-//     { id: 3, name: 'Booking Option 3', price: 79, img: 'https://via.placeholder.com/100', bookedOn: '2024-04-05' },
-//     { id: 4, name: 'Booking Option 4', price: 44, img: 'https://via.placeholder.com/100', bookedOn: '2024-02-05' }
-//   ];
-
-//   // Function to add item to the cart
-//   function addItemToCart(item) {
-//     subtotal += item.price;
-//     const itemRow = document.createElement('div');
-//     itemRow.className = 'cart-item d-flex justify-content-between align-items-center mb-3';
-//     itemRow.innerHTML = `
-//       <div class="d-flex align-items-center">
-//         <img src="${item.img}" alt="${item.name}" style="width: 100px; height: 100px; object-fit: cover; margin-right: 15px;">
-//         <div>
-//           <h6 class="my-0">${item.name}</h6>
-//           <small class="text-muted">Booked on: ${item.bookedOn}</small><br>
-//           <small class="text-muted">Price: $${item.price}</small>
-//         </div>
-//       </div>
-//       <span class="text-muted">$${item.price}</span>
-//       <button class="btn btn-sm" style="background-color: #f85424; color: white;" data-itemid="${item.id}">Remove</button>
-//     `;
-//     cartItemsContainer.appendChild(itemRow);
-//     updateSummary();
-//   }
-
-//   // Function to remove item from the cart
-//   function removeItemFromCart(event) {
-//     if (!event.target.matches('[data-itemid]')) return;
-//     const itemId = parseInt(event.target.getAttribute('data-itemid'), 10);
-//     const item = sampleItems.find(item => item.id === itemId);
-//     subtotal -= item.price;
-//     event.target.closest('.cart-item').remove();
-//     updateSummary();
-//   }
-
-//   // Function to update cart summary
-//   function updateSummary() {
-//     const tax = subtotal * 0.05;
-//     const total = subtotal + tax;
-//     document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-//     document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
-//     document.getElementById('total').textContent = `$${total.toFixed(2)}`;
-//   }
-
-//   // Initial items
-//   sampleItems.forEach(item => addItemToCart(item));
-
-//   // Event listener for removing items
-//   cartItemsContainer.addEventListener('click', removeItemFromCart);
-// });
+// BOOKED ITEMS 
     document.addEventListener('DOMContentLoaded', function() {
-      const cartItemsContainer = document.getElementById('cart-items');
+      const cartItemsContainer = document.getElementById('booked-items');
 const sampleItems = [
         { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-18-21 to 10-24-21', status: 'Pending', requestBy: 'User' },
         { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Invoice Issued', requestBy: 'User' },
@@ -247,7 +193,57 @@ const sampleItems = [
         }
       };
     });
+
+// LISTED ITEMS 
+document.addEventListener('DOMContentLoaded', function() {
+      const listItemsContainer = document.getElementById('listed-items');
+const sampleItems = [
+        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', datePosted: '10-18-21 to 10-24-21', status: 'Pending', requestBy: 'User' },
+        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Posted', requestBy: 'User' },
+        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Pending', requestBy: 'User' }
+      ];
+    
+      const statusColors = {
+        'Pending': 'orange', 
+        'Posted': 'green'
+      };
+    
+      function addItemToCart(item) {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'list-item d-flex justify-content-between align-items-center mb-3';
+        itemElement.innerHTML = `
+          <div class="d-flex align-items-center" style="flex-grow: 1;">
+            <img src="${item.img}" alt="..." class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
+            <div>
+              <h5 class="fw-bold mb-1">${item.name}</h5>
+              <p class="text-muted mb-0">Requested by: ${item.requestBy}</p>
+              <p class="text-muted">Period: ${item.datePosted}</p>
+            </div>
+          </div>
+          <div style="margin-right: 20px;">
+            <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
+          </div>
+          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove</button>
+        `;
+        listItemsContainer.appendChild(itemElement);
+      }
+    
+      sampleItems.forEach(addItemToCart);
+    
+      window.removeItem = function(itemId) {
+        const itemIndex = sampleItems.findIndex(item => item.id === itemId);
+        if (itemIndex > -1) {
+          sampleItems.splice(itemIndex, 1);
+          listItemsContainer.children[itemIndex].remove();
+        }
+      };
+    });
+
     </script>
+
+
+
+
 <?php
     
     //   class Bookings {
