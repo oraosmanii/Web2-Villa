@@ -105,7 +105,7 @@ https://templatemo.com/tm-591-villa-agency
     </div>
   </div>
 
-  <div class="single-property section">
+  <!-- <div class="single-property section">
     <div class="container">
       <div class="row">
         <div class="col-lg-8">
@@ -120,7 +120,37 @@ https://templatemo.com/tm-591-villa-agency
             <p>Browse our collection to find your sanctuary amidst the city's hustle or a tranquil retreat in the countryside. Our team is here to provide <strong>tailored support</strong>, ensuring a smooth transition into your new home. Trust in our expertise to navigate the market and secure your future residence with confidence.</p>
             
             </div> 
-        </div>
+        </div> -->
+
+        <?php
+        if(isset($_GET['info'])) {
+          // Decode the encoded information
+          $info= urldecode($_GET['info']);
+
+          $page=recieverProperties($info);
+
+          
+          // Display the information
+          echo "<div class='single-property section'>
+          <div class='container'>
+            <div class='row'>
+              <div class='col-lg-8'>
+                <div class='main-image'>
+                  <img src='{$page->get_image()}' alt=''>
+                </div>
+                <div class='main-content'>
+                  <span class='category'>Luxury Villa</span>
+                  <h4>18 New Street Miami, OR 24560</h4>
+                  <p>Step into the comfort of modern living with <strong>our premier real estate offerings</strong>. Our carefully curated selections bring you the finest homes that blend luxury with coziness, designed to exceed your expectations. With an eye for exceptional properties, we ensure that every listing provides a unique glimpse into the lifestyle you desire.<br><br></p>
+      
+                  <p>Browse our collection to find your sanctuary amidst the city's hustle or a tranquil retreat in the countryside. Our team is here to provide <strong>tailored support</strong>, ensuring a smooth transition into your new home. Trust in our expertise to navigate the market and secure your future residence with confidence.</p>
+                  
+                  </div> 
+              </div>";
+      } else {
+          echo "Information not provided";
+      }
+        ?>
         <div class="col-lg-4">
           <div class="info-table-and-button-wrapper">
             <div class="info-table">
