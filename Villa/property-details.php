@@ -139,7 +139,7 @@ https://templatemo.com/tm-591-villa-agency
                   <img src='{$page->get_image()}' alt=''>
                 </div>
                 <div class='main-content'>
-                  <span class='category'>Luxury Villa</span>
+                  <span class='category'>{}</span>
                   <h4>18 New Street Miami, OR 24560</h4>
                   <p>Step into the comfort of modern living with <strong>our premier real estate offerings</strong>. Our carefully curated selections bring you the finest homes that blend luxury with coziness, designed to exceed your expectations. With an eye for exceptional properties, we ensure that every listing provides a unique glimpse into the lifestyle you desire.<br><br></p>
       

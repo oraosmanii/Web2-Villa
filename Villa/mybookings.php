@@ -109,117 +109,17 @@ https://templatemo.com/tm-591-villa-agency
   <section class="py-5 bg-light" style="font-family: 'Poppins', sans-serif;">
     <div class="container">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
           <h2 class="mb-4">Booking Cart</h2>
           <div class="cart-items" id="cart-items">
-          <?php
-    
-    class Bookings {
-      private $id;
-      private $country;
-      private $city;
-      private $date;
-      private $imgpath;
-      private $price;
-
-      function __construct( $country, $city, $date, $imgpath, $price) {
-        $this->id = uniqid();
-        $this->country=$country;
-        $this->city=$city;
-        $this->date=$date;
-        $this->imgpath=$imgpath;
-        $this->price=$price;
-      }
-
-      function get_image(){
-        return $this->imgpath;
-      }
-      function get_country(){
-        return $this->country;
-      }
-      function get_city(){
-        return $this->city;
-      }
-      function get_price(){
-        return $this->price;
-      }
-      function get_date(){
-        return $this->date;
-      }
-      function get_id(){
-        return $this->id;
-      }
-
-    }
-
-    function createCard(){
-
-      $myfile= fopen("Mybookings.txt","r+");
-      while (!feof($myfile)) {
-          // Read a line from the file
-          $line = fgets($myfile);
-          
-          // Split the line by commas
-          $data = explode(",", $line);
-          
-          
-          // Process the data as needed
-          // For example, you can print the split data
-          
-          $villa= new Bookings($data[0],$data[1],$data[2],$data[3],$data[4]);
-
-          
-              echo " <div class='cart-item d-flex justify-content-between align-items-center mb-3'> 
-                <div class='d-flex align-items-center'>
-                  <img src='{$villa->get_image()}' alt='Place in {$villa->get_country()},{$villa->get_city()}' style='width: 100px; height: 100px; object-fit: cover; margin-right: 15px;'>
-                  <div>
-                  <h6 class='my-0'>{$villa->get_country()},{$villa->get_city()}</h6>
-                  <small class='text-muted'>Booked on: {$villa->get_date()}</small><br>
-                  <small class='text-muted'>Price: $ {$villa->get_price()}</small>
-                </div>
-              </div>
-              <span class='text-muted'>$ {$villa->get_price()}</span>
-              <button class='btn btn-sm' style='background-color: #f85424; color: white;' data-itemid='{$villa->get_id()}'>Remove</button>
-            
-            </div>";
-          
-          // print_r($data);
-          // echo "<br> <br>";
-      }
-      
-      // Close the file
-      fclose($myfile);
-  }
-
-  createCard();
-
-    ?>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <!-- Explicitly set the background color for card-body -->
-            <div class="card-body" style="background-color: #fff; padding: 20px;">
-              <h4 class="card-title">Cart Summary</h4>
-              <p><strong>Subtotal:</strong> <span id="subtotal">$0.00</span></p>
-              <p><strong>Tax (5%):</strong> <span id="tax">$0.00</span></p>
-              <hr>
-              <p><strong>Total:</strong> <span id="total">$0.00</span></p>
-              <div class="form-group">
-                <label for="promo-code">Promo Code:</label>
-                <input type="text" class="form-control" id="promo-code" placeholder="Enter your code">
-                <button class="btn btn-block custom-button">Apply</button>
-              </div>
-              <button class="btn btn-block custom-button">Proceed to Checkout</button>
-              <a href="properties.php" class="btn btn-block" style="background-color: #f85424; color: white; margin-top: 15px;">
-                <i class="fas fa-arrow-left"></i> Go Back to Book More
-              </a>
-            </div>
+            <!-- Booking items will be dynamically added here -->
           </div>
         </div>
       </div>
     </div>
   </section>
+  
+
   
 
   
@@ -303,8 +203,133 @@ https://templatemo.com/tm-591-villa-agency
 //   // Event listener for removing items
 //   cartItemsContainer.addEventListener('click', removeItemFromCart);
 // });
-
+    document.addEventListener('DOMContentLoaded', function() {
+      const cartItemsContainer = document.getElementById('cart-items');
+const sampleItems = [
+        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-18-21 to 10-24-21', status: 'Pending', requestBy: 'User' },
+        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Invoice Issued', requestBy: 'User' },
+        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Booked', requestBy: 'User' }
+      ];
+    
+      const statusColors = {
+        'Pending': 'orange', 
+        'Invoice Issued': 'blue',
+        'Booked': 'green'
+      };
+    
+      function addItemToCart(item) {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'cart-item d-flex justify-content-between align-items-center mb-3';
+        itemElement.innerHTML = `
+          <div class="d-flex align-items-center" style="flex-grow: 1;">
+            <img src="${item.img}" alt="..." class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
+            <div>
+              <h5 class="fw-bold mb-1">${item.name}</h5>
+              <p class="text-muted mb-0">Requested by: ${item.requestBy}</p>
+              <p class="text-muted">Period: ${item.dateReserved}</p>
+            </div>
+          </div>
+          <div style="margin-right: 20px;">
+            <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
+          </div>
+          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove</button>
+        `;
+        cartItemsContainer.appendChild(itemElement);
+      }
+    
+      sampleItems.forEach(addItemToCart);
+    
+      window.removeItem = function(itemId) {
+        const itemIndex = sampleItems.findIndex(item => item.id === itemId);
+        if (itemIndex > -1) {
+          sampleItems.splice(itemIndex, 1);
+          cartItemsContainer.children[itemIndex].remove();
+        }
+      };
+    });
     </script>
+<?php
+    
+    //   class Bookings {
+    //     private $id;
+    //     private $country;
+    //     private $city;
+    //     private $date;
+    //     private $imgpath;
+    //     private $price;
+  
+    //     function __construct( $country, $city, $date, $imgpath, $price) {
+    //       $this->id = uniqid();
+    //       $this->country=$country;
+    //       $this->city=$city;
+    //       $this->date=$date;
+    //       $this->imgpath=$imgpath;
+    //       $this->price=$price;
+    //     }
+  
+    //     function get_image(){
+    //       return $this->imgpath;
+    //     }
+    //     function get_country(){
+    //       return $this->country;
+    //     }
+    //     function get_city(){
+    //       return $this->city;
+    //     }
+    //     function get_price(){
+    //       return $this->price;
+    //     }
+    //     function get_date(){
+    //       return $this->date;
+    //     }
+    //     function get_id(){
+    //       return $this->id;
+    //     }
+  
+    //   }
+  
+    //   function createCard(){
+  
+    //     $myfile= fopen("Mybookings.txt","r+");
+    //     while (!feof($myfile)) {
+    //         // Read a line from the file
+    //         $line = fgets($myfile);
+            
+    //         // Split the line by commas
+    //         $data = explode(",", $line);
+            
+            
+    //         // Process the data as needed
+    //         // For example, you can print the split data
+            
+    //         $villa= new Bookings($data[0],$data[1],$data[2],$data[3],$data[4]);
+  
+            
+    //             echo " <div class='cart-item d-flex justify-content-between align-items-center mb-3'> 
+    //               <div class='d-flex align-items-center'>
+    //                 <img src='{$villa->get_image()}' alt='Place in {$villa->get_country()},{$villa->get_city()}' style='width: 100px; height: 100px; object-fit: cover; margin-right: 15px;'>
+    //                 <div>
+    //                 <h6 class='my-0'>{$villa->get_country()},{$villa->get_city()}</h6>
+    //                 <small class='text-muted'>Booked on: {$villa->get_date()}</small><br>
+    //                 <small class='text-muted'>Price: $ {$villa->get_price()}</small>
+    //               </div>
+    //             </div>
+    //             <span class='text-muted'>$ {$villa->get_price()}</span>
+    //             <button class='btn btn-sm' style='background-color: #f85424; color: white;' data-itemid='{$villa->get_id()}'>Remove</button>
+              
+    //           </div>";
+            
+    //         // print_r($data);
+    //         // echo "<br> <br>";
+    //     }
+        
+    //     // Close the file
+    //     fclose($myfile);
+    // }
+  
+    // createCard();
+  
+      ?>
    
 
   </body>
