@@ -77,7 +77,7 @@ https://templatemo.com/tm-591-villa-agency
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
                       <li><a href="index.html">Home</a></li>
-                      <li><a href="properties.html" class="active">Properties</a></li>
+                      <li><a href="properties.php" class="active">Properties</a></li>
           
                      
                       <li><a href="lease.html">Lease your villa</a></li>

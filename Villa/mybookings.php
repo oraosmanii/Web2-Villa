@@ -78,7 +78,7 @@ https://templatemo.com/tm-591-villa-agency
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
                       <li><a href="index.html">Home</a></li>
-                      <li><a href="properties.html">Properties</a></li>
+                      <li><a href="properties.php">Properties</a></li>
           
                      
                       <li><a href="lease.html">Lease your villa</a></li>
@@ -213,7 +213,7 @@ https://templatemo.com/tm-591-villa-agency
                 <button class="btn btn-block custom-button">Apply</button>
               </div>
               <button class="btn btn-block custom-button">Proceed to Checkout</button>
-              <a href="properties.html" class="btn btn-block" style="background-color: #f85424; color: white; margin-top: 15px;">
+              <a href="properties.php" class="btn btn-block" style="background-color: #f85424; color: white; margin-top: 15px;">
                 <i class="fas fa-arrow-left"></i> Go Back to Book More
               </a>
             </div>
