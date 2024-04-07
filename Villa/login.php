@@ -33,13 +33,15 @@
 </div>
 
 <div id="signup-form" class="cont cont1">
-    <form id="signup" action="#">
+    <form id="signup" action="#" method="POST">
         <a href="index.php" class="logo1">
             <h1>Villa</h1>
         </a> 
         <h2>Sign Up</h2>
         <label for="firstname">Full Name:</label> <br>
         <input type="text" id="firstname" required placeholder="First name" autocomplete="name"> <br>
+        <label for="email">Email</label> <br>
+        <input type="email" name="email" id="email" placeholder="Email" required autocomplete="email"> <br> 
         <label for="newUsername">New Username:</label> <br>
         <input type="text" id="newUsername" name="newUsername" required placeholder="Username" autocomplete="username"> <br>
         <label for="newPassword">New Password:</label> <br>
@@ -59,6 +61,47 @@
         <button type="submit" class="submit" id="signupButton">Sign Up</button>
         <h3>Already have an account? <i><a href="#" id="loginLink">Login!</a></i> </h3>
     </form>
+    <?php
+    session_start();
+    if(isset($_SESSION['error'])) {
+        echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+        unset($_SESSION['error']);
+    }
+    ?>
+    <?php
+//session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $fullname = $_POST['fullname'];
+    $email = $_POST['email'];
+    $username = $_POST['newUsername'];
+    $password = $_POST['newPassword'];
+    $confirm_password = $_POST['confirmPassword'];
+    $gender = $_POST['gender'];
+
+    
+    if (!preg_match("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/", $password)) {
+        
+        $_SESSION['error'] = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.";
+        header("Location: login.php#signupLink");
+        exit();
+    }
+
+    
+    if ($password !== $confirm_password) {
+        
+        $_SESSION['error'] = "Passwords do not match. Please try again.";
+        header("Location: login.php#signupLink");
+        exit();
+    }
+
+    
+    echo "Signup Successful!<br>";
+    echo "Full Name: $fullname<br>";
+    echo "Username: $username<br>";
+    echo "Gender: $gender<br>";
+}
+?>
    
 </div>
 
