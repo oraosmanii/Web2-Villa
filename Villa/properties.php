@@ -114,13 +114,13 @@ https://templatemo.com/tm-591-villa-agency
           <a class="is_active" href="#!" data-filter="*">Show All</a>
         </li>
         <li>
-          <a href="#!" data-filter=".adv">Apartment</a>
+          <a href="#!" data-filter=".Apartment">Apartment</a>
         </li>
         <li>
-          <a href="#!" data-filter=".str">Villa House</a>
+          <a href="#!" data-filter=".Villa">Villa House</a>
         </li>
         <li>
-          <a href="#!" data-filter=".rac">Penthouse</a>
+          <a href="#!" data-filter=".Penthouse">Penthouse</a>
         </li>
       </ul>
       <div class="row properties-box">
@@ -302,7 +302,7 @@ https://templatemo.com/tm-591-villa-agency
           } 
           // $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
 
-              echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 adv'>
+              echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
               <div class='item'> 
               <a href='property-details.html'><img src='{$booking->get_image()}' alt=''></a>
               <span class='category'>{$booking->get_type()}</span> 
