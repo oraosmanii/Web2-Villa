@@ -33,7 +33,7 @@
 </div>
 
 <div id="signup-form" class="cont cont1">
-    <form id="signup" action="#">
+    <form id="signup" action="#" method="POST">
         <a href="index.php" class="logo1">
             <h1>Villa</h1>
         </a> 
@@ -73,6 +73,7 @@
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
+    $email = $_POST['email'];
     $username = $_POST['newUsername'];
     $password = $_POST['newPassword'];
     $confirm_password = $_POST['confirmPassword'];
