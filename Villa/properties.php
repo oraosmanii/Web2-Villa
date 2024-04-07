@@ -131,7 +131,7 @@ https://templatemo.com/tm-591-villa-agency
     function createCard(){
       
 
-      $myfile= fopen("Mybookings.txt","r+");
+      $myfile= fopen("Places.txt","r+");
       while (!feof($myfile)) {
           // Read a line from the file
           $line = fgets($myfile);
