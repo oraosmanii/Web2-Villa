@@ -40,6 +40,8 @@
         <h2>Sign Up</h2>
         <label for="firstname">Full Name:</label> <br>
         <input type="text" id="firstname" required placeholder="First name" autocomplete="name"> <br>
+        <label for="email">Email</label> <br>
+        <input type="email" name="email" id="email" placeholder="Email" required autocomplete="email"> <br> 
         <label for="newUsername">New Username:</label> <br>
         <input type="text" id="newUsername" name="newUsername" required placeholder="Username" autocomplete="username"> <br>
         <label for="newPassword">New Password:</label> <br>
