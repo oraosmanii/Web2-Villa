@@ -364,6 +364,23 @@ https://templatemo.com/tm-591-villa-agency
                 <fieldset>
                   <label for="email">Email Address</label>
                   <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." required="">
+                  <?php 
+          if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $email = $_POST["email"];
+            $email_pattern = '/^[a-zA-Z][a-zA-Z0-9_]*@[a-zA-Z.]+$/';
+          if (preg_match($email_pattern, $email)) {
+              echo "<script>alert('Thanks for contacting us!');
+              window.location.href = '#sub-header';
+              </script>";
+            //header("Location: index.php");
+        } else {
+            echo "<span style='color: red;'>Invalid email address!</span><br><br>
+           <script> window.location.href = '#contact-form';
+            </script>";
+            
+        }
+      }
+          ?>
                 </fieldset>
               </div>
               <div class="col-lg-12">
@@ -394,8 +411,9 @@ https://templatemo.com/tm-591-villa-agency
               </script>";
             //header("Location: index.php");
         } else {
-            echo "<script>alert('Invalid email address, please refill the form');
-            window.location.href = '#contact-form';
+            $error_message= "Invalid email address!";
+            echo "
+           <script> window.location.href = '#contact-form';
             </script>";
             
         }
