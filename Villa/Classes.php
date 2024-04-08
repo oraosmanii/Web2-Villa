@@ -168,4 +168,7 @@ class Penthouse extends Bookings{
               echo "Invalid info";
           } 
     }
+    function transferArray($sortingArray,$id,$price){
+      $sortingArray[$id]=$price;
+    }
 ?>

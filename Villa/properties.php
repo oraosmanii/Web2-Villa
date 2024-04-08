@@ -127,7 +127,7 @@ https://templatemo.com/tm-591-villa-agency
         <?php
       include "Classes.php";
     
-
+    $objectArray=array();
     function createCard(){
       
 
@@ -140,7 +140,7 @@ https://templatemo.com/tm-591-villa-agency
           // Split the line by commas
           $data = explode(",", $line);
           
-          
+         
           // Process the data as needed
           // For example, you can print the split data
 
@@ -159,6 +159,8 @@ https://templatemo.com/tm-591-villa-agency
             default:
               echo "Invalid creation";
           } 
+          global $objectArray;
+          transferArray($objectArray,$booking->get_id(),$booking->get_price());
           // $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
 
               echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
