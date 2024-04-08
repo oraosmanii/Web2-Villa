@@ -230,12 +230,12 @@ form .btn input[type="submit"] {
           <div class="slider-tab"></div>
         </div>
         <div class="form-inner">
-          <form action="#" class="login">
+          <form action="loginn.php" method="post" class="login">
             <div class="field">
-              <input type="text" placeholder="Email Address" required>
+            <input type="text" name="email" placeholder="Email Address" required>
             </div>
             <div class="field">
-              <input type="password" placeholder="Password" required>
+            <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="pass-link"><a href="#">Forgot password?</a></div>
             <div class="field btn">
@@ -244,12 +244,12 @@ form .btn input[type="submit"] {
             </div>
             <div class="signup-link">Not a member? <a href="">Signup now</a></div>
           </form>
-          <form action="#" class="signup">
+          <form action="signup.php" method="post" class="signup">
             <div class="field">
-              <input type="text" placeholder="Email Address" required>
+            <input type="text" name="email" placeholder="Email Address" required>
             </div>
             <div class="field">
-              <input type="password" placeholder="Password" required>
+            <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="field">
               <input type="password" placeholder="Confirm password" required>
@@ -262,6 +262,20 @@ form .btn input[type="submit"] {
         </div>
       </div>
     </div>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error === 'passwordshort') {
+        const errorMessage = document.createElement('div');
+        errorMessage.innerHTML = "Password should be longer than 8 characters.";
+        errorMessage.style.color = "red";
+        // Insert this message at the top of your form or wherever you see fit
+        document.body.insertBefore(errorMessage, document.body.firstChild);
+    }
+});
+</script>
+
     <script>
         const loginText = document.querySelector(".title-text .login");
       const loginForm = document.querySelector("form.login");
