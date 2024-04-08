@@ -150,11 +150,11 @@ https://templatemo.com/tm-591-villa-agency
 
 // BOOKED ITEMS 
     document.addEventListener('DOMContentLoaded', function() {
-      const cartItemsContainer = document.getElementById('booked-items');
-const sampleItems = [
-        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-18-21 to 10-24-21', status: 'Pending', requestBy: 'User' },
-        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Invoice Issued', requestBy: 'User' },
-        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Booked', requestBy: 'User' }
+      const bookedItemsContainer = document.getElementById('booked-items');
+const bookSampleItems = [
+        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-18-21 to 10-24-21', status: 'Pending', requestBy: 'User', price: '$500' },
+        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Invoice Issued', requestBy: 'User', price: '$500' },
+        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Booked', requestBy: 'User', price: '$500'}
       ];
     
       const statusColors = {
@@ -163,7 +163,7 @@ const sampleItems = [
         'Booked': 'green'
       };
     
-      function addItemToCart(item) {
+      function addItemToBook(item) {
         const itemElement = document.createElement('div');
         itemElement.className = 'cart-item d-flex justify-content-between align-items-center mb-3';
         itemElement.innerHTML = `
@@ -173,23 +173,24 @@ const sampleItems = [
               <h5 class="fw-bold mb-1">${item.name}</h5>
               <p class="text-muted mb-0">Requested by: ${item.requestBy}</p>
               <p class="text-muted">Period: ${item.dateReserved}</p>
+              <p class="text-muted">Price: ${item.price}</p>
             </div>
           </div>
           <div style="margin-right: 20px;">
             <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
           </div>
-          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove</button>
+          <button onclick="removeBookedItem(${item.id})" class="btn btn-danger btn-sm">Cancel Booking</button>
         `;
-        cartItemsContainer.appendChild(itemElement);
+        bookedItemsContainer.appendChild(itemElement);
       }
     
-      sampleItems.forEach(addItemToCart);
+      bookSampleItems.forEach(addItemToBook);
     
-      window.removeItem = function(itemId) {
-        const itemIndex = sampleItems.findIndex(item => item.id === itemId);
-        if (itemIndex > -1) {
-          sampleItems.splice(itemIndex, 1);
-          cartItemsContainer.children[itemIndex].remove();
+      window.removeBookedItem = function(itemId) {
+        const bookedItemIndex = bookSampleItems.findIndex(item => item.id === itemId);
+        if (bookedItemIndex > -1) {
+          bookSampleItems.splice(bookedItemIndex, 1);
+          bookedItemsContainer.children[bookedItemIndex].remove();
         }
       };
     });
@@ -198,13 +199,13 @@ const sampleItems = [
 document.addEventListener('DOMContentLoaded', function() {
       const listItemsContainer = document.getElementById('listed-items');
 const sampleItems = [
-        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', datePosted: '10-18-21 to 10-24-21', status: 'Pending', requestBy: 'User' },
-        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Posted', requestBy: 'User' },
-        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Pending', requestBy: 'User' }
+        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', datePosted: '10-18-21 to 10-24-21', status: 'Booked', requestBy: 'User', price: '$500' },
+        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Posted', requestBy: 'User', price: '$500' },
+        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Posted', requestBy: 'User', price: '$500' }
       ];
     
       const statusColors = {
-        'Pending': 'orange', 
+        'Booked': 'blue', 
         'Posted': 'green'
       };
     
@@ -218,12 +219,13 @@ const sampleItems = [
               <h5 class="fw-bold mb-1">${item.name}</h5>
               <p class="text-muted mb-0">Requested by: ${item.requestBy}</p>
               <p class="text-muted">Period: ${item.datePosted}</p>
+              <p class="text-muted">Price: ${item.price}</p>
             </div>
           </div>
           <div style="margin-right: 20px;">
             <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
           </div>
-          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove</button>
+          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove Listing</button>
         `;
         listItemsContainer.appendChild(itemElement);
       }
