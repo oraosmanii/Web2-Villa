@@ -43,7 +43,7 @@ https://templatemo.com/tm-591-villa-agency
   </div>
   <!-- ***** Preloader End ***** -->
 
-  <div class="sub-header">
+  <div class="sub-header" id="sub-header">
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-8">
@@ -352,7 +352,7 @@ https://templatemo.com/tm-591-villa-agency
           </div>
         </div>
         <div class="col-lg-5">
-          <form id="contact-form" action="" method="post">
+          <form id="contact-form" action="" method="POST">
             <div class="row">
               <div class="col-lg-12">
                 <fieldset>
@@ -384,6 +384,23 @@ https://templatemo.com/tm-591-villa-agency
                 </fieldset>
               </div>
             </div>
+            <?php 
+          if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $email = $_POST["email"];
+            $email_pattern = '/^[a-zA-Z][a-zA-Z0-9_]*@[a-zA-Z.]+$/';
+          if (preg_match($email_pattern, $email)) {
+              echo "<script>alert('Thanks for contacting us!');
+              window.location.href = '#sub-header';
+              </script>";
+            //header("Location: index.php");
+        } else {
+            echo "<script>alert('Invalid email address, please refill the form');
+            window.location.href = '#contact-form';
+            </script>";
+            
+        }
+      }
+          ?>
           </form>
         </div>
       </div>
