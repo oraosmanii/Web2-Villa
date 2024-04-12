@@ -197,7 +197,7 @@ form .btn input[type="submit"]{
   justify-content: center; 
   align-items: center; 
   position: relative; 
-  overflow: hidden; /
+  overflow: hidden; 
   height: 50px; 
   width: 100%; 
   border-radius: 15px; 
