@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -77,11 +80,34 @@ https://templatemo.com/tm-591-villa-agency
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="index.php">Home</a></li>
+                      <li><a href="index.php" class="active">Home</a></li>
                       <li><a href="properties.php">Properties</a></li>
-                      <li><a href="lease.php">Lease your villa</a></li>
-                      <li><a href="mybookings.php">My Bookings</a></li>
-                      <li><a href="logincopy.php">Log in | Sign up</a></li>
+                      <li><a href="<?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        echo "lease.php";
+                      }
+                      else{
+                        echo "logincopy.php";
+                      }
+                      ?>">Lease your villa</a></li>
+                      <li><a href="<?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        echo "mybookings.php";
+                      }
+                      else{
+                        echo "logincopy.php";
+                      }
+                      ?>">My Bookings</a></li>
+                      <?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        $username=$_SESSION['USERNAME'];
+                        echo "<li><a href='#'>{$username}</a></li><li>
+                        <a href='logout.php'>Log Out</a></li>";
+                      }
+                      else{
+                        echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
+                      }
+                      ?>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>
@@ -177,7 +203,12 @@ https://templatemo.com/tm-591-villa-agency
         
             
             <div class="icon-button" style="text-align: center; margin-top: 50px; height: 100px;">
-              <a href="schedule.php" style="font-size: 23px;"><i class="fa fa-calendar"></i> Book Now</a>
+              <a href="<?php if(!empty($_SESSION['LogedIn'])){
+                echo "schedule.php";
+              }
+              else{
+                echo "#";
+              }?>" style="font-size: 23px;"><i class="fa fa-calendar"></i> Book Now</a>
             </div>
           </div>
 
@@ -201,11 +232,17 @@ https://templatemo.com/tm-591-villa-agency
                     <label for="star2"></label>
                     <input type="radio" id="star1" name="rating" value="1">
                     <label for="star1"></label>
-                  </div>
-                  <div class="login-first">
-                    <a href="logincopy.php">Log in first to rate</a>
-                  </div>
-                  <button type="submit" class="btn btn-danger" style="position: relative; bottom: 30px;">Submit</button>
+                  </div><div class='login-first'>
+                  <?php
+                  if(empty($_SESSION['LogedIn'])){
+                    echo"<a href='logincopy.php'>Log in first to rate</a>
+                  </div>";
+                  }
+                  else{
+                    echo "<button type='submit' class='btn btn-danger' style='position: relative; bottom: 30px;'>Submit</button>";
+                  }
+                    
+                  ?>
                 </form>
               </div>
             </div>
