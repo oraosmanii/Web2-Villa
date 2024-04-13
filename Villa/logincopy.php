@@ -311,7 +311,7 @@ form .btn input[type="submit"] {
                     <!-- Display message if set -->
  <!-- Display message if set -->
             <?php 
-            include 'signup.php';
+            include_once'signup.php';
             if (!empty($message)){
                 echo $message; 
             }?>
