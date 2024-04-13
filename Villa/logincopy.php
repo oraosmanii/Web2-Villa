@@ -291,9 +291,9 @@ form .btn input[type="submit"] {
             <div class="signup-link">Not a member? <a href="">Signup now</a></div>
           </form>
           <!-- SIGNUP -->
-          <form action="logincopy.php" method="post" class="signup">
+          <form id="signupf" action="logincopy.php" method="post" class="signup">
             <div class="field">
-            <input type="text" name="email" placeholder="Email Address" required>
+            <input type="email" name="email" placeholder="Email Address" required>
             </div>
             <div class="field">
             <input type="text" name="username" placeholder="Username" required>
@@ -302,14 +302,12 @@ form .btn input[type="submit"] {
             <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="field">
-              <input type="password" placeholder="Confirm password" required>
+            <input type="password" name="confirmpassword" placeholder="Password" required>
             </div>
             <div class="field btn">
               <div class="btn-layer"></div>
               <input type="submit" value="Signup">
             </div>
-                    <!-- Display message if set -->
- <!-- Display message if set -->
             <?php 
             include_once'signup.php';
             if (!empty($message)){
@@ -321,7 +319,7 @@ form .btn input[type="submit"] {
     </div>
 
     <script>
-        const loginText = document.querySelector(".title-text .login");
+      const loginText = document.querySelector(".title-text .login");
       const loginForm = document.querySelector("form.login");
       const loginBtn = document.querySelector("label.login");
       const signupBtn = document.querySelector("label.signup");
@@ -340,5 +338,6 @@ form .btn input[type="submit"] {
       });
 
     </script>
+
 </body>
 </html>
