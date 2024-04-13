@@ -308,23 +308,15 @@ form .btn input[type="submit"] {
               <div class="btn-layer"></div>
               <input type="submit" value="Signup">
             </div>
+                    <!-- Display message if set -->
+ <!-- Display message if set -->
+            <?php if (!empty($message)): ?>
+            <?php echo $message; ?>
+           <?php endif; ?>
           </form>
         </div>
       </div>
     </div>
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const error = urlParams.get('error');
-    if (error === 'passwordshort') {
-        const errorMessage = document.createElement('div');
-        errorMessage.innerHTML = "Password should be longer than 8 characters.";
-        errorMessage.style.color = "red";
-        // Insert this message at the top of your form or wherever you see fit
-        document.body.insertBefore(errorMessage, document.body.firstChild);
-    }
-});
-</script>
 
     <script>
         const loginText = document.querySelector(".title-text .login");
