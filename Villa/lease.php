@@ -81,7 +81,7 @@ https://templatemo.com/tm-591-villa-agency
                       <li><a href="properties.php">Properties</a></li>
                       <li><a href="lease.php">Lease your villa</a></li>
                       <li><a href="mybookings.php">My Bookings</a></li>
-                      <li><a href="login.php">Log in | Sign up</a></li>
+                      <li><a href="logincopy.php">Log in | Sign up</a></li>
                       
                   </ul>   
                     <a class='menu-trigger'>

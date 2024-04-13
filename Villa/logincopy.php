@@ -1,3 +1,35 @@
+<?php
+
+session_start();
+if(isset($_POST['login'])){
+              if (!empty($_POST["email"]) && !empty($_POST["password"])){
+                $email=$_POST["email"];
+                $password=hash("sha256",$_POST["password"]);
+                $file_content=file("users.txt",FILE_IGNORE_NEW_LINES);
+                $username;
+                $email_exist=false;
+                $passwordMatch=false;
+                foreach($file_content as $line){
+                  $params=explode("~",$line);
+                  if($params[0]===$email){
+                    $email_exist=true;
+                    if ($params[2]===$password){
+                      $passwordMatch=true;
+                      $username=$params[1];
+                    }
+                    break;
+                  }
+                  
+                }
+                if($email_exist && $passwordMatch){
+                    $_SESSION['LogedIn']=true;
+                    $_SESSION['USERNAME']=$username;
+                    header("Location:index.php");
+                  }
+                }
+              }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +37,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rentify | Login</title>
     <link rel="stylesheet" href="assets/css/login.css">
- 
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -230,7 +260,8 @@ form .btn input[type="submit"] {
           <div class="slider-tab"></div>
         </div>
         <div class="form-inner">
-          <form action="loginn.php" method="post" class="login">
+          <!-- LOGIN -->
+          <form action="logincopy.php" method="post" class="login">
             <div class="field">
             <input type="text" name="email" placeholder="Email Address" required>
             </div>
@@ -238,12 +269,28 @@ form .btn input[type="submit"] {
             <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="pass-link"><a href="#">Forgot password?</a></div>
+            
             <div class="field btn">
               <div class="btn-layer"></div>
-              <input type="submit" value="Login">
+              <input type="submit" name="login" value="Login">
             </div>
+            <?php
+            if(isset($_POST['login'])){
+            global $email_exist;
+            global $passwordMatch;
+              if(!$email_exist){
+                echo "<div class='signup-link' >Your credentials are not valid!Email</div>";
+              }
+              else{
+                if(!$passwordMatch){
+                  echo "<div class='signup-link' >Your credentials are not valid!Pass</div>";
+                }
+              }
+            }
+            ?>
             <div class="signup-link">Not a member? <a href="">Signup now</a></div>
           </form>
+          <!-- SIGNUP -->
           <form action="signup.php" method="post" class="signup">
             <div class="field">
             <input type="text" name="email" placeholder="Email Address" required>

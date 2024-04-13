@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if(isset($_POST['logout'])){
+  echo "<script> console.log(Loged Out)</script>";
+  session_destroy();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,7 +89,18 @@ https://templatemo.com/tm-591-villa-agency
                       <li><a href="properties.php">Properties</a></li>
                       <li><a href="lease.php">Lease your villa</a></li>
                       <li><a href="mybookings.php">My Bookings</a></li>
-                      <li><a href="login.php">Log in | Sign up</a></li>
+                      <li><?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        $username=$_SESSION['USERNAME'];
+                        echo "<a href='#'>{$username}</a></li><li>
+                        <form action='index.php' method='post'>
+                          <button type='submit' name='logout'>Logout</button>
+                        </form></li>";
+                      }
+                      else{
+                        echo "<a href='logincopy.php'>Log in | Sign up</a>";
+                      }
+                      ?></li>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>
