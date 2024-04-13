@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +33,7 @@ https://templatemo.com/tm-591-villa-agency
 <body>
 
   <!-- ***** Preloader Start ***** -->
-  <div id="js-preloader" class="js-preloader">
+  <!-- <div id="js-preloader" class="js-preloader">
     <div class="preloader-inner">
       <span class="dot"></span>
       <div class="dots">
@@ -39,7 +42,7 @@ https://templatemo.com/tm-591-villa-agency
         <span></span>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- ***** Preloader End ***** -->
 
   <div class="sub-header">
@@ -64,7 +67,7 @@ https://templatemo.com/tm-591-villa-agency
   </div>
 
   <!-- ***** Header Area Start ***** -->
-  <header class="header-area header-sticky">
+  < <header class="header-area header-sticky">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -76,12 +79,34 @@ https://templatemo.com/tm-591-villa-agency
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="index.php">Home</a></li>
-                      <li><a href="properties.php" class="active">Properties</a></li>
-                      <li><a href="lease.php">Lease your villa</a></li>
-                      <li><a href="mybookings.php">My Bookings</a></li>
-                      <li><a href="logincopy.php">Log in | Sign up</a></li>
-                      
+                      <li><a href="index.php" class="active">Home</a></li>
+                      <li><a href="properties.php">Properties</a></li>
+                      <li><a href="<?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        echo "lease.php";
+                      }
+                      else{
+                        echo "logincopy.php";
+                      }
+                      ?>">Lease your villa</a></li>
+                      <li><a href="<?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        echo "mybookings.php";
+                      }
+                      else{
+                        echo "logincopy.php";
+                      }
+                      ?>">My Bookings</a></li>
+                      <?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        $username=$_SESSION['USERNAME'];
+                        echo "<li><a href='#'>{$username}</a></li><li>
+                        <a href='logout.php'>Log Out</a></li>";
+                      }
+                      else{
+                        echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
+                      }
+                      ?>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>
@@ -126,10 +151,19 @@ https://templatemo.com/tm-591-villa-agency
 
         <?php
       include "Classes.php";
-    
+    function getLink(){
+              if(!empty($_SESSION['LogedIn'])){
+                return "schedule.php";
+              }
+              else{
+                return "logincopy.php";
+              }
+            }
+          $Link=getLink();
+          
     $objectArray=array();
     function createCard(){
-      
+      global $Link;
 
       $myfile= fopen("Places.txt","r+");
       while (!feof($myfile)) {
@@ -159,6 +193,9 @@ https://templatemo.com/tm-591-villa-agency
             default:
               echo "Invalid creation";
           } 
+          
+          
+          
           global $objectArray;
           transferArray($objectArray,$booking->get_id(),$booking->get_price());
           // $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
@@ -175,7 +212,7 @@ https://templatemo.com/tm-591-villa-agency
               <li>Area: <span>{$booking->get_area()}m2</span></li>
             </ul>
             <div class='main-button'>
-              <a href='schedule.php'>Book Now</a>
+              <a href='{$Link}'>Book Now</a>
             </div>
             </div>
             </div>";
