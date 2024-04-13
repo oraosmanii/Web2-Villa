@@ -1,10 +1,5 @@
 <?php
 session_start();
-
-if(isset($_POST['logout'])){
-  echo "<script> console.log(Loged Out)</script>";
-  session_destroy();
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +51,7 @@ https://templatemo.com/tm-591-villa-agency
       <div class="row">
         <div class="col-lg-8 col-md-8">
           <ul class="info">
-            <li><i class="fa fa-envelope"></i> info@company.com</li>
+            <li><i class="fa fa-envelope"></i> infos@company.com</li>
             <li><i class="fa fa-map"></i> Sunny Isles Beach, FL 33160</li>
           </ul>
         </div>
@@ -87,20 +82,32 @@ https://templatemo.com/tm-591-villa-agency
                     <ul class="nav">
                       <li><a href="index.php" class="active">Home</a></li>
                       <li><a href="properties.php">Properties</a></li>
-                      <li><a href="lease.php">Lease your villa</a></li>
-                      <li><a href="mybookings.php">My Bookings</a></li>
-                      <li><?php
+                      <li><a href="<?php
                       if(!empty($_SESSION['LogedIn'])){
-                        $username=$_SESSION['USERNAME'];
-                        echo "<a href='#'>{$username}</a></li><li>
-                        <form action='index.php' method='post'>
-                          <button type='submit' name='logout'>Logout</button>
-                        </form></li>";
+                        echo "lease.php";
                       }
                       else{
-                        echo "<a href='logincopy.php'>Log in | Sign up</a>";
+                        echo "logincopy.php";
                       }
-                      ?></li>
+                      ?>">Lease your villa</a></li>
+                      <li><a href="<?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        echo "mybookings.php";
+                      }
+                      else{
+                        echo "logincopy.php";
+                      }
+                      ?>">My Bookings</a></li>
+                      <?php
+                      if(!empty($_SESSION['LogedIn'])){
+                        $username=$_SESSION['USERNAME'];
+                        echo "<li><a href='#'>{$username}</a></li><li>
+                        <a href='logout.php'>Log Out</a></li>";
+                      }
+                      else{
+                        echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
+                      }
+                      ?>
                   </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>
@@ -384,7 +391,7 @@ https://templatemo.com/tm-591-villa-agency
                   <label for="email">Email Address</label>
                   <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." required="">
                   <?php 
-          if ($_SERVER["REQUEST_METHOD"] == "POST") {
+          if (isset($_POST["message"])) {
             $email = $_POST["email"];
             $email_pattern = '/^[a-zA-Z][a-zA-Z0-9_]*@[a-zA-Z.]+$/';
           if (preg_match($email_pattern, $email)) {
@@ -393,7 +400,8 @@ https://templatemo.com/tm-591-villa-agency
               </script>";
             //header("Location: index.php");
         } else {
-            echo "<span style='color: red;'>Invalid email address!</span><br><br>
+            $error_message= "Invalid email address!";
+            echo "
            <script> window.location.href = '#contact-form';
             </script>";
             
@@ -416,28 +424,10 @@ https://templatemo.com/tm-591-villa-agency
               </div>
               <div class="col-lg-12">
                 <fieldset>
-                  <button type="submit" id="form-submit" class="orange-button">Send Message</button>
+                  <button type="submit" id="form-submit" name="message" class="orange-button">Send Message</button>
                 </fieldset>
               </div>
             </div>
-            <?php 
-          if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $email = $_POST["email"];
-            $email_pattern = '/^[a-zA-Z][a-zA-Z0-9_]*@[a-zA-Z.]+$/';
-          if (preg_match($email_pattern, $email)) {
-              echo "<script>alert('Thanks for contacting us!');
-              window.location.href = '#sub-header';
-              </script>";
-            //header("Location: index.php");
-        } else {
-            $error_message= "Invalid email address!";
-            echo "
-           <script> window.location.href = '#contact-form';
-            </script>";
-            
-        }
-      }
-          ?>
           </form>
         </div>
       </div>
