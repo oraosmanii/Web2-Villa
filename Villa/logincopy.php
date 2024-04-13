@@ -291,7 +291,7 @@ form .btn input[type="submit"] {
             <div class="signup-link">Not a member? <a href="">Signup now</a></div>
           </form>
           <!-- SIGNUP -->
-          <form action="signup.php" method="post" class="signup">
+          <form action="logincopy.php" method="post" class="signup">
             <div class="field">
             <input type="text" name="email" placeholder="Email Address" required>
             </div>
@@ -310,9 +310,11 @@ form .btn input[type="submit"] {
             </div>
                     <!-- Display message if set -->
  <!-- Display message if set -->
-            <?php if (!empty($message)): ?>
-            <?php echo $message; ?>
-           <?php endif; ?>
+            <?php 
+            include 'signup.php';
+            if (!empty($message)){
+                echo $message; 
+            }?>
           </form>
         </div>
       </div>
