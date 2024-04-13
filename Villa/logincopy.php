@@ -242,6 +242,7 @@ form .btn input[type="submit"] {
   width: auto;
   margin: 0; 
 }
+
 </style>
 </head>
 <body>
