@@ -53,7 +53,7 @@ html,body{
   height: 100%;
   width: 100%;
   place-items: center;
-  background: -webkit-linear-gradient(left, #c44620, #e24d1f, #f4420b, #ff6333);
+
 }
 ::selection{
   background: #f35525;
@@ -307,7 +307,7 @@ form .btn input[type="submit"] {
             <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="field">
-            <input type="password" name="confirmpassword" placeholder="Password" required>
+            <input type="password" name="confirmpassword" placeholder="Confirm password" required>
             </div>
             <div class="field btn">
               <div class="btn-layer"></div>
