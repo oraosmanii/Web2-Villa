@@ -1,4 +1,5 @@
 <?php
+define("minlength", 8);
 $message = ''; // Initialize message variable
 if (isset($_POST['signup'])) {
     $email = $_POST['email'];
@@ -30,7 +31,7 @@ if (isset($_POST['signup'])) {
     }
 
     // Validate password length
-    if (strlen($password) < 8) {
+    if (strlen($password) < minlength) {
         $message = "<p style='color: red; font-size: 16px;'>Password is too short. It must be at least 8 characters.</p>";
     } elseif ($password !== $confirmpassword) {
         $message = "<p style='color: red; font-size: 16px;'>Passwords do not match.</p>";
