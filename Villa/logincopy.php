@@ -73,7 +73,7 @@ html,body{
 }
 .wrapper .title{
   width: 50%;
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 600;
   text-align: center;
   transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
@@ -242,6 +242,11 @@ form .btn input[type="submit"] {
   width: auto;
   margin: 0; 
 }
+.logo1{
+  width: 100%;
+  text-align: center;
+
+}
 
 .logo {
   font-size: 20px;
@@ -266,6 +271,9 @@ form .btn input[type="submit"] {
                         <h1>Villa</h1>
                     </a>
 <div class="wrapper">
+<a href="index.php" class="logo1">
+            <h1>Villa</h1>
+        </a> <br> <br>
       <div class="title-text">
         <div class="title login">Login</div>
         <div class="title signup">Signup</div>
@@ -359,7 +367,11 @@ form .btn input[type="submit"] {
         signupBtn.click();
         return false;
       });
-
+      <?php 
+      if (isset($_POST['signup'])){
+        echo "signupBtn.click();";
+      }
+      ?>
     </script>
 
 </body>
