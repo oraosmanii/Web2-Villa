@@ -307,7 +307,7 @@ form .btn input[type="submit"] {
             <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="field">
-            <input type="password" name="confirmpassword" placeholder="Password" required>
+            <input type="password" name="confirmpassword" placeholder="Confirm Password" required>
             </div>
             <div class="field btn">
               <div class="btn-layer"></div>
