@@ -53,7 +53,7 @@ html,body{
   height: 100%;
   width: 100%;
   place-items: center;
-  background: -webkit-linear-gradient(left, #c44620, #e24d1f, #f4420b, #ff6333);
+
 }
 ::selection{
   background: #f35525;
