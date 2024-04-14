@@ -154,6 +154,27 @@ https://templatemo.com/tm-591-villa-agency
                 <fieldset>
                   <label for="name">Full Name</label>
                   <input type="name" name="name" id="name" placeholder="Your Name..." autocomplete="on" required>
+                   <?php
+                     function fixFullName($full_name) {
+                      
+                      $full_name = trim($full_name);
+                      
+                      $full_name = preg_replace('/\s+/', ' ', $full_name);
+                      
+                      $full_name = ucwords($full_name);
+                      
+                      return $full_name;
+                  }
+                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    $name = $_POST["name"];
+                    if (preg_match('/\s\s+/', $name)) {
+                        echo "<p>Please fix the input: Double spaces or more are not allowed.</p>";
+                        echo "<script> window.location.href='#name';</script>";
+                    } else {
+                        $fixed_full_name = fixFullName($name);
+                    }
+                }
+                  ?>
                 </fieldset>
               </div>
               <div class="col-lg-12">
@@ -176,10 +197,10 @@ https://templatemo.com/tm-591-villa-agency
                       <script>window.location.href = '#phone';</script>"
                       ;
                     }else{
-                      echo "<script>
-                      window.location.href = '#sub_head';
-                      </script>";
-                    }
+                       echo "<script>
+                       window.location.href = '#contact-form';
+                       </script>";
+                     }
                   }
                   ?>
                 </fieldset>
