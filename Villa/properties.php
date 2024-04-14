@@ -30,10 +30,21 @@ https://templatemo.com/tm-591-villa-agency
 -->
 <style>
   .sort-button{
-    background-color: orangered;
-    border-radius: 5px;
-    color: white;
+  display: inline-block;
+  text-align: center;
+  font-size: 15px;
+  text-transform: capitalize;
+  font-weight: 500;
+  color: #fff;
+  background-color: #1e1e1e;
+  padding: 12px 25px;
+  border-radius: 5px;
+  transition: all .3s;
+  border: none;
   }
+  .sort-button:hover {
+  color: #f35525;
+}
   form{
     margin-bottom: 20px;
   }
@@ -130,8 +141,10 @@ https://templatemo.com/tm-591-villa-agency
 
   <div class="section properties">
     <div class="container">
-          <div class="sort-container">
-                           <form action="properties.php" method="post">
+            
+        <ul class="properties-filter">
+        <li>
+          <form action="properties.php" method="post">
                               <label for="sort-by">Sort properties by:</label>
                               <select name="sort" id="sort-by">
                                   <option value="">Select an option</option>
@@ -142,10 +155,7 @@ https://templatemo.com/tm-591-villa-agency
                               </select>
                               <button class="sort-button" type="submit">Sort</button>
                           </form>
-
-        <!-- VERSIONI PARAPRAK I SORTIMIT
-          
-        <ul class="properties-filter">
+        </li>
         <li>
           <a class="is_active" href="#!" data-filter="*">Show All</a>
         </li>
@@ -158,7 +168,11 @@ https://templatemo.com/tm-591-villa-agency
         <li>
           <a href="#!" data-filter=".Penthouse">Penthouse</a>
         </li>
-      </ul> -->
+      </ul>
+                           
+
+        <!-- VERSIONI PARAPRAK I SORTIMIT
+         -->
                   
           </div>    
        
@@ -194,7 +208,7 @@ https://templatemo.com/tm-591-villa-agency
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-  <!-- <script src="assets/js/isotope.min.js"></script> -->
+  <script src="assets/js/isotope.min.js"></script>
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
