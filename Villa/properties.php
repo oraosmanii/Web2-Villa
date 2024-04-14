@@ -28,22 +28,20 @@ TemplateMo 591 villa agency
 https://templatemo.com/tm-591-villa-agency
 
 -->
+<style>
+  .sort-button{
+    background-color: orangered;
+    border-radius: 5px;
+    color: white;
+  }
+  form{
+    margin-bottom: 20px;
+  }
+ 
+</style>
   </head>
 
 <body>
-
-  <!-- ***** Preloader Start ***** -->
-  <!-- <div id="js-preloader" class="js-preloader">
-    <div class="preloader-inner">
-      <span class="dot"></span>
-      <div class="dots">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </div> -->
-  <!-- ***** Preloader End ***** -->
 
   <div class="sub-header">
     <div class="container">
@@ -132,7 +130,22 @@ https://templatemo.com/tm-591-villa-agency
 
   <div class="section properties">
     <div class="container">
-      <ul class="properties-filter">
+          <div class="sort-container">
+                           <form action="sort-properties.php" method="post">
+                              <label for="sort-by">Sort properties by:</label>
+                              <select name="sort" id="sort-by">
+                                  <option value="">Select an option</option>
+                                  <option class="orange" value="price-asc">Price (Low to High)</option>
+                                  <option class="orange" value="price-desc">Price (High to Low)</option>
+                                  <option class="orange" value="name-asc">Name (A to Z)</option>
+                                  <option class="orange" value="name-desc">Name (Z to A)</option>
+                              </select>
+                              <button class="sort-button" type="submit">Sort</button>
+                          </form>
+
+        <!-- VERSIONI PARAPRAK I SORTIMIT
+          
+        <ul class="properties-filter">
         <li>
           <a class="is_active" href="#!" data-filter="*">Show All</a>
         </li>
@@ -145,89 +158,23 @@ https://templatemo.com/tm-591-villa-agency
         <li>
           <a href="#!" data-filter=".Penthouse">Penthouse</a>
         </li>
-      </ul>
+      </ul> -->
+                  
+          </div>    
+       
       <div class="row properties-box">
-        
 
-        <?php
-      include "Classes.php";
-    function getLink(){
-              if(!empty($_SESSION['LogedIn'])){
-                return "schedule.php";
-              }
-              else{
-                return "logincopy.php";
-              }
-            }
-          $Link=getLink();
-          
-    $objectArray=array();
-    function createCard(){
-      global $Link;
+<?php 
 
-      $myfile= fopen("Places.txt","r+");
-      while (!feof($myfile)) {
-          // Read a line from the file
-          $line = fgets($myfile);
-          $cards= urlencode($line);
-          
-          // Split the line by commas
-          $data = explode(",", $line);
-          
-         
-          // Process the data as needed
-          // For example, you can print the split data
-
-          $type=strtoupper(trim($data[8]));
-          
-          switch($type){
-            case 'VILLA':
-                $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
-                break;
-            case 'APARTMENT':
-              $booking = new Apartment($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
-              break;
-            case 'PENTHOUSE':
-              $booking = new Penthouse($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
-              break;
-            default:
-              echo "Invalid creation";
-          } 
-          
-          
-          
-          global $objectArray;
-          transferArray($objectArray,$booking->get_id(),$booking->get_price());
-          // $booking = new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
-
-              echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
-              <div class='item'> 
-              <a href='property-details.php?info={$cards}'><img src='{$booking->get_image()}' height='300' alt=''></a>
-              <span class='category'>{$booking->get_type()}</span> 
-              <h6>$ {$booking->get_price()}</h6>
-            <h4><a href='property-details.php'>{$booking->get_country()} {$booking->get_city()}</a></h4>
-            <ul>
-              <li>Bedrooms: <span>{$booking->get_bedrooms()}</span></li>
-              <li>Bathrooms: <span>{$booking->get_bathrooms()}</span></li>
-              <li>Area: <span>{$booking->get_area()}m2</span></li>
-            </ul>
-            <div class='main-button'>
-              <a href='{$Link}'>Book Now</a>
-            </div>
-            </div>
-            </div>";
-          
-          // print_r($data);
-          // echo "<br> <br>";
-      }
-      
-      // Close the file
-      fclose($myfile);
-  }
-
+  include "create-properties.php";//E qita funksionin ne tjeter file veq mu dok ma clean se ja nisen me mu perzi senet
   createCard();
 
-    ?>
+  //SORTING FILE
+  include "sort-properties.php";
+
+?>
+
+
         </div>
       </div>
     </div>
@@ -247,7 +194,7 @@ https://templatemo.com/tm-591-villa-agency
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-  <script src="assets/js/isotope.min.js"></script>
+  <!-- <script src="assets/js/isotope.min.js"></script> -->
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
