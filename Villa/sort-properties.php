@@ -1,7 +1,4 @@
-
 <?php
-// Start the session
-// session_start();
 
 // Initialize an empty array to store the data
 $properties = [];
@@ -60,22 +57,23 @@ if (isset($_POST['sort'])) {
     } elseif ($sort == 'name-desc') {
         // Sort by country name in descending order
         krsort($properties);
+    }elseif ($sort == 'beds-asc') {
+       // Sort the data based on the number of bedrooms in ascending order
+        usort($properties, function ($a, $b) {
+                return $a[0]['bedrooms'] <=> $b[0]['bedrooms'];
+        });
     }
-
-    // echo '<pre>'; print_r($properties); echo '</pre>';
+    elseif ($sort == 'beds-desc') {
+        usort($properties, function ($a, $b) {
+            return $b[0]['bedrooms'] <=> $a[0]['bedrooms'];
+    });
+    }
 
 
     // Store the sorted data in the session
     $_SESSION['properties'] = $properties;
 
     
-
-    // Redirect the user back to the properties.php page
-    // header('Location: properties.php');
-    //exit;
 }
-
-
-
 
 ?>

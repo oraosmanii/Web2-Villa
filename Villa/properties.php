@@ -139,6 +139,8 @@ https://templatemo.com/tm-591-villa-agency
                                   <option class="orange" value="price-desc">Price (High to Low)</option>
                                   <option class="orange" value="name-asc">Name (A to Z)</option>
                                   <option class="orange" value="name-desc">Name (Z to A)</option>
+                                  <option class="orange" value="beds-asc">Bedrooms (Low to High)</option>
+                                  <option class="orange" value="beds-desc">Bedrooms (High to Low)</option>
                               </select>
                               <button class="sort-button" type="submit">Sort</button>
                           </form>
