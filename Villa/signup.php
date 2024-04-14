@@ -1,6 +1,6 @@
 <?php
 $message = ''; // Initialize message variable
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST['signup'])) {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
