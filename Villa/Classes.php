@@ -68,7 +68,15 @@ class Villa extends Bookings{
       function get_area(){
         return $this->area;
       }
-
+      function set_Villa_bedrooms($bedrooms){
+        $this->bedrooms=$bedrooms;
+      }
+      function set_Villa_bathrooms($bathrooms){
+        $this->bathrooms=$bathrooms;
+      }
+      function set_Villa_area($area){
+        $this -> area=$area;
+      }
     }
 
 class Apartment extends Bookings{
@@ -103,7 +111,15 @@ class Apartment extends Bookings{
       function get_area(){
         return $this->area;
       }
-
+      function set_Apartment_bedrooms($bedrooms){
+        $this->bedrooms=$bedrooms;
+      }
+      function set_Aparment_bathrooms($bathrooms){
+        $this->bathrooms=$bathrooms;
+      }
+      function set_Apartment_area($area){
+        $this -> area=$area;
+      }
     }
 
 class Penthouse extends Bookings{
@@ -139,7 +155,15 @@ class Penthouse extends Bookings{
       function get_area(){
         return $this->area;
       }
-
+      function set_Penthouse_bedrooms($bedrooms){
+        $this->bedrooms=$bedrooms;
+      }
+      function set_Penthouse_bathrooms($bathrooms){
+        $this->bathrooms=$bathrooms;
+      }
+      function set_Penthouse_area($area){
+        $this -> area=$area;
+      }
     }
 
     function recieverProperties($info){
