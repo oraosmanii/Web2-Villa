@@ -261,6 +261,8 @@ form .btn input[type="submit"] {
           <div class="slider-tab"></div>
         </div>
         <div class="form-inner">
+
+
           <!-- LOGIN -->
           <form action="logincopy.php" method="post" class="login">
             <div class="field">
@@ -291,6 +293,8 @@ form .btn input[type="submit"] {
             ?>
             <div class="signup-link">Not a member? <a href="">Signup now</a></div>
           </form>
+
+
           <!-- SIGNUP -->
           <form id="signupf" action="logincopy.php" method="post" class="signup">
             <div class="field">
@@ -307,7 +311,7 @@ form .btn input[type="submit"] {
             </div>
             <div class="field btn">
               <div class="btn-layer"></div>
-              <input type="submit" value="Signup">
+              <input type="submit" name="signup" value="Signup">
             </div>
             <?php 
             include_once'signup.php';

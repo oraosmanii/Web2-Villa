@@ -1,7 +1,7 @@
 <?php
 define("minlength", 8);
 $message = ''; // Initialize message variable
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST['signup'])) {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "<p style='color: red; font-size: 16px;'>This username is already taken.</p>";
     } else {
         // Hash the password using PASSWORD_DEFAULT algorithm
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $hashed_password = hash("sha256",$password);
 
         // If validations pass, append the new user data to the file
         file_put_contents("users.txt", "$email~$username~$hashed_password\n", FILE_APPEND);
