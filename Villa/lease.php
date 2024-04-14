@@ -87,8 +87,8 @@ https://templatemo.com/tm-591-villa-agency
                       <?php 
                         if(!empty($_SESSION['LogedIn'])){
                         $username=$_SESSION['USERNAME'];
-                        echo "<li><a href='#'>{$username}</a></li><li>
-                        <a href='logout.php'>Log Out</a></li>";
+                        echo "<li><a href='#'>{$username}</a></li>
+                        <li><a href='logout.php'>Log Out</a></li>";
                       }
                       else{
                         echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
