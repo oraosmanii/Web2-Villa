@@ -35,19 +35,21 @@ https://templatemo.com/tm-591-villa-agency
   font-size: 15px;
   text-transform: capitalize;
   font-weight: 500;
-  color: #fff;
-  background-color: #1e1e1e;
-  padding: 12px 25px;
+  color: white;
+  background-color: #e95317;
+  padding: 6px 13px;
   border-radius: 5px;
   transition: all .3s;
   border: none;
   }
   .sort-button:hover {
-  color: #f35525;
+  background-color: #000103;
 }
   form{
     margin-bottom: 20px;
+    margin-right: 180px;
   }
+
  
 </style>
   </head>
@@ -143,52 +145,44 @@ https://templatemo.com/tm-591-villa-agency
     <div class="container">
             
         <ul class="properties-filter">
-        <li>
-          <form action="properties.php" method="post">
-                              <label for="sort-by">Sort properties by:</label>
-                              <select name="sort" id="sort-by">
-                                  <option value="">Select an option</option>
-                                  <option class="orange" value="price-asc">Price (Low to High)</option>
-                                  <option class="orange" value="price-desc">Price (High to Low)</option>
-                                  <option class="orange" value="name-asc">Name (A to Z)</option>
-                                  <option class="orange" value="name-desc">Name (Z to A)</option>
-                                  <option class="orange" value="beds-asc">Bedrooms (Low to High)</option>
-                                  <option class="orange" value="beds-desc">Bedrooms (High to Low)</option>
-                              </select>
-                              <button class="sort-button" type="submit">Sort</button>
-                          </form>
-        </li>
-        <li>
-          <a class="is_active" href="#!" data-filter="*">Show All</a>
-        </li>
-        <li>
-          <a href="#!" data-filter=".Apartment">Apartment</a>
-        </li>
-        <li>
-          <a href="#!" data-filter=".Villa">Villa House</a>
-        </li>
-        <li>
-          <a href="#!" data-filter=".Penthouse">Penthouse</a>
-        </li>
+          <li>
+            <form action="properties.php" method="post">
+                                <label for="sort-by">Sort properties by:</label>
+                                <select name="sort" id="sort-by">
+                                    <option value="">Select an option</option>
+                                    <option value="price-asc">Price (Low to High)</option>
+                                    <option value="price-desc">Price (High to Low)</option>
+                                    <option value="name-asc">Name (A to Z)</option>
+                                    <option value="name-desc">Name (Z to A)</option>
+                                    <option value="beds-asc">Bedrooms (Low to High)</option>
+                                    <option value="beds-desc">Bedrooms (High to Low)</option>
+                                </select>
+                                <button class="sort-button" type="submit">Sort</button>
+                            </form>
+          </li>
+          <li class="filter-button">
+            <a class="is_active" href="#!" data-filter="*">Show All</a>
+          </li>
+          <li class="filter-button">
+            <a href="#!" data-filter=".Apartment">Apartment</a>
+          </li >
+          <li class="filter-button">
+            <a href="#!" data-filter=".Villa">Villa House</a>
+          </li>
+          <li class="filter-button">
+            <a href="#!" data-filter=".Penthouse">Penthouse</a>
+          </li>
       </ul>
-                           
-
-        <!-- VERSIONI PARAPRAK I SORTIMIT
-         -->
-                  
-          </div>    
+      </div>    
        
-      <div class="row properties-box">
+  <div class="row properties-box">
 
-<?php
-  include "create-properties.php";
-  include "sort-properties.php";
-  
-  createCard($_SESSION['properties']);
-
-  //SORTING FILE
-  
-?>
+  <?php
+    include "create-properties.php";
+    include "sort-properties.php";
+    
+    createCard($_SESSION['properties']);
+  ?>
 
 
         </div>
