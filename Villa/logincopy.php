@@ -35,7 +35,7 @@ if(isset($_POST['login'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rentify | Login</title>
+    <title>Villa | Login</title>
     <link rel="stylesheet" href="assets/css/login.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -293,11 +293,11 @@ form .btn input[type="submit"] {
             global $email_exist;
             global $passwordMatch;
               if(!$email_exist){
-                echo "<div class='signup-link' >Your credentials are not valid!Email</div>";
+                echo "<div class='signup-link' >Your credentials are not valid!</div>";
               }
               else{
                 if(!$passwordMatch){
-                  echo "<div class='signup-link' >Your credentials are not valid!Pass</div>";
+                  echo "<div class='signup-link' >Your credentials are not valid!</div>";
                 }
               }
             }
