@@ -293,11 +293,11 @@ form .btn input[type="submit"] {
             global $email_exist;
             global $passwordMatch;
               if(!$email_exist){
-                echo "<div class='signup-link' >Your credentials are not valid!Email</div>";
+                echo "<div class='signup-link' >Your credentials are not valid!</div>";
               }
               else{
                 if(!$passwordMatch){
-                  echo "<div class='signup-link' >Your credentials are not valid!Pass</div>";
+                  echo "<div class='signup-link' >Your credentials are not valid!</div>";
                 }
               }
             }
