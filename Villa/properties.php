@@ -65,7 +65,7 @@ https://templatemo.com/tm-591-villa-agency
   </div>
 
   <!-- ***** Header Area Start ***** -->
-  < <header class="header-area header-sticky">
+   <header class="header-area header-sticky">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -131,7 +131,7 @@ https://templatemo.com/tm-591-villa-agency
   <div class="section properties">
     <div class="container">
           <div class="sort-container">
-                           <form action="sort-properties.php" method="post">
+                           <form action="properties.php" method="post">
                               <label for="sort-by">Sort properties by:</label>
                               <select name="sort" id="sort-by">
                                   <option value="">Select an option</option>
@@ -166,10 +166,12 @@ https://templatemo.com/tm-591-villa-agency
 
 <?php
   include "create-properties.php";
-  createCard();
+  include "sort-properties.php";
+  
+  createCard($_SESSION['properties']);
 
   //SORTING FILE
-  include "sort-properties.php";
+  
 ?>
 
 
