@@ -153,7 +153,7 @@ https://templatemo.com/tm-591-villa-agency
         if(isset($_GET['info'])) {
           // Decode the encoded information
           $info= urldecode($_GET['info']);
-
+          $encode=urlencode($info);
           $page=recieverProperties($info);
 
           
@@ -204,7 +204,7 @@ https://templatemo.com/tm-591-villa-agency
             
             <div class="icon-button" style="text-align: center; margin-top: 50px; height: 100px;">
               <a href="<?php if(!empty($_SESSION['LogedIn'])){
-                echo "schedule.php";
+                echo "schedule.php?info={$encode}";
               }
               else{
                 echo "#";
