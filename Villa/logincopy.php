@@ -243,10 +243,28 @@ form .btn input[type="submit"] {
   margin: 0; 
 }
 
+.logo {
+  font-size: 20px;
+  text-transform: uppercase;
+  color: wheat;
+  font-weight: 700;
+  letter-spacing: 2px;
+  position: absolute;
+  top: 60px;
+
+}
+
+.logo h1{
+  text-shadow: black 5px 5px;
+}
+
 </style>
 </head>
 <body>
 
+<a href="index.php" class="logo">
+                        <h1>Villa</h1>
+                    </a>
 <div class="wrapper">
       <div class="title-text">
         <div class="title login">Login</div>
