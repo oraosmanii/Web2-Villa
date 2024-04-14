@@ -349,7 +349,11 @@ form .btn input[type="submit"] {
         signupBtn.click();
         return false;
       });
-
+      <?php 
+      if (isset($_POST['signup'])){
+        echo "signupBtn.click();";
+      }
+      ?>
     </script>
 
 </body>
