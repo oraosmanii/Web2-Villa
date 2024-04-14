@@ -151,25 +151,26 @@ https://templatemo.com/tm-591-villa-agency
 
         <?php
       include "Classes.php";
-    function getLink(){
+    function getLink($cards){
               if(!empty($_SESSION['LogedIn'])){
-                return "schedule.php";
+                return "schedule.php?info=$cards";
               }
               else{
                 return "logincopy.php";
               }
             }
-          $Link=getLink();
+          
           
     $objectArray=array();
     function createCard(){
-      global $Link;
+      
 
       $myfile= fopen("Places.txt","r+");
       while (!feof($myfile)) {
           // Read a line from the file
           $line = fgets($myfile);
           $cards= urlencode($line);
+          $Link=getLink($cards);
           
           // Split the line by commas
           $data = explode(",", $line);
