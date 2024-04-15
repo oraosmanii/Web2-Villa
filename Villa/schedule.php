@@ -131,11 +131,8 @@ session_start();
                 </label>
                 <input style="width:50%;float: right;" type="text" id="bank" class="classinput"
                   placeholder="Bank Number">
-                <br>
-                <label for="exampleFormControlTextarea1" class="form-label"></label>
-                <textarea class="classinput" id="exampleFormControlTextarea1" placeholder="Add comment..."
-                  rows="2"></textarea>
-                <br>
+        
+                <br> <br> <br>
               </div>
             </div>
             <div class="row">
@@ -145,7 +142,10 @@ session_start();
                   <div class="col-md-9">
                   <input class="classinput"type="text" name="phone-number" placeholder="Phone number"></div>
                 
-            </div> <br> <br>
+            </div>
+            <label for="exampleFormControlTextarea1" class="form-label"></label>
+                <textarea class="classinput" id="exampleFormControlTextarea1" placeholder="Add comment..."
+                  rows="2"></textarea> <br> <br>
             <div class="row">
               <div class="col-md-8">
                <div id="total_price"></div> 
