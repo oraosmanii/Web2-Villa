@@ -1,7 +1,31 @@
 <?php
 session_start();
-?>
 
+function formatPhoneNumber()
+{
+  if (isset($_POST['phone-number'])) {
+    $input = $_POST['phone-number']; 
+    $phoneNumber = trim($input); 
+    $phoneNumber = preg_replace('/\D/', '', $phoneNumber); 
+    if (strlen($phoneNumber) == 10) {
+      $phoneNumber = preg_replace('/(\d{2})(\d{3})(\d{3})/', '+383 (00) $1 $2 $3', $phoneNumber);
+    }
+    $_POST['phone-number'] = $phoneNumber;
+    return $phoneNumber; 
+  }
+  return '';
+}
+
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Format phone number if it's set
+if (isset($_POST['phone-number'])) {
+$_POST['phone-number'] = formatPhoneNumber($_POST['phone-number']);
+}
+}
+
+$formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,6 +68,33 @@ session_start();
 </head>
 
 <body>
+<script>
+    // Function to format phone number
+    function formatPhoneNumber() {
+      // Get the input field and its value
+      var phoneNumberInput = document.getElementById('phone-number');
+      var phoneNumber = phoneNumberInput.value.trim();
+
+      // Remove non-numeric characters from the input value
+      var numericPhoneNumber = phoneNumber.replace(/\D/g, '');
+
+      // Check if the numeric phone number has 10 digits
+      if (numericPhoneNumber.length === 10) {
+        // Format the phone number
+        var formattedPhoneNumber = '+383 (00) ' +
+          numericPhoneNumber.substr(0, 2) + ' ' +
+          numericPhoneNumber.substr(2, 3) + ' ' +
+          numericPhoneNumber.substr(5, 3);
+
+        // Update the value of the input field with the formatted phone number
+        phoneNumberInput.value = formattedPhoneNumber;
+      }
+    }
+
+    // Add event listener to the phone number input field
+    var phoneNumberInput = document.getElementById('phone-number');
+    phoneNumberInput.addEventListener('blur', formatPhoneNumber);
+  </script>
   <!-- Main Screen-->
   <!-- Audio File -->
   <audio id="Subscribe">
@@ -139,14 +190,16 @@ session_start();
                 <br> <br> <br>
               </div>
             </div>
+          
             <div class="row">
               
                   <div class="col-md-3">
                   <label for="phone-number">Phone number:</label></div>
                   <div class="col-md-9">
-                  <input class="classinput"type="text" name="phone-number" placeholder="Phone number"></div>
+                  <input class="classinput"type="text" name="phone-number" placeholder="Phone number" value="<?php echo $formattedPhoneNumber?>"></div>
                 
             </div>
+
             <label for="exampleFormControlTextarea1" class="form-label"></label>
                 <textarea class="classinput" id="exampleFormControlTextarea1" placeholder="Add comment..."
                   rows="2"></textarea> <br> <br>
