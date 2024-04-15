@@ -36,6 +36,10 @@ session_start();
       #total_price{
         font-style: italic;
       }
+      input[type="date"]{
+        color: #ffffff;
+        border-color: #ffffff;
+      }
     </style>
 </head>
 
