@@ -24,6 +24,7 @@ if(isset($_POST['login'])){
                 if($email_exist && $passwordMatch){
                     $_SESSION['LogedIn']=true;
                     $_SESSION['USERNAME']=$username;
+                    $_SESSION['EMAIL']=$email;
                     header("Location:index.php");
                   }
                 }

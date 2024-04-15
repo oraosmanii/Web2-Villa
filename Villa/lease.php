@@ -153,7 +153,7 @@ https://templatemo.com/tm-591-villa-agency
               <div class="col-lg-12">
                 <fieldset>
                   <label for="name">Full Name</label>
-                  <input type="name" name="name" id="name" placeholder="Your Name..." autocomplete="on" required>
+                  <input type="name" name="name" id="name" placeholder="Your Name..." autocomplete="on"  required>
                    <?php
                      function fixFullName($full_name) {
                       
@@ -180,7 +180,12 @@ https://templatemo.com/tm-591-villa-agency
               <div class="col-lg-12">
                 <fieldset>
                   <label for="email">Email Address</label>
-                  <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." required="">
+                  <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." <?php 
+                  if (!empty($_SESSION['LogedIn'])){
+                    $email=$_SESSION['EMAIL'];
+                    echo "value='{$email}'";
+                  }
+                  ?> required="">
                 </fieldset>
               </div>
               <div class="col-lg-12">
