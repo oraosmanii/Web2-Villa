@@ -68,33 +68,6 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
 </head>
 
 <body>
-<script>
-    // Function to format phone number
-    function formatPhoneNumber() {
-      // Get the input field and its value
-      var phoneNumberInput = document.getElementById('phone-number');
-      var phoneNumber = phoneNumberInput.value.trim();
-
-      // Remove non-numeric characters from the input value
-      var numericPhoneNumber = phoneNumber.replace(/\D/g, '');
-
-      // Check if the numeric phone number has 10 digits
-      if (numericPhoneNumber.length === 10) {
-        // Format the phone number
-        var formattedPhoneNumber = '+383 (00) ' +
-          numericPhoneNumber.substr(0, 2) + ' ' +
-          numericPhoneNumber.substr(2, 3) + ' ' +
-          numericPhoneNumber.substr(5, 3);
-
-        // Update the value of the input field with the formatted phone number
-        phoneNumberInput.value = formattedPhoneNumber;
-      }
-    }
-
-    // Add event listener to the phone number input field
-    var phoneNumberInput = document.getElementById('phone-number');
-    phoneNumberInput.addEventListener('blur', formatPhoneNumber);
-  </script>
   <!-- Main Screen-->
   <!-- Audio File -->
   <audio id="Subscribe">
@@ -142,7 +115,7 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
     <h1 class="book-title"><b>Book your dream villa<b></b></h1>
     <p class="book-caption">WE ALWAYS AIM TO CONFIRM YOUR RESERVATION WITHIN 1 HOUR</p> <br> <br>
 
-    <form id="booking-form" action="#" method="post">
+    <form id="booking-form" action="mybookings.php" method="post">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-1"></div>
@@ -165,25 +138,6 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                 <label for="arrival_date">Arrival Date:</label>
                 <input type="date" id="arrival_date" name="arrival_date" required>
                 <input type="hidden" id="property_name" name="property_name" value="<?php echo $property_name; ?>">
-                <?php
-                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                      $arrival_date=strtotime($_POST["arrival_date"]);
-                      $departure_date=strtotime($_POST["departure_date"]);
-
-                      $curr_date=strtotime(date('m/d/y'));
-
-                    if($arrival_date < $curr_date){
-                      echo "<br> Arrival date cannot be earlier than today! <br>";
-                      echo "<script>window.location.href= '#arrival_date';</script>";
-                    }elseif($arrival_date >= $departure_date){
-                      echo "<br> Departure date must be later than arrival date. <br>";
-                      echo "<script>window.location.href= '#departure_date';</script>";
-                    }else{
-                      //  echo "<br> Form submitted successfully. <br>";
-                       header("Location: mybookings.php");
-                      }
-                  }
-?>
               </div>
               <div class="col-md-6">
                 <label for="departure_date">Departure Date:</label>
@@ -274,12 +228,8 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
             const numNights = Math.ceil((departureDate - arrivalDate) / (1000 * 60 * 60 * 24));
             const totalPrice = numNights * propertyPrice;
             totalPriceContainer.textContent = 'Total Price: ' + totalPrice.toFixed(2)+ "$";
-            totalPriceContainer.style.fontWeight= '700'; 
-            totalPriceContainer.style.fontSize = '23px';
           } else {
-            totalPriceContainer.textContent = 'Enter your travel dates for total price';
-            totalPriceContainer.style.fontWeight= '700'; 
-            totalPriceContainer.style.fontSize = '20px';
+            totalPriceContainer.textContent = 'Total Price: 0$';
           }
         }
       });
