@@ -139,6 +139,14 @@ session_start();
               </div>
             </div>
             <div class="row">
+              
+                  <div class="col-md-3">
+                  <label for="phone-number">Phone number:</label></div>
+                  <div class="col-md-9">
+                  <input class="classinput"type="text" name="phone-number" placeholder="Phone number"></div>
+                
+            </div> <br> <br>
+            <div class="row">
               <div class="col-md-8">
                <div id="total_price"></div> 
               </div>
