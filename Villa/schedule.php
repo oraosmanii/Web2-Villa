@@ -1,5 +1,6 @@
 <?php
 session_start();
+define ('TVSH', '0.18');
 
 function formatPhoneNumber()
 {
@@ -206,7 +207,7 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                 </button>
               </div>
               </div>
-            </div>
+            </div> <br> <br>
           </div>
           
      
@@ -234,6 +235,7 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
         const departureDateInput = document.getElementById('departure_date');
         const propertyPriceInput = document.getElementById('property_price');
         const totalPriceContainer = document.getElementById('total_price');
+        const TVSH = "<?php echo TVSH;?>"
 
         arrivalDateInput.addEventListener('change', updateTotalPrice);
         departureDateInput.addEventListener('change', updateTotalPrice);
@@ -246,16 +248,23 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
           if (!isNaN(arrivalDate.getTime()) && !isNaN(departureDate.getTime()) && !isNaN(propertyPrice)) {
             const numNights = Math.ceil((departureDate - arrivalDate) / (1000 * 60 * 60 * 24));
             const totalPrice = numNights * propertyPrice;
+            const totalPriceTVSH = numNights * propertyPrice + TVSH*propertyPrice;
             if(totalPrice<0){
               totalPriceContainer.textContent = 'Please enter valid dates';
               totalPriceContainer.style.fontWeight= '700'; 
                totalPriceContainer.style.fontSize = '20px';
             }else{
-              totalPriceContainer.textContent = 'Total Price: ' + totalPrice.toFixed(2)+ "$";
+              totalPriceContainer.innerHTML = '';
+              var totalPriceNode = document.createTextNode('Total Price: ' + totalPrice.toFixed(2) + "$");
+              var br = document.createElement("br");
+              var totalPriceTVSHNode = document.createTextNode("Total price with VAT: " + totalPriceTVSH.toFixed(2) + "$");
+              totalPriceContainer.appendChild(totalPriceNode);
+              totalPriceContainer.appendChild(br);
+              totalPriceContainer.appendChild(totalPriceTVSHNode);
+
               totalPriceContainer.style.fontWeight= '700'; 
               totalPriceContainer.style.fontSize = '23px';
-            }
-          } else {
+            } } else {
             totalPriceContainer.textContent = 'Total Price: 0$';
             totalPriceContainer.textContent = 'Enter your travel dates for total price';
             totalPriceContainer.style.fontWeight= '700'; 
