@@ -1,6 +1,7 @@
 <?php
 session_start();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,8 +13,6 @@ session_start();
   <link rel="stylesheet" href="assets/css/bootstrap.css">
   <link rel="stylesheet" href="assets/css/book.css">
 
-
-
   <link rel="stylesheet" href="footer.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,6 +23,20 @@ session_start();
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"
     rel="stylesheet">
 
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900");
+      *{
+        font-family: 'Poppins', sans-serif;
+      }
+      .property{
+        font-size: 30px;
+        font-style: light;
+      }
+      #total_price{
+        font-style: italic;
+      }
+    </style>
 </head>
 
 <body>
@@ -72,46 +85,42 @@ session_start();
     </div>
     <br>
     <h1 class="book-title"><b>Book your dream villa<b></b></h1>
-    <p class="book-caption">WE ALWAYS AIM TO CONFIRM YOUR RESERVATION WITHIN 1 HOUR</p>
+    <p class="book-caption">WE ALWAYS AIM TO CONFIRM YOUR RESERVATION WITHIN 1 HOUR</p> <br> <br>
 
-
-    <?php
-    include "Classes.php";
-    if(isset($_GET['info'])){
-      $info=urldecode($_GET['info']);
-      $page=recieverProperties($info);
-    }
-    $property_name ="{$page->get_country()},{$page->get_city()}"; //QETU ME MARR DIQYSH PROPERTY NAME
-    echo "Property Name: $property_name";
-    ?>
-
-
-    <form action="booking.php" method="post">
+    <form id="booking-form" action="mybookings.php" method="post">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-1"></div>
           <div class="col-md-6">
             <div class="row">
-              <div class="col-md-6">
+            <?php
+              include "Classes.php";
 
+              if (isset($_GET['info'])) {
+                $info = urldecode($_GET['info']);
+                $page = recieverProperties($info);
+              }
+              $property_name = "{$page->get_country()},{$page->get_city()}";
+              echo "<p class='property'> Property: $property_name</p>";
+              ?>
+            
+            </div>
+            <div class="row">
+              <div class="col-md-6">
                 <label for="arrival_date">Arrival Date:</label>
                 <input type="date" id="arrival_date" name="arrival_date" required>
-
                 <input type="hidden" id="property_name" name="property_name" value="<?php echo $property_name; ?>">
-
-
               </div>
               <div class="col-md-6">
                 <label for="departure_date">Departure Date:</label>
                 <input type="date" id="departure_date" name="departure_date" required>
-                <input type="hidden" id="property_price" name="property_price" value="<?php echo $property_price; ?>">
+                <input type="hidden" id="property_price" name="property_price" value="<?php echo $page->get_price(); ?>">
               </div>
             </div>
-
             <div class="row">
               <div class="col-md-12">
                 <br>
-                <label for="radio" style="font-weight: bold;">Payment: &nbsp &nbsp &nbsp &nbsp</label>
+                <label for="radio" >Payment: &nbsp &nbsp &nbsp &nbsp</label>
                 <input type="radio" id="cash" name="payment" checked> <label class="form-check-label" for="cash"
                   required>
                   Cash &nbsp &nbsp
@@ -121,70 +130,71 @@ session_start();
                   Bank
                 </label>
                 <input style="width:50%;float: right;" type="text" id="bank" class="classinput"
-                  placeholder="Bank Number" required>
-
+                  placeholder="Bank Number">
                 <br>
                 <label for="exampleFormControlTextarea1" class="form-label"></label>
                 <textarea class="classinput" id="exampleFormControlTextarea1" placeholder="Add comment..."
                   rows="2"></textarea>
                 <br>
-
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+               <div id="total_price"></div> 
+              </div>
+              <div class="col-md-2">
+              <div class="submit-buttoni">
+                <button type="submit" class="submitButton" id="buttoni">
+                 <p>MAKE IT YOURS</p>
+                </button>
+              </div>
               </div>
             </div>
           </div>
+          
+     
           <div class="col-md-4">
             <br>
             <div class="container-fluid">
               <img id="telephone" src="assets/images/Phone.png">
-
-              <a href="" onclick="alert('You re calling this number...')">
+              <a href="" onclick="alert('You are calling this number...')">
                 <h2 class="call">
                   Call us:<br>
                   +383 44 342 685</h2>
               </a>
             </div>
-
           </div>
           <div class="col-md-1"></div>
         </div>
-      </div>
-
-
-
-      <?php
-      $property_price = $page->get_price(); //QETU ME MARR DIQYSH PROPERTY PRICE
-      if(isset($_POST['arrival_date'])&&isset($_POST['departure_date'])){
-      $arrival_date = $_POST['arrival_date'];
-      $departure_date = $_POST['departure_date'];
-
-      $date1 = new DateTime($arrival_date);
-      $date2 = new DateTime($departure_date);
-      $interval = $date1->diff($date2);
-      $num_nights = $interval->days;
-        
-      $total_price = $num_nights * $property_price;
-
-      echo "Total Price: $total_price";}
-      else{
-        echo "Total Price: 0";
-      }
-      ?>
-
-
-
-
-
-      <div class="submit-buttoni">
-        <button type="submit" class="submitButton" id="buttoni">
-          <p>MAKE IT YOURS</p>
-        </button>
-      </div>
-
+            </div>
     </form>
 
+    <script src="assets/js/book.js"></script>
 
-    <script src="assets/js/book.js">
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const arrivalDateInput = document.getElementById('arrival_date');
+        const departureDateInput = document.getElementById('departure_date');
+        const propertyPriceInput = document.getElementById('property_price');
+        const totalPriceContainer = document.getElementById('total_price');
 
+        arrivalDateInput.addEventListener('change', updateTotalPrice);
+        departureDateInput.addEventListener('change', updateTotalPrice);
+
+        function updateTotalPrice() {
+          const arrivalDate = new Date(arrivalDateInput.value);
+          const departureDate = new Date(departureDateInput.value);
+          const propertyPrice = parseFloat(propertyPriceInput.value);
+
+          if (!isNaN(arrivalDate.getTime()) && !isNaN(departureDate.getTime()) && !isNaN(propertyPrice)) {
+            const numNights = Math.ceil((departureDate - arrivalDate) / (1000 * 60 * 60 * 24));
+            const totalPrice = numNights * propertyPrice;
+            totalPriceContainer.textContent = 'Total Price: ' + totalPrice.toFixed(2)+ "$";
+          } else {
+            totalPriceContainer.textContent = 'Total Price: 0$';
+          }
+        }
+      });
     </script>
 
 </body>
