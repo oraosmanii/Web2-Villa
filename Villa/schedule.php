@@ -91,7 +91,7 @@ session_start();
     <h1 class="book-title"><b>Book your dream villa<b></b></h1>
     <p class="book-caption">WE ALWAYS AIM TO CONFIRM YOUR RESERVATION WITHIN 1 HOUR</p> <br> <br>
 
-    <form id="booking-form" action="mybookings.php" method="post">
+    <form id="booking-form" action="#" method="post">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-1"></div>
@@ -114,6 +114,25 @@ session_start();
                 <label for="arrival_date">Arrival Date:</label>
                 <input type="date" id="arrival_date" name="arrival_date" required>
                 <input type="hidden" id="property_name" name="property_name" value="<?php echo $property_name; ?>">
+                <?php
+                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                      $arrival_date=strtotime($_POST["arrival_date"]);
+                      $departure_date=strtotime($_POST["departure_date"]);
+
+                      $curr_date=strtotime(date('m/d/y'));
+
+                    if($arrival_date < $curr_date){
+                      echo "<br> Arrival date cannot be earlier than today! <br>";
+                      echo "<script>window.location.href= '#arrival_date';</script>";
+                    }elseif($arrival_date >= $departure_date){
+                      echo "<br> Departure date must be later than arrival date. <br>";
+                      echo "<script>window.location.href= '#departure_date';</script>";
+                    }else{
+                      //  echo "<br> Form submitted successfully. <br>";
+                       header("Location: mybookings.php");
+                      }
+                  }
+?>
               </div>
               <div class="col-md-6">
                 <label for="departure_date">Departure Date:</label>
