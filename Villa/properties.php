@@ -173,7 +173,7 @@ https://templatemo.com/tm-591-villa-agency
             <a href="#!" data-filter=".Penthouse">Penthouse</a>
           </li>
       </ul>
-      </div>    
+          
        
   <div class="row properties-box">
 
@@ -187,8 +187,8 @@ https://templatemo.com/tm-591-villa-agency
 
         </div>
       </div>
-    </div>
   </div>
+    
 
   <footer>
     <div class="container">
