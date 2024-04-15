@@ -246,9 +246,15 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
           if (!isNaN(arrivalDate.getTime()) && !isNaN(departureDate.getTime()) && !isNaN(propertyPrice)) {
             const numNights = Math.ceil((departureDate - arrivalDate) / (1000 * 60 * 60 * 24));
             const totalPrice = numNights * propertyPrice;
-            totalPriceContainer.textContent = 'Total Price: ' + totalPrice.toFixed(2)+ "$";
-            totalPriceContainer.style.fontWeight= '700'; 
-            totalPriceContainer.style.fontSize = '23px';
+            if(totalPrice<0){
+              totalPriceContainer.textContent = 'Please enter valid dates';
+              totalPriceContainer.style.fontWeight= '700'; 
+               totalPriceContainer.style.fontSize = '20px';
+            }else{
+              totalPriceContainer.textContent = 'Total Price: ' + totalPrice.toFixed(2)+ "$";
+              totalPriceContainer.style.fontWeight= '700'; 
+              totalPriceContainer.style.fontSize = '23px';
+            }
           } else {
             totalPriceContainer.textContent = 'Total Price: 0$';
             totalPriceContainer.textContent = 'Enter your travel dates for total price';
