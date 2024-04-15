@@ -76,7 +76,12 @@ session_start();
 
 
     <?php
-    $property_name = $_POST['property_name']; //QETU ME MARR DIQYSH PROPERTY NAME
+    include "Classes.php";
+    if(isset($_GET['info'])){
+      $info=urldecode($_GET['info']);
+      $page=recieverProperties($info);
+    }
+    $property_name ="{$page->get_country()},{$page->get_city()}"; //QETU ME MARR DIQYSH PROPERTY NAME
     echo "Property Name: $property_name";
     ?>
 
@@ -147,8 +152,8 @@ session_start();
 
 
       <?php
-      $property_price = $_POST['property_price']; //QETU ME MARR DIQYSH PROPERTY PRICE
-      
+      $property_price = $page->get_price(); //QETU ME MARR DIQYSH PROPERTY PRICE
+      if(isset($_POST['arrival_date'])&&isset($_POST['departure_date'])){
       $arrival_date = $_POST['arrival_date'];
       $departure_date = $_POST['departure_date'];
 
@@ -156,10 +161,13 @@ session_start();
       $date2 = new DateTime($departure_date);
       $interval = $date1->diff($date2);
       $num_nights = $interval->days;
-
+        
       $total_price = $num_nights * $property_price;
 
-      echo "Total Price: $total_price";
+      echo "Total Price: $total_price";}
+      else{
+        echo "Total Price: 0";
+      }
       ?>
 
 
