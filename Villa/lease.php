@@ -46,7 +46,7 @@ https://templatemo.com/tm-591-villa-agency
   </div>
   <!-- ***** Preloader End ***** -->
 
-  <div class="sub-header">
+  <div class="sub-header" id="sub_head">
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-8">
@@ -87,8 +87,8 @@ https://templatemo.com/tm-591-villa-agency
                       <?php 
                         if(!empty($_SESSION['LogedIn'])){
                         $username=$_SESSION['USERNAME'];
-                        echo "<li><a href='#'>{$username}</a></li><li>
-                        <a href='logout.php'>Log Out</a></li>";
+                        echo "<li><a href='#'>{$username}</a></li>
+                        <li><a href='logout.php'>Log Out</a></li>";
                       }
                       else{
                         echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
@@ -154,6 +154,27 @@ https://templatemo.com/tm-591-villa-agency
                 <fieldset>
                   <label for="name">Full Name</label>
                   <input type="name" name="name" id="name" placeholder="Your Name..." autocomplete="on" required>
+                   <?php
+                     function fixFullName($full_name) {
+                      
+                      $full_name = trim($full_name);
+                      
+                      $full_name = preg_replace('/\s+/', ' ', $full_name);
+                      
+                      $full_name = ucwords($full_name);
+                      
+                      return $full_name;
+                  }
+                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    $name = $_POST["name"];
+                    if (preg_match('/\s\s+/', $name)) {
+                        echo "<p>Please fix the input: Double spaces or more are not allowed.</p>";
+                        echo "<script> window.location.href='#name';</script>";
+                    } else {
+                        $fixed_full_name = fixFullName($name);
+                    }
+                }
+                  ?>
                 </fieldset>
               </div>
               <div class="col-lg-12">
@@ -165,7 +186,23 @@ https://templatemo.com/tm-591-villa-agency
               <div class="col-lg-12">
                 <fieldset>
                   <label for="phone">Phone Number</label>
-                  <input type="phone" name="phone" id="phone" pattern="[^ @]*@[^ @]*" placeholder="Your Phone Number..." required="">
+                  <!-- pattern="[^ @]*@[^ @]*" -->
+                  <input type="phone" name="phone" id="phone"  placeholder="Your Phone Number..." required> 
+                  <?php
+                  if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                    $pattern='/^\+[0-9]{1,11}$/';
+                    $phone=$_POST["phone"];
+                    if(!preg_match($pattern, $phone)){
+                      echo "<p style='color: red; font-size: 16px;'>invalid phone number.</p>
+                      <script>window.location.href = '#phone';</script>"
+                      ;
+                    }else{
+                       echo "<script>
+                       window.location.href = '#contact-form';
+                       </script>";
+                     }
+                  }
+                  ?>
                 </fieldset>
               </div>
               <div class="col-lg-12">

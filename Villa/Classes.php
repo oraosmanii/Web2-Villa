@@ -186,13 +186,26 @@ class Penthouse extends Bookings{
               return new Apartment($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
               break;
             case 'PENTHOUSE':
-             return new Penthouse($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
+              return new Penthouse($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
               break;
             default:
               echo "Invalid info";
           } 
     }
-    function transferArray($sortingArray,$id,$price){
-      $sortingArray[$id]=$price;
+    function transferArray(&$Array,$booking,$card){
+      $property = [
+        'country' => $booking->get_country(),
+        'city' => $booking->get_city(),
+        'date' => $booking->get_date(),
+        'image' => $booking->get_image(),
+        'price' => (int)$booking->get_price(),
+        'bathrooms' => (int)$booking->get_bathrooms(),
+        'bedrooms' => (int)$booking->get_bedrooms(),
+        'area' => (int)$booking->get_area(),
+        'type' => $booking->get_type(),
+        'card' => $card
+    ];
+    $Array[$booking->get_country()][]=$property;
+
     }
 ?>
