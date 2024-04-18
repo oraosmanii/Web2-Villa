@@ -1,8 +1,14 @@
-<?php
+ <?php
 session_start();
+if (!isset($_SESSION['index_visits'])) {
+
+  $_SESSION['index_visits'] = 1; 
+} else {
+  $_SESSION['index_visits']++; 
+}
 
 
-?>
+?> 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,6 +39,21 @@ https://templatemo.com/tm-591-villa-agency
 -->
 
 <style>
+  .button-orange {
+            padding: 10px 20px; 
+            background-color: orange; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+
+        .button-orange:hover {
+            background-color: darkorange; 
+            color: #fff; 
+        }
   .main-banner .item-1 {
     background-image: url(assets/images/location/<?php if (isset($_COOKIE["user_location"])) { echo $_COOKIE["user_location"]; } else { echo "Toronto"; } ?>.jpg);
   }
@@ -80,6 +101,41 @@ https://templatemo.com/tm-591-villa-agency
             background-color: red;
         }
 
+        #ratingBox {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -100%);
+            }
+            to {
+                transform: translate(-50%, -50%);
+            }
+        }
 </style>
   </head>
 
@@ -194,7 +250,13 @@ https://templatemo.com/tm-591-villa-agency
         </div>
       </div>
   </div>
-
+  <div id="overlay"></div>
+    <div id="ratingBox" class="slide-in">
+        <p>You visited our home page more than 3 times! Maybe give us a rating?</p>
+        <button class="button-orange" onclick="handleClick('later')">Maybe Later</button>
+        <button class="button-orange" onclick="handleClick('rate')">Rate</button>
+    </div>
+              
   <!-- FEATURED / TOP RANKED -->
   <div class="featured section">
     <div class="container">
@@ -318,6 +380,26 @@ https://templatemo.com/tm-591-villa-agency
           </div>
         </div>
         <div class="col-lg-5">
+        <?php
+
+ //session_start();
+
+function countFormSubmissions() {
+    
+    if (!isset($_SESSION['form_submissions'])) {
+        $_SESSION['form_submissions'] = 0;
+    }
+    $_SESSION['form_submissions']++;
+
+    return $_SESSION['form_submissions'];
+}
+  
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
+    $form_submission_count = countFormSubmissions();
+    //ket variabel mundemi me perdor nese deshirojm me dit sa forma jon submitted brenda sessionit
+    //echo "This form is submitted " . $form_submission_count . " times!";
+}
+?>
           <form id="contact-form" action="" method="POST">
             <div class="row">
               <div class="col-lg-12">
@@ -386,6 +468,31 @@ https://templatemo.com/tm-591-villa-agency
 
   <!-- Scripts -->
   <!-- Bootstrap core JavaScript -->
+  <script>
+        function handleClick(choice) {
+            var box = document.getElementById('ratingBox');
+            var overlay = document.getElementById('overlay');
+            switch(choice) {
+                case 'ok':
+                case 'later':
+                    box.style.display = 'none';
+                    overlay.style.display = 'none';
+                    break;
+                case 'rate':
+                    window.location.href = '#'; // redirect to rating page po na hala se kem
+                    break;
+            }
+        }
+
+     
+        window.onload = function() {
+            var visits = <?php echo $_SESSION['index_visits']; ?>;
+            if (visits == 3 || visits == 6) {
+                document.getElementById('ratingBox').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+        }
+    </script>
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
   <script src="assets/js/isotope.min.js"></script>

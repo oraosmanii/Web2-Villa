@@ -1,5 +1,17 @@
 <?php
 session_start();
+function incrementPageCount($info) {
+  if (empty($_SESSION[$info])) {
+      $_SESSION[$info] = 1;
+  } else {
+      $_SESSION[$info]++;
+  }
+  $counter=$_SESSION[$info];
+  echo "<script>console.log($counter)</script>";
+  return $counter;
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -152,6 +164,9 @@ https://templatemo.com/tm-591-villa-agency
         include "Classes.php";
         if(isset($_GET['info'])) {
           // Decode the encoded information
+          $page =$_GET['info'];
+          global $counter;
+          $counter=incrementPageCount($page);
           $info= urldecode($_GET['info']);
           $encode=urlencode($info);
           $page=recieverProperties($info);
@@ -274,6 +289,14 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
+  <?php
+  if ($counter>3){
+    echo "<script>setTimeout(function() {
+      alert('We think this might be the right place for you to stay.')
+    }, 450)</script>";
+  }
+  ?>
+
 
   </body>
 </html>
