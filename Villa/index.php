@@ -1,4 +1,4 @@
-<?php
+ <?php
 session_start();
 if (!isset($_SESSION['index_visits'])) {
 
@@ -8,7 +8,7 @@ if (!isset($_SESSION['index_visits'])) {
 }
 
 
-?>
+?> 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -380,6 +380,26 @@ https://templatemo.com/tm-591-villa-agency
           </div>
         </div>
         <div class="col-lg-5">
+        <?php
+
+ //session_start();
+
+function countFormSubmissions() {
+    
+    if (!isset($_SESSION['form_submissions'])) {
+        $_SESSION['form_submissions'] = 0;
+    }
+    $_SESSION['form_submissions']++;
+
+    return $_SESSION['form_submissions'];
+}
+  
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
+    $form_submission_count = countFormSubmissions();
+    //ket variabel mundemi me perdor nese deshirojm me dit sa forma jon submitted brenda sessionit
+    //echo "This form is submitted " . $form_submission_count . " times!";
+}
+?>
           <form id="contact-form" action="" method="POST">
             <div class="row">
               <div class="col-lg-12">
