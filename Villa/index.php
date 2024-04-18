@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,12 +25,62 @@ session_start();
     <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
 <!--
-
+  
 TemplateMo 591 villa agency
 
 https://templatemo.com/tm-591-villa-agency
 
 -->
+
+<style>
+  .main-banner .item-1 {
+    background-image: url(assets/images/location/<?php if (isset($_COOKIE["user_location"])) { echo $_COOKIE["user_location"]; } else { echo "Toronto"; } ?>.jpg);
+  }
+
+.location-form{
+            background-color: #fff;
+            padding: 1rem;
+            border-top: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .location-form form {
+            display: flex;
+            align-items: center;
+        }
+
+        .location-form label {
+            margin-right: 1rem;
+        }
+
+        .location-form select {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .location-form button {
+            background-color: orangered;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        .location-form button:hover {
+            background-color: #0069d9;
+            background-color: red;
+        }
+
+</style>
   </head>
 
 <body>
@@ -123,26 +175,25 @@ https://templatemo.com/tm-591-villa-agency
   <!-- MAIN CAROUSEL -->
 
   <div class="main-banner">
-    <div class="owl-carousel owl-banner">
+  <div class="location-form">
+        <form action="set-location.php" method="post">
+          <label for="location">Choose your preferred location:</label>
+          <select name="location" id="location">
+            <option value="Toronto" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Toronto") { echo "selected"; } ?>>Toronto</option>
+            <option value="Melbourne" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Melbourne") { echo "selected"; } ?>>Melbourne</option>
+            <option value="Miami" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Miami") { echo "selected"; } ?>>Miami</option>
+            <option value="Paris" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Paris") { echo "selected"; } ?>>Paris</option>
+            <option value="Berlin" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Berlin") { echo "selected"; } ?>>Berlin</option>
+          </select>
+          <button type="submit">Save Location</button>
+        </form>
+      </div>
       <div class="item item-1">
         <div class="header-text">
-          <span class="category">Toronto, <em>Canada</em></span>
+          <span class="category"><?php if (isset($_COOKIE["user_location"])) { echo $_COOKIE["user_location"]; } else { echo "Toronto"; } ?></span>
           <h2>Hurry!<br>Get the Best Villa for you</h2>
         </div>
       </div>
-      <div class="item item-2">
-        <div class="header-text">
-          <span class="category">Melbourne, <em>Australia</em></span>
-          <h2>Be Quick!<br>Get the best villa in town</h2>
-        </div>
-      </div>
-      <div class="item item-3">
-        <div class="header-text">
-          <span class="category">Miami, <em>South Florida</em></span>
-          <h2>Act Now!<br>Get the highest level penthouse</h2>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- FEATURED / TOP RANKED -->
@@ -231,116 +282,6 @@ https://templatemo.com/tm-591-villa-agency
     </div>
   </div>
 
-  <!-- <div class="properties section">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 offset-lg-4">
-          <div class="section-heading text-center">
-            <h6>| Properties</h6>
-            <h2>We Provide The Best Property You Like</h2>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-4 col-md-6">
-          <div class="item">
-            <a href="property-details.php"><img src="assets/images/property-01.jpg" alt=""></a>
-            <span class="category">Luxury Villa</span>
-            <h6>$2.264.000</h6>
-            <h4><a href="property-details.php">18 New Street Miami, OR 97219</a></h4>
-            <ul>
-              <li>Bedrooms: <span>8</span></li>
-              <li>Bathrooms: <span>8</span></li>
-              <li>Area: <span>545m2</span></li>
-            </ul>
-            <div class="main-button">
-              <a href="schedule.php">Book Now</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="item">
-            <a href="property-details.php"><img src="assets/images/property-02.jpg" alt=""></a>
-            <span class="category">Luxury Villa</span>
-            <h6>$1.180.000</h6>
-            <h4><a href="property-details.php">54 Mid Street Florida, OR 27001</a></h4>
-            <ul>
-              <li>Bedrooms: <span>6</span></li>
-              <li>Bathrooms: <span>5</span></li>
-              <li>Area: <span>450m2</span></li>
-            </ul>
-            <div class="main-button">
-              <a href="schedule.php">Book Now</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="item">
-            <a href="property-details.php"><img src="assets/images/property-03.jpg" alt=""></a>
-            <span class="category">Luxury Villa</span>
-            <h6>$1.460.000</h6>
-            <h4><a href="property-details.php">26 Old Street Miami, OR 38540</a></h4>
-            <ul>
-              <li>Bedrooms: <span>5</span></li>
-              <li>Bathrooms: <span>4</span></li>
-              <li>Area: <span>225m2</span></li>
-            </ul>
-            <div class="main-button">
-              <a href="schedule.php">Book Now</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="item">
-            <a href="property-details.php"><img src="assets/images/property-04.jpg" alt=""></a>
-            <span class="category">Apartment</span>
-            <h6>$584.500</h6>
-            <h4><a href="property-details.php">12 New Street Miami, OR 12650</a></h4>
-            <ul>
-              <li>Bedrooms: <span>4</span></li>
-              <li>Bathrooms: <span>3</span></li>
-              <li>Area: <span>125m2</span></li>
-            </ul>
-            <div class="main-button">
-              <a href="schedule.php">Book Now</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="item">
-            <a href="property-details.php"><img src="assets/images/property-05.jpg" alt=""></a>
-            <span class="category">Penthouse</span>
-            <h6>$925.600</h6>
-            <h4><a href="property-details.php">34 Beach Street Miami, OR 42680</a></h4>
-            <ul>
-              <li>Bedrooms: <span>4</span></li>
-              <li>Bathrooms: <span>4</span></li>
-              <li>Area: <span>180m2</span></li>
-            </ul>
-            <div class="main-button">
-              <a href="schedule.php">Book Now</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="item">
-            <a href="property-details.php"><img src="assets/images/property-06.jpg" alt=""></a>
-            <span class="category">Modern Condo</span>
-            <h6>$450.000</h6>
-            <h4><a href="property-details.php">22 New Street Portland, OR 16540</a></h4>
-            <ul>
-              <li>Bedrooms: <span>3</span></li>
-              <li>Bathrooms: <span>2</span></li>
-              <li>Area: <span>165m2</span></li>
-            </ul>
-            <div class="main-button">
-              <a href="schedule.php">Book Now</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
 
   <div class="contact section">
     <div class="container">
@@ -452,6 +393,7 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
+
 
   </body>
 </html>
