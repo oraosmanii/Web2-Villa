@@ -1,21 +1,17 @@
 <?php
 
-// Initialize an empty array to store the data
+//Inicializohet array per ruajtjen e informatave
 $properties = [];
-
-// Open the file for reading
+//Lexohet file
 $file = fopen('Places.txt', 'r+');
 
-// Loop through each line in the file
+//Loop ne cdo rresht
 while (!feof($file)) {
-    // Read a line
     $line = fgets($file);
     $cards = urlencode($line);
-    // Explode the line into parts
-    $parts = explode(',', $line);
+    $parts = explode(',', $line); //Ndahet ne presje
 
-    // Create an associative array for this line
-    $property = [
+    $property = [     //varg asociativ
         'country' => $parts[0],
         'city' => $parts[1],
         'date' => $parts[2],
@@ -27,52 +23,43 @@ while (!feof($file)) {
         'type' => ucwords($parts[8]),
         'card'=> $cards
     ];
-
-    // Add this entry to the data array, using the country as the key
-    $properties[$parts[0]][] = $property;
+    $properties[$parts[0]][] = $property;// Vendoset ne array
 }
-
-// Close the file
 fclose($file);
 
-// Check if the form has been submitted
+// Nese forma behet submit
 if (isset($_POST['sort'])) {
-    // Get the selected sort option
+    //Merr opsionin e selektuar
     $sort = $_POST['sort'];
-
-    // Sort the data based on the selected option
     if ($sort == 'price-asc') {
-        // Sort by price in ascending order
+        // Cmimi ne rritje
         usort($properties, function ($a, $b) {
             return $a[0]['price'] <=> $b[0]['price'];
         });
     } elseif ($sort == 'price-desc') {
-        // Sort by price in descending order
+        // Cmimi ne zvogelim
         usort($properties, function ($a, $b) {
             return $b[0]['price'] <=> $a[0]['price'];
         });
     } elseif ($sort == 'name-asc') {
-        // Sort by country name in ascending order
+        // Emri i vendit alfabetikisht
         ksort($properties);
     } elseif ($sort == 'name-desc') {
-        // Sort by country name in descending order
+        // Emri i vendit anasjelltas
         krsort($properties);
     }elseif ($sort == 'beds-asc') {
-       // Sort the data based on the number of bedrooms in ascending order
+       // Nr.krevateve ne rritje
         usort($properties, function ($a, $b) {
                 return $a[0]['bedrooms'] <=> $b[0]['bedrooms'];
         });
     }
     elseif ($sort == 'beds-desc') {
+        // E kunderta
         usort($properties, function ($a, $b) {
             return $b[0]['bedrooms'] <=> $a[0]['bedrooms'];
     });
     }
-
-
-    // Store the sorted data in the session
     $_SESSION['properties'] = $properties;
-
     
 }
 
