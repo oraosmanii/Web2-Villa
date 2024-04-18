@@ -181,7 +181,6 @@ https://templatemo.com/tm-591-villa-agency
           <select name="location" id="location">
             <option value="Toronto" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Toronto") { echo "selected"; } ?>>Toronto</option>
             <option value="Melbourne" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Melbourne") { echo "selected"; } ?>>Melbourne</option>
-            <option value="Miami" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Miami") { echo "selected"; } ?>>Miami</option>
             <option value="Paris" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Paris") { echo "selected"; } ?>>Paris</option>
             <option value="Berlin" <?php if (isset($_COOKIE["user_location"]) && $_COOKIE["user_location"] == "Berlin") { echo "selected"; } ?>>Berlin</option>
           </select>
