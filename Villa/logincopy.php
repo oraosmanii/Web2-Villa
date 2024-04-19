@@ -283,7 +283,7 @@ form .btn input[type="submit"] {
             <div class="field">
             <input type="password" name="password" placeholder="Password" required>
             </div>
-            <div class="pass-link"><a href="#">Forgot password?</a></div>
+            <!-- <div class="pass-link"><a href="#">Forgot password?</a></div> -->
             
             <div class="field btn">
               <div class="btn-layer"></div>
