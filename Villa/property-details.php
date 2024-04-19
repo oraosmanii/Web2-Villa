@@ -290,11 +290,11 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
   <?php
-  if ($counter>3){
-    echo "<script>setTimeout(function() {
-      alert('We think this might be the right place for you to stay.')
-    }, 450)</script>";
-  }
+  // if ($counter>3){
+  //   echo "<script>setTimeout(function() {
+  //     alert('We think this might be the right place for you to stay.')
+  //   }, 450)</script>";
+  // }
   ?>
 
 
