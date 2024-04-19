@@ -425,7 +425,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
             $error_message= "Invalid email address!";
             echo "
            <script> window.location.href = '#contact-form';
-            </script>";
+            </script>" . "<p style='color: red'>$error_message</p><br>";
             
         }
       }
