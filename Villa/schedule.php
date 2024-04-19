@@ -9,7 +9,7 @@ function formatPhoneNumber()
     $phoneNumber = trim($input); 
     $phoneNumber = preg_replace('/\D/', '', $phoneNumber); 
     if (strlen($phoneNumber) == 10) {
-      $phoneNumber = preg_replace('/(\d{2})(\d{3})(\d{3})/', '+383 (00) $1 $2 $3', $phoneNumber);
+      $phoneNumber = preg_replace('/(\d{2})(\d{3})(\d{3})/', '+383 (0) $1 $2 $3', $phoneNumber);
     }
     $_POST['phone-number'] = $phoneNumber;
     return $phoneNumber; 
