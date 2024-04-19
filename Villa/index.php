@@ -40,8 +40,9 @@ https://templatemo.com/tm-591-villa-agency
 
 <style>
   .button-orange {
+            
             padding: 10px 20px; 
-            background-color: orange; 
+            background-color: #FF4500; 
             color: white; 
             border: none; 
             border-radius: 5px; 
@@ -51,7 +52,7 @@ https://templatemo.com/tm-591-villa-agency
 
 
         .button-orange:hover {
-            background-color: darkorange; 
+            background-color: #ed4002; 
             color: #fff; 
         }
   .main-banner .item-1 {
@@ -107,7 +108,7 @@ https://templatemo.com/tm-591-villa-agency
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px;
+            width: 35vw;
             background-color: #fff;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             padding: 20px;
@@ -116,6 +117,7 @@ https://templatemo.com/tm-591-villa-agency
             z-index: 1000;
         }
         #overlay {
+          
             display: none;
             position: fixed;
             top: 0;
@@ -250,13 +252,13 @@ https://templatemo.com/tm-591-villa-agency
         </div>
       </div>
   </div>
-  <div id="overlay"></div>
+  <div id="overlay">
     <div id="ratingBox" class="slide-in">
-        <p>You visited our home page more than 3 times! Maybe give us a rating?</p>
+        <p>You visited our home page <?php echo "{$_SESSION['index_visits']}"; ?> times! Give us a follow?</p>
         <button class="button-orange" onclick="handleClick('later')">Maybe Later</button>
-        <button class="button-orange" onclick="handleClick('rate')">Rate</button>
+        <button class="button-orange" onclick="handleClick('rate')">Follow Us!</button>
     </div>
-              
+    </div>
   <!-- FEATURED / TOP RANKED -->
   <div class="featured section">
     <div class="container">
@@ -479,7 +481,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
                     overlay.style.display = 'none';
                     break;
                 case 'rate':
-                    window.location.href = '#'; // redirect to rating page po na hala se kem
+                    window.location.href = 'https://www.instagram.com/airbnb/'; // redirect to rating page po na hala se kem
                     break;
             }
         }
@@ -487,7 +489,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['message'])) {
      
         window.onload = function() {
             var visits = <?php echo $_SESSION['index_visits']; ?>;
-            if (visits == 3 || visits == 6) {
+            if (visits %3 == 0) {
                 document.getElementById('ratingBox').style.display = 'block';
                 document.getElementById('overlay').style.display = 'block';
             }
