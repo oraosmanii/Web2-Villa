@@ -1,80 +1,67 @@
 <?php
+include "db_connection.php"; 
 include "Classes.php";
-function getLink($cards)
+
+function getLink($id)
 {
     if (!empty($_SESSION['LogedIn'])) {
-        return "schedule.php?info=$cards";
+        return "schedule.php?info=$id";
     } else {
         return "logincopy.php";
     }
 }
 
-
-function createCard(&$array)
+function createCard(&$array = [])
 {
-    global $Link;
-    if(empty($_POST['sort'])){
-    $myfile = fopen("Places.txt", "r+");
-    while (!feof($myfile)) {
-        // Read a line from the file
-        $line = fgets($myfile);
-        $cards = urlencode($line);
+    global $conn;
+
+    if (empty($_POST['sort'])) {
+        // fetch infot prej dbs
+        $result = $conn->query("SELECT * FROM properties");
         
-        // Split the line by commas
-        $data = explode(",", $line);
+        while ($data = $result->fetch_assoc()) {
+            $cards = urlencode($data['id']); // prej id-s
 
+            $type = strtoupper(trim($data['type']));
 
-        // Process the data as needed
-        // For example, you can print the split data
+            switch ($type) {
+                case 'VILLA':
+                    $booking = new Villa($data['country'], $data['city'], $data['date'], $data['image'], $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    break;
+                case 'APARTMENT':
+                    $booking = new Apartment($data['country'], $data['city'], $data['date'], $data['image'], $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    break;
+                case 'PENTHOUSE':
+                    $booking = new Penthouse($data['country'], $data['city'], $data['date'], $data['image'], $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    break;
+                default:
+                    echo "Invalid creation";
+            }
 
-        $type = strtoupper(trim($data[8]));
-
-        switch ($type) {
-            case 'VILLA':
-                $booking = new Villa($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7]);
-                break;
-            case 'APARTMENT':
-                $booking = new Apartment($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7]);
-                break;
-            case 'PENTHOUSE':
-                $booking = new Penthouse($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7]);
-                break;
-            default:
-                echo "Invalid creation";
-        }
-
-
-
-        
             $Link = getLink($cards);
-    echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
-                <div class='item'> 
-                    <a href='property-details.php?info={$cards}'><img src='{$booking->get_image()}' height='300' alt=''></a>
-                    <span class='category'>{$booking->get_type()}</span> 
-                    <h6>$ {$booking->get_price()}</h6>
-                    <h4><a href='property-details.php'>{$booking->get_country()} {$booking->get_city()}</a></h4>
-                    <ul>
-                    <li>Bedrooms: <span>{$booking->get_bedrooms()}</span></li>
-                    <li>Bathrooms: <span>{$booking->get_bathrooms()}</span></li>
-                    <li>Area: <span>{$booking->get_area()}m2</span></li>
-                    </ul>
-                    <div class='main-button'>
-                        <a href='{$Link}'>Book Now</a>
+            echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
+                    <div class='item'> 
+                        <a href='property-details.php?info={$cards}'><img src='{$booking->get_image()}' height='300' alt=''></a>
+                        <span class='category'>{$booking->get_type()}</span> 
+                        <h6>$ {$booking->get_price()}</h6>
+                        <h4><a href='property-details.php'>{$booking->get_country()} {$booking->get_city()}</a></h4>
+                        <ul>
+                        <li>Bedrooms: <span>{$booking->get_bedrooms()}</span></li>
+                        <li>Bathrooms: <span>{$booking->get_bathrooms()}</span></li>
+                        <li>Area: <span>{$booking->get_area()}m2</span></li>
+                        </ul>
+                        <div class='main-button'>
+                            <a href='{$Link}'>Book Now</a>
+                        </div>
                     </div>
-                </div>
-            </div>";
+                </div>";
         }
-        
-        
-    fclose($myfile);
-        // print_r($data);
-        // echo "<br> <br>";
-    }
 
-    else{
-        foreach($array as $objects){
-            $info= $objects[0];
-            $Link=getLink($info['card']);
+        $result->free();
+    } else {
+        foreach ($array as $objects) {
+            $info = $objects[0];
+            $Link = getLink($info['card']);
             echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$info['type']}'>
                 <div class='item'> 
                     <a href='property-details.php?info={$info['card']}'><img src='{$info['image']}' height='300' alt=''></a>
@@ -94,8 +81,5 @@ function createCard(&$array)
             echo "<script>console.log('I have been created')</script>";
         }
     }
-    // echo '<pre>'; print_r($_SESSION['properties']); echo '</pre>';
-    // Close the file
-    
 }
 ?>
