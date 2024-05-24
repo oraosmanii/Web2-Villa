@@ -1,34 +1,32 @@
 <?php
-
 session_start();
-if(isset($_POST['login'])){
-              if (!empty($_POST["email"]) && !empty($_POST["password"])){
-                $email=$_POST["email"];
-                $password=hash("sha256",$_POST["password"]);
-                $file_content=file("users.txt",FILE_IGNORE_NEW_LINES);
-                $username;
-                $email_exist=false;
-                $passwordMatch=false;
-                foreach($file_content as $line){
-                  $params=explode("~",$line);
-                  if($params[0]===$email){
-                    $email_exist=true;
-                    if ($params[2]===$password){
-                      $passwordMatch=true;
-                      $username=$params[1];
-                    }
-                    break;
-                  }
-                  
-                }
-                if($email_exist && $passwordMatch){
-                    $_SESSION['LogedIn']=true;
-                    $_SESSION['USERNAME']=$username;
-                    $_SESSION['EMAIL']=$email;
-                    header("Location:index.php");
-                  }
-                }
-              }
+include 'db_connection.php'; 
+
+if (isset($_POST['login'])) {
+    if (!empty($_POST["email"]) && !empty($_POST["password"])) {
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        
+        // Check if the email exists in the database
+        $stmt = $conn->prepare("SELECT username, password, salt FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->bind_result($username, $hashed_password, $salt);
+        $stmt->fetch();
+        $stmt->close();
+        
+        // Verify the password
+        if ($hashed_password && hash("sha256", $password . $salt) === $hashed_password) {
+            $_SESSION['LogedIn'] = true;
+            $_SESSION['USERNAME'] = $username;
+            $_SESSION['EMAIL'] = $email;
+            header("Location: index.php");
+            exit();
+        } else {
+            $message = "<div class='signup-link'>Your credentials are not valid!</div>";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -275,62 +273,53 @@ form .btn input[type="submit"] {
         <div class="form-inner">
 
 
-          <!-- LOGIN -->
-          <form action="logincopy.php" method="post" class="login">
+        <!-- LOGIN -->
+        <form action="logincopy.php" method="post" class="login">
             <div class="field">
-            <input type="text" name="email" placeholder="Email Address" required>
+                <input type="text" name="email" placeholder="Email Address" required>
             </div>
             <div class="field">
-            <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required>
             </div>
-            <!-- <div class="pass-link"><a href="#">Forgot password?</a></div> -->
-            
             <div class="field btn">
-              <div class="btn-layer"></div>
-              <input type="submit" name="login" value="Login">
+                <div class="btn-layer"></div>
+                <input type="submit" name="login" value="Login">
             </div>
             <?php
-            if(isset($_POST['login'])){
-            global $email_exist;
-            global $passwordMatch;
-              if(!$email_exist){
-                echo "<div class='signup-link' >Your credentials are not valid!</div>";
-              }
-              else{
-                if(!$passwordMatch){
-                  echo "<div class='signup-link' >Your credentials are not valid!</div>";
-                }
-              }
+            if (isset($message)) {
+                echo $message;
             }
             ?>
             <div class="signup-link">Not a member? <a href="">Signup now</a></div>
-          </form>
+        </form>
 
 
-          <!-- SIGNUP -->
-          <form id="signupf" action="logincopy.php" method="post" class="signup">
+
+        <!-- SIGNUP -->
+        <form id="signupf" action="logincopy.php" method="post" class="signup">
             <div class="field">
-            <input type="email" name="email" placeholder="Email Address" required>
+                <input type="email" name="email" placeholder="Email Address" required>
             </div>
             <div class="field">
-            <input type="text" name="username" placeholder="Username" required>
+                <input type="text" name="username" placeholder="Username" required>
             </div>
             <div class="field">
-            <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required>
             </div>
             <div class="field">
-            <input type="password" name="confirmpassword" placeholder="Confirm Password" required>
+                <input type="password" name="confirmpassword" placeholder="Confirm Password" required>
             </div>
             <div class="field btn">
-              <div class="btn-layer"></div>
-              <input type="submit" name="signup" value="Signup">
+                <div class="btn-layer"></div>
+                <input type="submit" name="signup" value="Signup">
             </div>
             <?php 
-            include_once'signup.php';
-            if (!empty($message)){
+            include_once 'signup.php'; 
+            if (!empty($message)) {
                 echo $message; 
-            }?>
-          </form>
+            }
+            ?>
+        </form>
         </div>
       </div>
     </div>

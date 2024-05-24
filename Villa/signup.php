@@ -1,36 +1,32 @@
 <?php
+include 'db_connection.php'; // databaza
+
 define("minlength", 8);
-$message = ''; // Initialize message variable
+$message = ''; // mesazhi
+
 if (isset($_POST['signup'])) {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirmpassword = $_POST['confirmpassword'];
 
-    // Read the file contents
-    $file_content = file("users.txt", FILE_IGNORE_NEW_LINES);
-    $email_exist = false;
+    // check email
+    $stmt = $conn->prepare("SELECT email FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    $email_exist = $stmt->num_rows > 0;
+    $stmt->close();
 
-    // Check if the email already exists in the file
-    foreach ($file_content as $line) {
-        list($file_email,) = explode("~", $line);
-        if ($file_email === $email) {
-            $email_exist = true;
-            break;
-        }
-    }
+    // checkusername
+    $stmt = $conn->prepare("SELECT username FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+    $username_exist = $stmt->num_rows > 0;
+    $stmt->close();
 
-    // Check if the username already exists in the file
-    $username_exist = false;
-    foreach ($file_content as $line) {
-        list(,$file_username,) = explode("~", $line);
-        if ($file_username === $username) {
-            $username_exist = true;
-            break;
-        }
-    }
-
-    // Validate password length
+    // validimi
     if (strlen($password) < minlength) {
         $message = "<p style='color: red; font-size: 16px;'>Password is too short. It must be at least 8 characters.</p>";
     } elseif ($password !== $confirmpassword) {
@@ -40,12 +36,25 @@ if (isset($_POST['signup'])) {
     } elseif ($username_exist) {
         $message = "<p style='color: red; font-size: 16px;'>This username is already taken.</p>";
     } else {
-        // Hash the password using PASSWORD_DEFAULT algorithm
-        $hashed_password = hash("sha256",$password);
+        // salt
+        $salt = bin2hex(random_bytes(16)); // 32 characters salt
 
-        // If validations pass, append the new user data to the file
-        file_put_contents("users.txt", "$email~$username~$hashed_password\n", FILE_APPEND);
-        $message = "<p style='color: green; font-size: 16px;'>Account created successfully.</p>";
+        // hash with salt
+        $hashed_password = hash("sha256", $password . $salt);
+
+        // if validimi me salt
+        $stmt = $conn->prepare("INSERT INTO users (email, username, password, salt) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $email, $username, $hashed_password, $salt);
+
+        if ($stmt->execute()) {
+            $message = "<p style='color: green; font-size: 16px;'>Account created successfully.</p>";
+        } else {
+            $message = "<p style='color: red; font-size: 16px;'>Error: " . $stmt->error . "</p>";
+        }
+
+        $stmt->close();
     }
+
+    $conn->close();
 }
 ?>
