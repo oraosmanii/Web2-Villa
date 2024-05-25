@@ -32,3 +32,18 @@ INSERT INTO properties (country, city, date, image, price, bedrooms, bathrooms, 
 ('Croatia', 'Split', '2024-04-15', './assets/images/property-01.jpg', 500, 5, 5, 270, 'villa'),
 ('Slovenia', 'Ljubljana', '2024-04-15', './assets/images/property-02.jpg', 420, 2, 3, 115, 'penthouse'),
 ('Germany', 'Berlin', '2024-04-15', './assets/images/property-04.jpg', 200, 3, 4, 120, 'villa');
+
+-- bookings table
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    property_id INT NOT NULL,
+    arrival_date DATE NOT NULL,
+    departure_date DATE NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    payment_method VARCHAR(255) NOT NULL,
+    comment TEXT,
+    total_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (property_id) REFERENCES properties(id)
+);

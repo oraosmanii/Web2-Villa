@@ -7,10 +7,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $password = $_POST['password'];
 
     // fetch
-    $stmt = $conn->prepare("SELECT username, password, salt FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT id, username, password, salt FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->bind_result($username, $hashed_password, $salt);
+    $stmt->bind_result($user_id, $username, $hashed_password, $salt);
     $stmt->fetch();
     $stmt->close();
 
@@ -22,8 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         if (hash("sha256", $password . $salt) === $hashed_password) {
             $passwordMatch = true;
             $_SESSION['LogedIn'] = true;
+            $_SESSION['USER_ID'] = $user_id; 
             $_SESSION['USERNAME'] = $username;
             $_SESSION['EMAIL'] = $email;
+            echo "USER_ID set in session: " . $_SESSION['USER_ID']; 
             header("Location: index.php");
             exit();
         }
@@ -33,8 +35,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     if (!$email_exist || !$passwordMatch) {
         $message = "<div class='signup-link'>Your credentials are not valid!</div>";
     }
-// } else {
-//     header("Location: yourLoginForm.html");
-//     exit();
-// }
+}
 ?>
