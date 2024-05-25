@@ -1,38 +1,43 @@
 <?php
 session_start();
+include 'db_connection.php'; // include database 
+
+if (!isset($_SESSION['USER_ID'])) {
+    header("Location: logincopy.php");
+    exit();
+}
+
+$user_id = $_SESSION['USER_ID'];
+
+// fetch from login
+$stmt = $conn->prepare("SELECT bookings.*, properties.country, properties.city, properties.image, properties.price FROM bookings INNER JOIN properties ON bookings.property_id = properties.id WHERE bookings.user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$bookings = [];
+while ($row = $result->fetch_assoc()) {
+    $bookings[] = $row;
+}
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
     <title>Villa Agency - Properties</title>
-
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Additional CSS Files -->
     <link rel="stylesheet" href="assets/css/fontawesome.css">
     <link rel="stylesheet" href="assets/css/templatemo-villa-agency.css">
     <link rel="stylesheet" href="assets/css/owl.css">
     <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet" href="assets/css/mybookings.css">
-    <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
-<!--
-
-TemplateMo 591 villa agency
-
-https://templatemo.com/tm-591-villa-agency
-
--->
-  </head>
-
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+</head>
 <body>
-
   <!-- ***** Preloader Start ***** -->
   <div id="js-preloader" class="js-preloader">
     <div class="preloader-inner">
@@ -93,8 +98,7 @@ https://templatemo.com/tm-591-villa-agency
                       else{
                         echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
                       }?>
-                      
-                  </ul>   
+                    </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>
                     </a>
@@ -123,14 +127,31 @@ https://templatemo.com/tm-591-villa-agency
         <div class="col-md-12">
           <h2 class="mb-4">My Bookings:</h2>
           <div class="booked-items" id="booked-items">
-            <!-- Booking items will be dynamically added here -->
+            <?php if (empty($bookings)): ?>
+              <p class="text-center">You don't have any bookings yet.</p>
+            <?php else: ?>
+              <?php foreach ($bookings as $booking): ?>
+                <div class="cart-item d-flex justify-content-between align-items-center mb-3">
+                  <div class="d-flex align-items-center" style="flex-grow: 1;">
+                    <img src="<?php echo $booking['image']; ?>" alt="Place in <?php echo $booking['country'] . ', ' . $booking['city']; ?>" class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
+                    <div>
+                      <h5 class="fw-bold mb-1"><?php echo $booking['country'] . ', ' . $booking['city']; ?></h5>
+                      <p class="text-muted mb-0">Arrival: <?php echo $booking['arrival_date']; ?></p>
+                      <p class="text-muted mb-0">Departure: <?php echo $booking['departure_date']; ?></p>
+                      <p class="text-muted mb-0">Total Price: $<?php echo $booking['total_price']; ?></p>
+                    </div>
+                  </div>
+                  <button onclick="cancelBooking(<?php echo $booking['id']; ?>)" class="btn btn-danger btn-sm">Cancel Booking</button>
+                </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
         </div>
-      <hr>
+        <hr>
         <div class="col-md-12">
           <h2 class="mb-4">My Listings:</h2>
           <div class="listed-items" id="listed-items">
-            <!-- Listed items will be dynamically added here -->
+            <!-- qetu shtohen items -->
           </div>
         </div>
       </div>
@@ -146,7 +167,6 @@ https://templatemo.com/tm-591-villa-agency
       </div>
     </div>
   </footer>
-  
 
   <!-- Scripts -->
   <!-- Bootstrap core JavaScript -->
@@ -158,188 +178,18 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/custom.js"></script>
 
   <script>
-
-// BOOKED ITEMS 
-    document.addEventListener('DOMContentLoaded', function() {
-      const bookedItemsContainer = document.getElementById('booked-items');
-const bookSampleItems = [
-        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-18-21 to 10-24-21', status: 'Pending', requestBy: 'User', price: '$500' },
-        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Invoice Issued', requestBy: 'User', price: '$500' },
-        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', dateReserved: '10-04-21 to 10-05-21', status: 'Booked', requestBy: 'User', price: '$500'}
-      ];
-    
-      const statusColors = {
-        'Pending': 'orange', 
-        'Invoice Issued': 'blue',
-        'Booked': 'green'
-      };
-    
-      function addItemToBook(item) {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'cart-item d-flex justify-content-between align-items-center mb-3';
-        itemElement.innerHTML = `
-          <div class="d-flex align-items-center" style="flex-grow: 1;">
-            <img src="${item.img}" alt="..." class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
-            <div>
-              <h5 class="fw-bold mb-1">${item.name}</h5>
-              <p class="text-muted mb-0">Requested by: ${item.requestBy}</p>
-              <p class="text-muted">Period: ${item.dateReserved}</p>
-              <p class="text-muted">Price: ${item.price}</p>
-            </div>
-          </div>
-          <div style="margin-right: 20px;">
-            <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
-          </div>
-          <button onclick="removeBookedItem(${item.id})" class="btn btn-danger btn-sm">Cancel Booking</button>
-        `;
-        bookedItemsContainer.appendChild(itemElement);
+    function cancelBooking(bookingId) {
+      if (confirm("Are you sure you want to cancel this booking?")) {
+        // ajax request
+        $.post('cancel_booking.php', { booking_id: bookingId }, function(response) {
+          if (response.success) {
+            location.reload(); // reload page
+          } else {
+            alert("Failed to cancel the booking. Please try again.");
+          }
+        }, 'json');
       }
-    
-      bookSampleItems.forEach(addItemToBook);
-    
-      window.removeBookedItem = function(itemId) {
-        const bookedItemIndex = bookSampleItems.findIndex(item => item.id === itemId);
-        if (bookedItemIndex > -1) {
-          bookSampleItems.splice(bookedItemIndex, 1);
-          bookedItemsContainer.children[bookedItemIndex].remove();
-        }
-      };
-    });
-
-// LISTED ITEMS 
-document.addEventListener('DOMContentLoaded', function() {
-      const listItemsContainer = document.getElementById('listed-items');
-const sampleItems = [
-        { id: 1, name: 'Huge Sunny Villa – East Side', img: 'https://via.placeholder.com/150', datePosted: '10-18-21 to 10-24-21', status: 'Booked', requestBy: 'User', price: '$500' },
-        { id: 2, name: 'West Town 3rd Floor Dorm', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Posted', requestBy: 'User', price: '$500' },
-        { id: 3, name: 'Nest Villa East Side', img: 'https://via.placeholder.com/150', datePosted: '10-04-21 to 10-05-21', status: 'Posted', requestBy: 'User', price: '$500' }
-      ];
-    
-      const statusColors = {
-        'Booked': 'blue', 
-        'Posted': 'green'
-      };
-    
-      function addItemToCart(item) {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'list-item d-flex justify-content-between align-items-center mb-3';
-        itemElement.innerHTML = `
-          <div class="d-flex align-items-center" style="flex-grow: 1;">
-            <img src="${item.img}" alt="..." class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
-            <div>
-              <h5 class="fw-bold mb-1">${item.name}</h5>
-              <p class="text-muted mb-0">Requested by: ${item.requestBy}</p>
-              <p class="text-muted">Period: ${item.datePosted}</p>
-              <p class="text-muted">Price: ${item.price}</p>
-            </div>
-          </div>
-          <div style="margin-right: 20px;">
-            <span class="badge rounded-pill" style="background-color: ${statusColors[item.status]};">${item.status}</span>
-          </div>
-          <button onclick="removeItem(${item.id})" class="btn btn-danger btn-sm">Remove Listing</button>
-        `;
-        listItemsContainer.appendChild(itemElement);
-      }
-    
-      sampleItems.forEach(addItemToCart);
-    
-      window.removeItem = function(itemId) {
-        const itemIndex = sampleItems.findIndex(item => item.id === itemId);
-        if (itemIndex > -1) {
-          sampleItems.splice(itemIndex, 1);
-          listItemsContainer.children[itemIndex].remove();
-        }
-      };
-    });
-
-    </script>
-
-
-
-
-<?php
-    
-    //   class Bookings {
-    //     private $id;
-    //     private $country;
-    //     private $city;
-    //     private $date;
-    //     private $imgpath;
-    //     private $price;
-  
-    //     function __construct( $country, $city, $date, $imgpath, $price) {
-    //       $this->id = uniqid();
-    //       $this->country=$country;
-    //       $this->city=$city;
-    //       $this->date=$date;
-    //       $this->imgpath=$imgpath;
-    //       $this->price=$price;
-    //     }
-  
-    //     function get_image(){
-    //       return $this->imgpath;
-    //     }
-    //     function get_country(){
-    //       return $this->country;
-    //     }
-    //     function get_city(){
-    //       return $this->city;
-    //     }
-    //     function get_price(){
-    //       return $this->price;
-    //     }
-    //     function get_date(){
-    //       return $this->date;
-    //     }
-    //     function get_id(){
-    //       return $this->id;
-    //     }
-  
-    //   }
-  
-    //   function createCard(){
-  
-    //     $myfile= fopen("Mybookings.txt","r+");
-    //     while (!feof($myfile)) {
-    //         // Read a line from the file
-    //         $line = fgets($myfile);
-            
-    //         // Split the line by commas
-    //         $data = explode(",", $line);
-            
-            
-    //         // Process the data as needed
-    //         // For example, you can print the split data
-            
-    //         $villa= new Bookings($data[0],$data[1],$data[2],$data[3],$data[4]);
-  
-            
-    //             echo " <div class='cart-item d-flex justify-content-between align-items-center mb-3'> 
-    //               <div class='d-flex align-items-center'>
-    //                 <img src='{$villa->get_image()}' alt='Place in {$villa->get_country()},{$villa->get_city()}' style='width: 100px; height: 100px; object-fit: cover; margin-right: 15px;'>
-    //                 <div>
-    //                 <h6 class='my-0'>{$villa->get_country()},{$villa->get_city()}</h6>
-    //                 <small class='text-muted'>Booked on: {$villa->get_date()}</small><br>
-    //                 <small class='text-muted'>Price: $ {$villa->get_price()}</small>
-    //               </div>
-    //             </div>
-    //             <span class='text-muted'>$ {$villa->get_price()}</span>
-    //             <button class='btn btn-sm' style='background-color: #f85424; color: white;' data-itemid='{$villa->get_id()}'>Remove</button>
-              
-    //           </div>";
-            
-    //         // print_r($data);
-    //         // echo "<br> <br>";
-    //     }
-        
-    //     // Close the file
-    //     fclose($myfile);
-    // }
-  
-    // createCard();
-  
-      ?>
-   
-
-  </body>
+    }
+  </script>
+</body>
 </html>

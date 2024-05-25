@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             $_SESSION['USER_ID'] = $user_id; 
             $_SESSION['USERNAME'] = $username;
             $_SESSION['EMAIL'] = $email;
+            // Debugging statement to ensure USER_ID is set
             echo "USER_ID set in session: " . $_SESSION['USER_ID']; 
             header("Location: index.php");
             exit();

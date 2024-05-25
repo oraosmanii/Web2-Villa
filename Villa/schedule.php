@@ -1,6 +1,7 @@
 <?php
 session_start();
-include 'db_connection.php'; // Include your database connection file
+include 'db_connection.php'; 
+
 
 define('TVSH', '0.18');
 
@@ -30,7 +31,6 @@ if ($property_id > 0) {
     $stmt->close();
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $formattedPhoneNumber = formatPhoneNumber();
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $user_id = $_SESSION['USER_ID'];
-    echo "USER_ID from session: " . $user_id; // Debugging output
+    echo "USER_ID from session: " . $user_id; 
 
     $arrival_date = $_POST['arrival_date'];
     $departure_date = $_POST['departure_date'];
@@ -64,6 +64,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

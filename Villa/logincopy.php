@@ -8,18 +8,21 @@ if (isset($_POST['login'])) {
         $password = $_POST["password"];
         
         // Check if the email exists in the database
-        $stmt = $conn->prepare("SELECT username, password, salt FROM users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, username, password, salt FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        $stmt->bind_result($username, $hashed_password, $salt);
+        $stmt->bind_result($user_id, $username, $hashed_password, $salt);
         $stmt->fetch();
         $stmt->close();
         
         // Verify the password
         if ($hashed_password && hash("sha256", $password . $salt) === $hashed_password) {
             $_SESSION['LogedIn'] = true;
+            $_SESSION['USER_ID'] = $user_id; // Set the USER_ID in the session
             $_SESSION['USERNAME'] = $username;
             $_SESSION['EMAIL'] = $email;
+            // Debugging statement to ensure USER_ID is set
+            echo "USER_ID set in session: " . $_SESSION['USER_ID'];
             header("Location: index.php");
             exit();
         } else {
