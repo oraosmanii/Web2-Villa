@@ -1,3 +1,5 @@
+CREATE DATABASE villadb;
+
 -- Users table
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
