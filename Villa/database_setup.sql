@@ -47,3 +47,13 @@ CREATE TABLE bookings (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (property_id) REFERENCES properties(id)
 );
+-- ratings
+CREATE TABLE ratings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    property_id INT NOT NULL,
+    rating INT NOT NULL,
+    UNIQUE KEY unique_rating (user_id, property_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (property_id) REFERENCES properties(id)
+);
