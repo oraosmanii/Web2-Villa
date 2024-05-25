@@ -233,7 +233,7 @@ if (isset($_GET['info'])) {
             if (empty($_SESSION['LogedIn'])) {
                 echo "<a href='logincopy.php'>Log in first to rate</a></div>";
             } else {
-                echo "<button type='submit' class='btn-submit btn btn-danger' style='position: relative; bottom: 30px;'>Submit</button>";
+                echo "<button type='submit' class='btn-submit btn btn-danger' style='position: relative; bottom: 15px; right: 25px'>Submit</button>";
             }
             ?>
     </form>
