@@ -88,7 +88,7 @@ $stmt->close();
                       <li><a href="index.php">Home</a></li>
                       <li><a href="properties.php">Properties</a></li>
                       <li><a href="lease.php">Lease your villa</a></li>
-                      <li><a href="mybookings.php">My Bookings</a></li>
+                      <li><a href="mybookings.php" class="active">My Bookings</a></li>
                       <?php 
                         if(!empty($_SESSION['LogedIn'])){
                         $username=$_SESSION['USERNAME'];

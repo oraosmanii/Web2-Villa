@@ -90,8 +90,8 @@ https://templatemo.com/tm-591-villa-agency
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="index.php" class="active">Home</a></li>
-                      <li><a href="properties.php">Properties</a></li>
+                      <li><a href="index.php" >Home</a></li>
+                      <li><a href="properties.php" class="active">Properties</a></li>
                       <li><a href="<?php
                       if(!empty($_SESSION['LogedIn'])){
                         echo "lease.php";

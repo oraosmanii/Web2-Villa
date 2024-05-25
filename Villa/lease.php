@@ -82,7 +82,7 @@ https://templatemo.com/tm-591-villa-agency
                     <ul class="nav">
                       <li><a href="index.php">Home</a></li>
                       <li><a href="properties.php">Properties</a></li>
-                      <li><a href="lease.php">Lease your villa</a></li>
+                      <li><a href="lease.php" class="active">Lease your villa</a></li>
                       <li><a href="mybookings.php">My Bookings</a></li>
                       <?php 
                         if(!empty($_SESSION['LogedIn'])){

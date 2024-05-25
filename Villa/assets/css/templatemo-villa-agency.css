@@ -550,21 +550,11 @@ Header Style
   border: transparent;
   letter-spacing: .25px;
 }
-
-
-
-
-
-.header-area .main-nav .nav li:hover a {
+.header-area .main-nav .nav ul li a:hover {
   color: #f35525;
 }
 
-.header-area .main-nav .nav li a.active {
-  color: #f35525;
-}
-
-
-.background-header .main-nav .nav li a.active {
+.header-area .main-nav .nav ul li a.active {
   color: #f35525;
 }
 
