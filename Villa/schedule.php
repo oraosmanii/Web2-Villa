@@ -2,7 +2,6 @@
 session_start();
 include 'db_connection.php'; 
 
-
 define('TVSH', '0.18');
 
 function formatPhoneNumber()
@@ -29,10 +28,20 @@ if ($property_id > 0) {
     $result = $stmt->get_result();
     $property = $result->fetch_assoc();
     $stmt->close();
+
+    // Fetch booked dates for the property
+    $stmt = $conn->prepare("SELECT arrival_date, departure_date FROM bookings WHERE property_id = ?");
+    $stmt->bind_param("i", $property_id);
+    $stmt->execute();
+    $bookings_result = $stmt->get_result();
+    $booked_dates = [];
+    while ($row = $bookings_result->fetch_assoc()) {
+        $booked_dates[] = ['start' => $row['arrival_date'], 'end' => $row['departure_date']];
+    }
+    $stmt->close();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     $formattedPhoneNumber = formatPhoneNumber();
 
     if (!isset($_SESSION['USER_ID'])) {
@@ -41,13 +50,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $user_id = $_SESSION['USER_ID'];
-    echo "USER_ID from session: " . $user_id; 
-
     $arrival_date = $_POST['arrival_date'];
     $departure_date = $_POST['departure_date'];
     $payment_method = $_POST['payment'];
     $comment = $_POST['comment'];
     $total_price = isset($_POST['total_price']) ? $_POST['total_price'] : 0;
+
+    $today = date('Y-m-d');
+    if ($arrival_date < $today || $departure_date <= $arrival_date) {
+        echo "Error: Invalid dates selected.";
+        exit();
+    }
+
+    // Check for date overlap
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) FROM bookings 
+        WHERE property_id = ? AND 
+              ((arrival_date <= ? AND departure_date > ?) OR 
+               (arrival_date < ? AND departure_date >= ?))
+    ");
+    $stmt->bind_param("issss", $property_id, $departure_date, $arrival_date, $arrival_date, $departure_date);
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($count > 0) {
+        echo "Error: Selected dates are not available.";
+        exit();
+    }
 
     $stmt = $conn->prepare("INSERT INTO bookings (user_id, property_id, arrival_date, departure_date, phone_number, payment_method, comment, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("iisssssd", $user_id, $property_id, $arrival_date, $departure_date, $formattedPhoneNumber, $payment_method, $comment, $total_price);
@@ -65,8 +96,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,6 +108,9 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900");
         * {
@@ -155,11 +187,11 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="arrival_date">Arrival Date:</label>
-                                <input type="date" id="arrival_date" name="arrival_date" required>
+                                <input type="text" id="arrival_date" name="arrival_date" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="departure_date">Departure Date:</label>
-                                <input type="date" id="departure_date" name="departure_date" required>
+                                <input type="text" id="departure_date" name="departure_date" required>
                             </div>
                         </div>
                         <div class="row">
@@ -218,19 +250,59 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
         <script src="assets/js/book.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const arrivalDateInput = document.getElementById('arrival_date');
-                const departureDateInput = document.getElementById('departure_date');
+                const arrivalDateInput = $('#arrival_date');
+                const departureDateInput = $('#departure_date');
                 const propertyPriceInput = document.getElementById('property_price');
                 const totalPriceContainer = document.getElementById('total_price');
                 const totalPriceInput = document.getElementById('total_price_input');  // Hidden input for total price
                 const TVSH = parseFloat("<?php echo TVSH; ?>");
 
-                arrivalDateInput.addEventListener('change', updateTotalPrice);
-                departureDateInput.addEventListener('change', updateTotalPrice);
+                const today = new Date().toISOString().split('T')[0];
+                const bookedDates = <?php echo json_encode($booked_dates); ?>;
+                let bookedRanges = [];
+
+                bookedDates.forEach(function(booking) {
+                    let start = new Date(booking.start);
+                    let end = new Date(booking.end);
+                    bookedRanges.push({ start: start, end: end });
+                });
+
+                function isDateBooked(date) {
+                    for (let i = 0; i < bookedRanges.length; i++) {
+                        if (date >= bookedRanges[i].start && date <= bookedRanges[i].end) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                function noPastDates(date) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    if (date < today) {
+                        return [false, "", "Past dates are disabled"];
+                    }
+                    if (isDateBooked(date)) {
+                        return [false, "", "This date is already booked"];
+                    }
+                    return [true, "", ""];
+                }
+
+                arrivalDateInput.datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    beforeShowDay: noPastDates,
+                    onSelect: updateTotalPrice
+                });
+
+                departureDateInput.datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    beforeShowDay: noPastDates,
+                    onSelect: updateTotalPrice
+                });
 
                 function updateTotalPrice() {
-                    const arrivalDate = new Date(arrivalDateInput.value);
-                    const departureDate = new Date(departureDateInput.value);
+                    const arrivalDate = new Date(arrivalDateInput.val());
+                    const departureDate = new Date(departureDateInput.val());
                     const propertyPrice = parseFloat(propertyPriceInput.value);
 
                     if (!isNaN(arrivalDate.getTime()) && !isNaN(departureDate.getTime()) && !isNaN(propertyPrice)) {
@@ -242,7 +314,7 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                             totalPriceContainer.textContent = 'Please enter valid dates';
                             totalPriceContainer.style.fontWeight = '700';
                             totalPriceContainer.style.fontSize = '20px';
-                            totalPriceInput.value = "";  // Clear total price input
+                            totalPriceInput.value = "";  
                         } else {
                             totalPriceContainer.innerHTML = '';
                             var totalPriceNode = document.createTextNode('Total Price: ' + totalPrice.toFixed(2) + "$");
@@ -255,13 +327,13 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                             totalPriceContainer.style.fontWeight = '700';
                             totalPriceContainer.style.fontSize = '23px';
 
-                            totalPriceInput.value = totalPriceTVSH.toFixed(2);  // Set total price in hidden input
+                            totalPriceInput.value = totalPriceTVSH.toFixed(2);  
                         }
                     } else {
                         totalPriceContainer.textContent = 'Enter your travel dates for total price';
                         totalPriceContainer.style.fontWeight = '700';
                         totalPriceContainer.style.fontSize = '20px';
-                        totalPriceInput.value = "";  // Clear total price input
+                        totalPriceInput.value = "";  
                     }
                 }
             });

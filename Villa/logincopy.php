@@ -1,13 +1,12 @@
 <?php
 session_start();
-include 'db_connection.php'; 
+include 'db_connection.php';
 
 if (isset($_POST['login'])) {
     if (!empty($_POST["email"]) && !empty($_POST["password"])) {
         $email = $_POST["email"];
         $password = $_POST["password"];
         
-        // Check if the email exists in the database
         $stmt = $conn->prepare("SELECT id, username, password, salt FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -18,16 +17,16 @@ if (isset($_POST['login'])) {
         // Verify the password
         if ($hashed_password && hash("sha256", $password . $salt) === $hashed_password) {
             $_SESSION['LogedIn'] = true;
-            $_SESSION['USER_ID'] = $user_id; // Set the USER_ID in the session
+            $_SESSION['USER_ID'] = $user_id; 
             $_SESSION['USERNAME'] = $username;
             $_SESSION['EMAIL'] = $email;
-            // Debugging statement to ensure USER_ID is set
-            echo "USER_ID set in session: " . $_SESSION['USER_ID'];
             header("Location: index.php");
             exit();
         } else {
-            $message = "<div class='signup-link'>Your credentials are not valid!</div>";
+            $message = "Your credentials are not valid!";
         }
+    } else {
+        $message = "Please fill in all fields.";
     }
 }
 ?>
