@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = " "; 
+$password = ""; 
 $dbname = "villadb"; 
 $port = 3307;
 
