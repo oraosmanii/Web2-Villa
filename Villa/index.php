@@ -1,14 +1,27 @@
- <?php
+<?php
 session_start();
-if (!isset($_SESSION['index_visits'])) {
+include 'db_connection.php'; 
 
+if (!isset($_SESSION['index_visits'])) {
   $_SESSION['index_visits'] = 1; 
 } else {
   $_SESSION['index_visits']++; 
 }
 
-
-?> 
+// fetch
+$stmt = $conn->prepare("
+    SELECT p.*, AVG(r.rating) as avg_rating 
+    FROM properties p 
+    JOIN ratings r ON p.id = r.property_id 
+    GROUP BY p.id 
+    ORDER BY avg_rating DESC 
+    LIMIT 1
+");
+$stmt->execute();
+$result = $stmt->get_result();
+$topRatedProperty = $result->fetch_assoc();
+$stmt->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -143,8 +156,8 @@ https://templatemo.com/tm-591-villa-agency
 
 <body>
 
-  <!-- ***** Preloader Start ***** -->
-  <div id="js-preloader" class="js-preloader">
+   <!-- ***** Preloader Start ***** -->
+   <div id="js-preloader" class="js-preloader">
     <div class="preloader-inner">
       <span class="dot"></span>
       <div class="dots">
@@ -260,64 +273,78 @@ https://templatemo.com/tm-591-villa-agency
     </div>
     </div>
   <!-- FEATURED / TOP RANKED -->
-  <div class="featured section">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="left-image">
-            <img src="assets/images/featured.jpg" alt="">
-            <a href="property-details.php"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <div class="section-heading">
-            <h6>| Top Rated</h6>
-            <h2>Best Rated Apartment &amp; View </h2>
-          </div>
-          <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  Most loved from our clients!
-                </button>
-              </h2>
-              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body top-rated-accordion">
-                  Excellent
-                  <span class="top-rated">9.8</span>/10
-                  <img class="stars" src="assets/images/rating.png" alt="">
-    
-                </div>
+        <div class="featured section">
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-4">
+                      <div class="left-image">
+                          <?php if ($topRatedProperty): ?>
+                              <img src="<?php echo htmlspecialchars($topRatedProperty['image']); ?>" alt="">
+                              <a href="property-details.php?info=<?php echo htmlspecialchars($topRatedProperty['id']); ?>"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
+                          <?php else: ?>
+                              <img src="assets/images/default-property.jpg" alt="">
+                              <a href="#"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
+                          <?php endif; ?>
+                      </div>
+                  </div>
+                  <div class="col-lg-5">
+                      <div class="section-heading">
+                          <h6>| Top Rated</h6>
+                          <h2>
+                              <?php
+                              if ($topRatedProperty) {
+                                  echo htmlspecialchars($topRatedProperty['city']) . ", " . htmlspecialchars($topRatedProperty['country']);
+                              } else {
+                                  echo "No top-rated property available";
+                              }
+                              ?>
+                          </h2>
+                      </div>
+                      <div class="accordion" id="accordionExample">
+                          <div class="accordion-item">
+                              <h2 class="accordion-header" id="headingOne">
+                                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                      Most loved from our clients!
+                                  </button>
+                              </h2>
+                              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                  <div class="accordion-body top-rated-accordion">
+                                      Excellent
+                                      <span class="top-rated"><?php echo $topRatedProperty ? number_format($topRatedProperty['avg_rating'], 1) : 'N/A'; ?></span>/5.0
+                                      <img class="stars" src="assets/images/rating.png" alt="">
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-3">
+                      <div class="info-table">
+                          <ul>
+                              <li>
+                                  <img src="assets/images/info-icon-01.png" alt="" style="max-width: 52px;">
+                                  <h4><?php echo $topRatedProperty ? htmlspecialchars($topRatedProperty['area']) : 'N/A'; ?> m2<br><span>Total Flat Space</span></h4>
+                              </li>
+                              <li>
+                                  <img src="assets/images/info-icon-02.png" alt="" style="max-width: 52px;">
+                                  <h4>Contract<br><span>Contract Ready</span></h4>
+                              </li>
+                              <li>
+                                  <img src="assets/images/info-icon-03.png" alt="" style="max-width: 52px;">
+                                  <h4>Payment<br><span>Payment Process</span></h4>
+                              </li>
+                              <li>
+                                  <img src="assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
+                                  <h4>Safety<br><span>24/7 Under Control</span></h4>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
               </div>
-            </div>
-          
           </div>
-        </div>
-        <div class="col-lg-3">
-          <div class="info-table">
-            <ul>
-              <li>
-                <img src="assets/images/info-icon-01.png" alt="" style="max-width: 52px;">
-                <h4>250 m2<br><span>Total Flat Space</span></h4>
-              </li>
-              <li>
-                <img src="assets/images/info-icon-02.png" alt="" style="max-width: 52px;">
-                <h4>Contract<br><span>Contract Ready</span></h4>
-              </li>
-              <li>
-                <img src="assets/images/info-icon-03.png" alt="" style="max-width: 52px;">
-                <h4>Payment<br><span>Payment Process</span></h4>
-              </li>
-              <li>
-                <img src="assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
-                <h4>Safety<br><span>24/7 Under Control</span></h4>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
-    </div>
-  </div>
+
+
+
 
   <div class="video section">
     <div class="container">

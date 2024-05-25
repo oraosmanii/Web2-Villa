@@ -1,15 +1,15 @@
 <?php
 session_start();
-include 'db_connection.php'; 
+include 'db_connection.php'; // Include your database connection file
 
 $property = null;
 $info = null;
 
 if (isset($_GET['info'])) {
-    // decode
+    // Decode the encoded information
     $info = urldecode($_GET['info']);
 
-    // fetch
+    // Fetch property details from the database
     $stmt = $conn->prepare("SELECT country, city, image, price, bathrooms, bedrooms, area, type FROM properties WHERE id = ?");
     $stmt->bind_param("i", $info);
     $stmt->execute();
@@ -17,9 +17,7 @@ if (isset($_GET['info'])) {
     $property = $result->fetch_assoc();
     $stmt->close();
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -141,6 +139,16 @@ if (isset($_GET['info'])) {
 
     <?php
     if ($property) {
+        // fetch
+        $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE property_id = ?");
+        $stmt->bind_param("i", $info);
+        $stmt->execute();
+        $stmt->bind_result($avg_rating);
+        $stmt->fetch();
+        $stmt->close();
+
+        $avg_rating = round($avg_rating, 1); // round
+
         echo "<div class='single-property section'>
         <div class='container'>
           <div class='row'>
@@ -151,6 +159,7 @@ if (isset($_GET['info'])) {
               <div class='main-content'>
                 <span class='category'>{$property['type']}</span>
                 <h4>{$property['country']} {$property['city']}</h4>
+                <p>Average Rating: {$avg_rating}</p>
                 <p>Step into the comfort of modern living with <strong>our premier real estate offerings</strong>. Our carefully curated selections bring you the finest homes that blend luxury with coziness, designed to exceed your expectations. With an eye for exceptional properties, we ensure that every listing provides a unique glimpse into the lifestyle you desire.<br><br></p>
     
                 <p>Browse our collection to find your sanctuary amidst the city's hustle or a tranquil retreat in the countryside. Our team is here to provide <strong>tailored support</strong>, ensuring a smooth transition into your new home. Trust in our expertise to navigate the market and secure your future residence with confidence.</p>
@@ -195,45 +204,44 @@ if (isset($_GET['info'])) {
 
     <!-- RATING SECTION -->
     <div class="rating-section">
-        <div class="card">
-            <div class="card-header">
-                <h3>Rate this property</h3>
-            </div>
-            <div class="card-body">
-                <form id="rating-form" action="#">
-                    <label for="rating">Rating:</label>
-                    <div class="yjet">
-                        <input type="radio" id="star5" name="rating" value="5">
-                        <label for="star5"></label>
-                        <input type="radio" id="star4" name="rating" value="4">
-                        <label for="star4"></label>
-                        <input type="radio" id="star3" name="rating" value="3">
-                        <label for="star3"></label>
-                        <input type="radio" id="star2" name="rating" value="2">
-                        <label for="star2"></label>
-                        <input type="radio" id="star1" name="rating" value="1">
-                        <label for="star1"></label>
-                    </div>
-                    <div class='login-first'>
-                        <?php
-                        if (empty($_SESSION['LogedIn'])) {
-                            echo "<a href='logincopy.php'>Log in first to rate</a>
-                  </div>";
-                        } else {
-                            echo "<button type='submit' class='btn btn-danger' style='position: relative; bottom: 30px;'>Submit</button>";
-                        }
-
-                        ?>
-                </form>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h3>Rate this property</h3>
+        </div>
+        <div class="card-body">
+            <form id="rating-form" action="submit_rating.php" method="post">
+                <input type="hidden" name="property_id" value="<?php echo htmlspecialchars($info); ?>">
+                <label for="rating">Rating:</label>
+                <div class="yjet">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5"></label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4"></label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3"></label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2"></label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1"></label>
+                </div>
+                <div class='login-first'>
+                    <?php
+                    if (empty($_SESSION['LogedIn'])) {
+                        echo "<a href='logincopy.php'>Log in first to rate</a></div>";
+                    } else {
+                        echo "<button type='submit' class='btn btn-danger' style='position: relative; bottom: 30px;'>Submit</button>";
+                    }
+                    ?>
+            </form>
         </div>
     </div>
+</div>
+
 
     </div>
     </div>
     </div>
     </div>
-
 
     <footer class="footer-no-gap">
         <div class="container">
@@ -253,13 +261,6 @@ if (isset($_GET['info'])) {
     <script src="assets/js/owl-carousel.js"></script>
     <script src="assets/js/counter.js"></script>
     <script src="assets/js/custom.js"></script>
-    <?php
-    // if ($counter>3){
-    //   echo "<script>setTimeout(function() {
-    //     alert('We think this might be the right place for you to stay.')
-    //   }, 450)</script>";
-    ?>
-
 
 </body>
 
