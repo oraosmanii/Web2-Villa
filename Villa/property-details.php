@@ -1,20 +1,24 @@
 <?php
 session_start();
-include 'db_connection.php'; // Include your database connection file
+include 'db_connection.php';
 
 $property = null;
 $info = null;
 
 if (isset($_GET['info'])) {
-    // Decode the encoded information
     $info = urldecode($_GET['info']);
-
-    // Fetch property details from the database
-    $stmt = $conn->prepare("SELECT country, city, image, price, bathrooms, bedrooms, area, type FROM properties WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, country, city, image, price, bathrooms, bedrooms, area, type FROM properties WHERE id = ?");
     $stmt->bind_param("i", $info);
     $stmt->execute();
     $result = $stmt->get_result();
     $property = $result->fetch_assoc();
+    $stmt->close();
+
+    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE property_id = ?");
+    $stmt->bind_param("i", $info);
+    $stmt->execute();
+    $stmt->bind_result($avg_rating);
+    $stmt->fetch();
     $stmt->close();
 }
 ?>
