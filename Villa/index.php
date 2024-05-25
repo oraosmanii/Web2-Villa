@@ -110,6 +110,19 @@ https://templatemo.com/tm-591-villa-agency
             margin-left: 15px;
         }
 
+        .star{
+          width: 35px;
+          height: 35px;
+          margin-right: 10px;
+          position: relative;
+          top: 15px;
+          left: 20px;
+        }
+
+        .stars{
+          width: 300px;
+        }
+
         .location-form button:hover {
             background-color: #0069d9;
             background-color: red;
@@ -272,77 +285,92 @@ https://templatemo.com/tm-591-villa-agency
         <button class="button-orange" onclick="handleClick('rate')">Follow Us!</button>
     </div>
     </div>
-  <!-- FEATURED / TOP RANKED -->
-        <div class="featured section">
-          <div class="container">
-              <div class="row">
-                  <div class="col-lg-4">
-                      <div class="left-image">
-                          <?php if ($topRatedProperty): ?>
-                              <img src="<?php echo htmlspecialchars($topRatedProperty['image']); ?>" alt="">
-                              <a href="property-details.php?info=<?php echo htmlspecialchars($topRatedProperty['id']); ?>"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
-                          <?php else: ?>
-                              <img src="assets/images/default-property.jpg" alt="">
-                              <a href="#"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
-                          <?php endif; ?>
-                      </div>
-                  </div>
-                  <div class="col-lg-5">
-                      <div class="section-heading">
-                          <h6>| Top Rated</h6>
-                          <h2>
-                              <?php
-                              if ($topRatedProperty) {
-                                  echo htmlspecialchars($topRatedProperty['city']) . ", " . htmlspecialchars($topRatedProperty['country']);
-                              } else {
-                                  echo "No top-rated property available";
-                              }
-                              ?>
-                          </h2>
-                      </div>
-                      <div class="accordion" id="accordionExample">
-                          <div class="accordion-item">
-                              <h2 class="accordion-header" id="headingOne">
-                                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                      Most loved from our clients!
-                                  </button>
-                              </h2>
-                              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                  <div class="accordion-body top-rated-accordion">
-                                      Excellent
-                                      <span class="top-rated"><?php echo $topRatedProperty ? number_format($topRatedProperty['avg_rating'], 1) : 'N/A'; ?></span>/5.0
-                                      <img class="stars" src="assets/images/rating.png" alt="">
-                                  </div>
+ <!-- FEATURED / TOP RANKED -->
+<div class="featured section">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-4">
+              <div class="left-image">
+                  <?php if ($topRatedProperty): ?>
+                      <img src="<?php echo htmlspecialchars($topRatedProperty['image']); ?>" alt="">
+                      <a href="property-details.php?info=<?php echo htmlspecialchars($topRatedProperty['id']); ?>"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
+                  <?php else: ?>
+                      <img src="assets/images/default-property.jpg" alt="">
+                      <a href="#"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
+                  <?php endif; ?>
+              </div>
+          </div>
+          <div class="col-lg-5">
+              <div class="section-heading">
+                  <h6>| Top Rated</h6>
+                  <h2>
+                      <?php
+                      if ($topRatedProperty) {
+                          echo htmlspecialchars($topRatedProperty['city']) . ", " . htmlspecialchars($topRatedProperty['country']);
+                      } else {
+                          echo "No top-rated property available";
+                      }
+                      ?>
+                  </h2>
+              </div>
+              <div class="accordion" id="accordionExample">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              Most loved from our clients!
+                          </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                          <div class="accordion-body top-rated-accordion">
+                              Excellent
+                              <span class="top-rated"><?php echo $topRatedProperty ? number_format($topRatedProperty['avg_rating'], 1) : 'N/A'; ?></span>/5.0
+                              <div class="stars">
+                                  <?php
+                                  if ($topRatedProperty) {
+                                      $rating = round($topRatedProperty['avg_rating']);
+                                      for ($i = 0; $i < $rating; $i++) {
+                                          echo '<img class="star" src="assets/images/star.png" alt="Star">';
+                                      }
+                                      for ($i = $rating; $i < 5; $i++) {
+                                          echo '<img class="star" src="assets/images/star-empty.png" alt="Empty Star">';
+                                      }
+                                  } else {
+                                      for ($i = 0; $i < 5; $i++) {
+                                          echo '<img src="assets/images/star-empty.png" alt="Empty Star">';
+                                      }
+                                  }
+                                  ?>
                               </div>
                           </div>
                       </div>
                   </div>
-                  <div class="col-lg-3">
-                      <div class="info-table">
-                          <ul>
-                              <li>
-                                  <img src="assets/images/info-icon-01.png" alt="" style="max-width: 52px;">
-                                  <h4><?php echo $topRatedProperty ? htmlspecialchars($topRatedProperty['area']) : 'N/A'; ?> m2<br><span>Total Flat Space</span></h4>
-                              </li>
-                              <li>
-                                  <img src="assets/images/info-icon-02.png" alt="" style="max-width: 52px;">
-                                  <h4>Contract<br><span>Contract Ready</span></h4>
-                              </li>
-                              <li>
-                                  <img src="assets/images/info-icon-03.png" alt="" style="max-width: 52px;">
-                                  <h4>Payment<br><span>Payment Process</span></h4>
-                              </li>
-                              <li>
-                                  <img src="assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
-                                  <h4>Safety<br><span>24/7 Under Control</span></h4>
-                              </li>
-                          </ul>
-                      </div>
-                  </div>
+              </div>
+          </div>
+          <div class="col-lg-3">
+              <div class="info-table">
+                  <ul>
+                      <li>
+                          <img src="assets/images/info-icon-01.png" alt="" style="max-width: 52px;">
+                          <h4><?php echo $topRatedProperty ? htmlspecialchars($topRatedProperty['area']) : 'N/A'; ?> m2<br><span>Total Flat Space</span></h4>
+                      </li>
+                      <li>
+                          <img src="assets/images/info-icon-02.png" alt="" style="max-width: 52px;">
+                          <h4>Contract<br><span>Contract Ready</span></h4>
+                      </li>
+                      <li>
+                          <img src="assets/images/info-icon-03.png" alt="" style="max-width: 52px;">
+                          <h4>Payment<br><span>Payment Process</span></h4>
+                      </li>
+                      <li>
+                          <img src="assets/images/info-icon-04.png" alt="" style="max-width: 52px;">
+                          <h4>Safety<br><span>24/7 Under Control</span></h4>
+                      </li>
+                  </ul>
               </div>
           </div>
       </div>
-
+  </div>
+</div>
 
 
 
