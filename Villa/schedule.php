@@ -96,6 +96,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
 ?>
 
+<?php
+include('db_connection.php'); // Include your database connection
+
+$errors = [];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $arrival_date = isset($_POST['arrival_date']) ? $_POST['arrival_date'] : '';
+    $departure_date = isset($_POST['departure_date']) ? $_POST['departure_date'] : '';
+    $phone_number = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
+    $payment_method = isset($_POST['payment']) ? $_POST['payment'] : '';
+
+    if (empty($arrival_date)) {
+        $errors[] = "Arrival date is required.";
+    }
+
+    if (empty($departure_date)) {
+        $errors[] = "Departure date is required.";
+    }
+
+    if (empty($phone_number)) {
+        $errors[] = "Phone number is required.";
+    }
+
+    if (empty($payment_method)) {
+        $errors[] = "Payment method is required.";
+    }
+
+    if (empty($errors)) {
+        // Process the form (insert into database or whatever you need to do)
+        $user_id = $_SESSION['USER_ID']; // Assuming you have user ID in the session
+        $stmt = $conn->prepare("INSERT INTO bookings (user_id, property_id, arrival_date, departure_date, phone_number, payment_method, comment, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisssssd", $user_id, $property_id, $arrival_date, $departure_date, $phone_number, $payment_method, $comment, $total_price);
+
+        if ($stmt->execute()) {
+            header("Location: mybookings.php");
+            exit();
+        } else {
+            $errors[] = "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,7 +173,43 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
             border-color: #ffffff;
         }
     </style>
-</head>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('booking-form');
+            var button = document.getElementById('buttoni');
+            var requiredInputs = form.querySelectorAll('input[required], textarea[required]');
+            var radioInputs = form.querySelectorAll('input[name="payment"]');
+
+            function checkFormValidity() {
+                var allFilled = true;
+                requiredInputs.forEach(function(input) {
+                    if (!input.value.trim()) {
+                        allFilled = false;
+                    }
+                });
+                
+                var paymentSelected = false;
+                radioInputs.forEach(function(input) {
+                    if (input.checked) {
+                        paymentSelected = true;
+                    }
+                });
+
+                button.disabled = !(allFilled && paymentSelected);
+            }
+
+            requiredInputs.forEach(function(input) {
+                input.addEventListener('input', checkFormValidity);
+            });
+
+            radioInputs.forEach(function(input) {
+                input.addEventListener('change', checkFormValidity);
+            });
+
+            checkFormValidity(); // Initial check in case some fields are pre-filled
+        });
+    </script>
+    </head>
 <body>
     <!-- Main Screen-->
     <audio id="Subscribe">
@@ -246,7 +327,32 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                 </div>
             </div>
         </form>
+        <script>
+        function checkForm() {
+            var arrivalDate = document.getElementById('arrival_date').value;
+            var departureDate = document.getElementById('departure_date').value;
+            var phoneNumber = document.querySelector('input[name="phone-number"]').value;
+            var paymentMethod = document.querySelector('input[name="payment"]:checked');
 
+            if (arrivalDate && departureDate && phoneNumber && paymentMethod) {
+                document.getElementById('buttoni').disabled = false;
+            } else {
+                document.getElementById('buttoni').disabled = true;
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById('arrival_date').addEventListener('input', checkForm);
+            document.getElementById('departure_date').addEventListener('input', checkForm);
+            document.querySelector('input[name="phone-number"]').addEventListener('input', checkForm);
+            var paymentRadios = document.querySelectorAll('input[name="payment"]');
+            paymentRadios.forEach(function(radio) {
+                radio.addEventListener('change', checkForm);
+            });
+
+            checkForm(); // Initial check
+        };
+    </script>
         <script src="assets/js/book.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
