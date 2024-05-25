@@ -106,6 +106,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $departure_date = isset($_POST['departure_date']) ? $_POST['departure_date'] : '';
     $phone_number = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
     $payment_method = isset($_POST['payment']) ? $_POST['payment'] : '';
+    $bank_number = isset($_POST['bank_number']) ? $_POST['bank_number'] : '';
+    $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
+    $total_price = isset($_POST['total_price']) ? $_POST['total_price'] : 0;
 
     if (empty($arrival_date)) {
         $errors[] = "Arrival date is required.";
@@ -123,11 +126,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors[] = "Payment method is required.";
     }
 
+    if ($payment_method === 'bank' && empty($bank_number)) {
+        $errors[] = "Bank number is required when payment method is bank.";
+    }
+
     if (empty($errors)) {
         // Process the form (insert into database or whatever you need to do)
         $user_id = $_SESSION['USER_ID']; // Assuming you have user ID in the session
-        $stmt = $conn->prepare("INSERT INTO bookings (user_id, property_id, arrival_date, departure_date, phone_number, payment_method, comment, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iisssssd", $user_id, $property_id, $arrival_date, $departure_date, $phone_number, $payment_method, $comment, $total_price);
+        $property_id = $_GET['info']; // Assuming property_id is passed as a GET parameter
+
+        $stmt = $conn->prepare("INSERT INTO bookings (user_id, property_id, arrival_date, departure_date, phone_number, payment_method, comment, total_price, bank_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisssssd", $user_id, $property_id, $arrival_date, $departure_date, $phone_number, $payment_method, $comment, $total_price, $bank_number);
 
         if ($stmt->execute()) {
             header("Location: mybookings.php");
@@ -285,7 +294,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="radio" class="radio" id="bank" name="payment" value="bank"> <label class="form-check-label" for="bank" required>
                                     Bank
                                 </label>
-                                <input style="width:50%;float: right;" type="text" id="bank" class="classinput" placeholder="Bank Number">
+                                <input style="width:50%;float: right;" type="text" id="bank_number" class="classinput" placeholder="Bank Number">
                                 <br> <br> <br>
                             </div>
                         </div>
@@ -328,13 +337,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
         <script>
-        function checkForm() {
+       function checkForm() {
             var arrivalDate = document.getElementById('arrival_date').value;
             var departureDate = document.getElementById('departure_date').value;
             var phoneNumber = document.querySelector('input[name="phone-number"]').value;
             var paymentMethod = document.querySelector('input[name="payment"]:checked');
+            var bankNumber = document.getElementById('bank_number').value;
+            var bankRadio = document.getElementById('bank').checked;
 
-            if (arrivalDate && departureDate && phoneNumber && paymentMethod) {
+            if (arrivalDate && departureDate && phoneNumber && paymentMethod && (!bankRadio || (bankRadio && bankNumber))) {
                 document.getElementById('buttoni').disabled = false;
             } else {
                 document.getElementById('buttoni').disabled = true;
@@ -347,10 +358,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             document.querySelector('input[name="phone-number"]').addEventListener('input', checkForm);
             var paymentRadios = document.querySelectorAll('input[name="payment"]');
             paymentRadios.forEach(function(radio) {
-                radio.addEventListener('change', checkForm);
+                radio.addEventListener('change', function() {
+                    if (this.value === 'bank') {
+                        document.getElementById('bank_number').required = true;
+                    } else {
+                        document.getElementById('bank_number').required = false;
+                        document.getElementById('bank_number').value = '';
+                    }
+                    checkForm();
+                });
             });
-
-            checkForm(); // Initial check
+            document.getElementById('bank_number').addEventListener('input', checkForm);
+            checkForm();
         };
     </script>
         <script src="assets/js/book.js"></script>
