@@ -49,7 +49,7 @@ function createCard(&$array = [])
                         <a href='property-details.php?info={$cards}'><img src='{$booking->get_image()}' height='300' alt=''></a>
                         <span class='category'>{$booking->get_type()}</span> 
                         <h6>$ {$booking->get_price()}</h6>
-                        <h4><a href='property-details.php'>{$booking->get_country()} {$booking->get_city()}</a></h4>
+                        <h4><a href='property-details.php?info={$cards}'>{$booking->get_country()} {$booking->get_city()}</a></h4>
                         <ul>
                         <li>Bedrooms: <span>{$booking->get_bedrooms()}</span></li>
                         <li>Bathrooms: <span>{$booking->get_bathrooms()}</span></li>
@@ -72,7 +72,7 @@ function createCard(&$array = [])
                     <a href='property-details.php?info={$info['card']}'><img src='{$info['image']}' height='300' alt=''></a>
                     <span class='category'>{$info['type']}</span> 
                     <h6>$ {$info['price']}</h6>
-                    <h4><a href='property-details.php'>{$info['country']} {$info['city']}</a></h4>
+                    <h4><a href='property-details.php?info={$info['card']}'>{$info['country']} {$info['city']}</a></h4>
                     <ul>
                     <li>Bedrooms: <span>{$info['bedrooms']}</span></li>
                     <li>Bathrooms: <span>{$info['bathrooms']}</span></li>
