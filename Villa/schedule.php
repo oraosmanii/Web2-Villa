@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db_connection.php'; 
+include 'db_connection.php';
 
 define('TVSH', '0.18');
 
@@ -19,6 +19,21 @@ function formatPhoneNumber()
     return '';
 }
 
+function &getBookedDates($property_id)
+{
+    global $conn;
+    $stmt = $conn->prepare("SELECT arrival_date, departure_date FROM bookings WHERE property_id = ?");
+    $stmt->bind_param("i", $property_id);
+    $stmt->execute();
+    $bookings_result = $stmt->get_result();
+    $booked_dates = [];
+    while ($row = $bookings_result->fetch_assoc()) {
+        $booked_dates[] = ['start' => $row['arrival_date'], 'end' => $row['departure_date']];
+    }
+    $stmt->close();
+    return $booked_dates;
+}
+
 $property_id = isset($_GET['info']) ? intval($_GET['info']) : 0;
 
 if ($property_id > 0) {
@@ -30,15 +45,7 @@ if ($property_id > 0) {
     $stmt->close();
 
     // Fetch booked dates for the property
-    $stmt = $conn->prepare("SELECT arrival_date, departure_date FROM bookings WHERE property_id = ?");
-    $stmt->bind_param("i", $property_id);
-    $stmt->execute();
-    $bookings_result = $stmt->get_result();
-    $booked_dates = [];
-    while ($row = $bookings_result->fetch_assoc()) {
-        $booked_dates[] = ['start' => $row['arrival_date'], 'end' => $row['departure_date']];
-    }
-    $stmt->close();
+    $booked_dates = &getBookedDates($property_id);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -49,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $user_id = $_SESSION['USER_ID'];
+    $user_id = &$_SESSION['USER_ID'];
     $arrival_date = $_POST['arrival_date'];
     $departure_date = $_POST['departure_date'];
     $payment_method = $_POST['payment'];
@@ -94,67 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
-?>
-
-<?php
-include('db_connection.php');
-
-$errors = [];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $arrival_date = isset($_POST['arrival_date']) ? $_POST['arrival_date'] : '';
-    $departure_date = isset($_POST['departure_date']) ? $_POST['departure_date'] : '';
-    $phone_number = isset($_POST['phone_number']) ? $_POST['phone_number'] : '';
-    $payment_method = isset($_POST['payment']) ? $_POST['payment'] : '';
-    $bank_number = isset($_POST['bank_number']) ? $_POST['bank_number'] : '';
-    $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
-    $total_price = isset($_POST['total_price']) ? $_POST['total_price'] : 0;
-
-    if (empty($arrival_date)) {
-        $errors[] = "Arrival date is required.";
-    }
-
-    if (empty($departure_date)) {
-        $errors[] = "Departure date is required.";
-    }
-
-    if (empty($phone_number)) {
-        $errors[] = "Phone number is required.";
-    } elseif (!preg_match('/^\+\d{11}$/', $phone_number)) {
-        $errors[] = "Invalid phone number format. Please enter a valid phone number.";
-    }
-
-    if (empty($payment_method)) {
-        $errors[] = "Payment method is required.";
-    }
-
-    if ($payment_method === 'bank') {
-        if (empty($bank_number)) {
-            $errors[] = "Bank number is required when payment method is bank.";
-        } elseif (!preg_match('/^\d{12,}$/', $bank_number)) {
-            $errors[] = "Invalid bank number format. Bank number must be at least 12 digits long.";
-        }
-    }
-
-    if (empty($errors)) {
-        // Process the form (insert into database or whatever you need to do)
-        $user_id = $_SESSION['USER_ID']; // Assuming you have user ID in the session
-        $property_id = $_GET['info']; // Assuming property_id is passed as a GET parameter
-
-        $stmt = $conn->prepare("INSERT INTO bookings (user_id, property_id, arrival_date, departure_date, phone_number, payment_method, comment, total_price, bank_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iisssssds", $user_id, $property_id, $arrival_date, $departure_date, $phone_number, $payment_method, $comment, $total_price, $bank_number);
-
-        if ($stmt->execute()) {
-            header("Location: mybookings.php");
-            exit();
-        } else {
-            $errors[] = "Error: " . $stmt->error;
-        }
-
-        $stmt->close();
-    }
-}
-
 
 ?>
 
@@ -190,84 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-color: #ffffff;
         }
     </style>
-     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var form = document.getElementById('booking-form');
-            var button = document.getElementById('buttoni');
-            var requiredInputs = form.querySelectorAll('input[required], textarea[required]');
-            var radioInputs = form.querySelectorAll('input[name="payment"]');
-
-            function checkFormValidity() {
-                var allFilled = true;
-                requiredInputs.forEach(function(input) {
-                    if (!input.value.trim()) {
-                        allFilled = false;
-                    }
-                });
-                
-                var paymentSelected = false;
-                radioInputs.forEach(function(input) {
-                    if (input.checked) {
-                        paymentSelected = true;
-                    }
-                });
-
-                button.disabled = !(allFilled && paymentSelected);
-            }
-
-            requiredInputs.forEach(function(input) {
-                input.addEventListener('input', checkFormValidity);
-            });
-
-            radioInputs.forEach(function(input) {
-                input.addEventListener('change', checkFormValidity);
-            });
-
-            checkFormValidity(); // Initial check in case some fields are pre-filled
-        });
-    </script>
-    <script>
-       document.addEventListener("DOMContentLoaded", function() {
-            const phoneInput = document.getElementById("phone_number");
-            const bankInput = document.getElementById("bank_number");
-            const submitButton = document.getElementById("buttoni");
-            const paymentBankRadio = document.getElementById("bank");
-            const paymentCashRadio = document.getElementById("cash");
-
-            function validatePhoneNumber() {
-                const phonePattern = /^\+\d{11}$/;
-                const phoneNumber = phoneInput.value;
-                return phonePattern.test(phoneNumber);
-            }
-
-            function validateBankNumber() {
-                const bankPattern = /^\d{12,}$/;
-                const bankNumber = bankInput.value;
-                return bankPattern.test(bankNumber);
-            }
-
-            function validateForm() {
-                const isPhoneValid = validatePhoneNumber();
-                const isBankValid = paymentBankRadio.checked ? validateBankNumber() : true;
-                const isFormValid = isPhoneValid && isBankValid;
-                submitButton.disabled = !isFormValid;
-            }
-
-            phoneInput.addEventListener("input", validateForm);
-            bankInput.addEventListener("input", validateForm);
-            paymentBankRadio.addEventListener("change", function() {
-                bankInput.required = true;
-                validateForm();
-            });
-            paymentCashRadio.addEventListener("change", function() {
-                bankInput.required = false;
-                validateForm();
-            });
-
-            validateForm(); // Initial check
-        });
-    </script>
-    </head>
+</head>
 <body>
     <!-- Main Screen-->
     <audio id="Subscribe">
@@ -386,29 +255,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
         <script>
-       function checkForm() {
+        function checkForm() {
             var arrivalDate = document.getElementById('arrival_date').value;
             var departureDate = document.getElementById('departure_date').value;
-            var phoneNumber = document.querySelector('input[name="phone-number"]').value;
+            var phoneNumber = document.getElementById('phone_number').value;
             var paymentMethod = document.querySelector('input[name="payment"]:checked');
             var bankNumber = document.getElementById('bank_number').value;
             var bankRadio = document.getElementById('bank').checked;
-            var phone_number=document.getElementById('phone-number');
-
 
             if (arrivalDate && departureDate && phoneNumber && paymentMethod && (!bankRadio || (bankRadio && bankNumber))) {
                 document.getElementById('buttoni').disabled = false;
-                
-            }
-            else {
+            } else {
                 document.getElementById('buttoni').disabled = true;
             }
         }
 
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('booking-form').addEventListener('submit', function(event) {
+                var phoneNumber = document.getElementById('phone_number').value;
+                var phonePattern = /^\+\d{11}$/;
+
+                if (!phonePattern.test(phoneNumber)) {
+                    alert("Please enter a valid phone number.");
+                    event.preventDefault();
+                }
+            });
+
             document.getElementById('arrival_date').addEventListener('input', checkForm);
             document.getElementById('departure_date').addEventListener('input', checkForm);
-            document.querySelector('input[name="phone_number"]').addEventListener('input', checkForm);
+            document.getElementById('phone_number').addEventListener('input', checkForm);
             var paymentRadios = document.querySelectorAll('input[name="payment"]');
             paymentRadios.forEach(function(radio) {
                 radio.addEventListener('change', function() {
@@ -423,8 +298,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
             document.getElementById('bank_number').addEventListener('input', checkForm);
             checkForm();
-        };
-    </script>
+        });
+        </script>
         <script src="assets/js/book.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
