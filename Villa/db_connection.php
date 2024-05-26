@@ -1,9 +1,9 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = ""; 
+$password = "Password"; 
 $dbname = "villadb"; 
-$port = 3307;
+$port = 3306;
 
 
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
