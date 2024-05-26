@@ -38,11 +38,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $date = date("Y-m-d");
 
   if ($stmt->execute()) {
-    echo "<p style='color: green; font-size: 16px;'>New record created successfully</p>";
-  } else {
-    echo "<p style='color: red; font-size: 16px;'>Error: " . $stmt->error . "</p>";
-  }
-  $stmt->close();
+    echo "<script>alert('New record created successfully');</script>";
+} else {
+    echo $stmt->error;
+}
+$stmt->close();
 }
 ?>
 
@@ -225,7 +225,7 @@ https://templatemo.com/tm-591-villa-agency
                 <fieldset>
                   <label for="phone">Phone Number</label>
                   <!-- pattern="[^ @]*@[^ @]*" -->
-                  <input type="phone" name="phone" id="phone"  placeholder="Your Phone Number..." required> 
+                  <input type="phone" name="phone" id="phone"  placeholder="Your Phone Number (+....)" required> 
                   <?php
                   if ($_SERVER["REQUEST_METHOD"] == "POST"){
                     $pattern='/^\+[0-9]{1,11}$/';
@@ -297,7 +297,7 @@ https://templatemo.com/tm-591-villa-agency
         <div class="col-lg-12">
               <div class="col-lg-12">
                 <fieldset>
-                  <button type="submit" id="form-submit" class="orange-button">Send request for leasing</button>
+                  <button type="submit" id="form-submit" class="orange-button">Lease your property</button>
                 </fieldset>
               </div>
             </div>
