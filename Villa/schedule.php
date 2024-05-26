@@ -97,7 +97,7 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
 ?>
 
 <?php
-include('db_connection.php'); // Include your database connection
+include('db_connection.php');
 
 $errors = [];
 
@@ -258,7 +258,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br>
         <h1 class="book-title"><b>Book your dream villa<b></b></h1>
         <p class="book-caption">WE ALWAYS AIM TO CONFIRM YOUR RESERVATION WITHIN 1 HOUR</p> <br> <br>
-        <form id="booking-form" action="#" method="post">
+        <form id="booking-form" action="#" method="POST">
             <input type="hidden" id="total_price_input" name="total_price" value=""> <!-- Hidden input for total price -->
             <div class="container-fluid">
                 <div class="row">
@@ -303,7 +303,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label for="phone-number">Phone number:</label>
                             </div>
                             <div class="col-md-9">
-                                <input class="classinput" type="text" name="phone-number" placeholder="Phone number" value="<?php echo $formattedPhoneNumber ?>">
+                                <input class="classinput" type="text" name="phone-number" id="phone-number" placeholder="Phone number" value="<?php echo $formattedPhoneNumber ?>">
+                                <?php
+                                if ($_SERVER["REQUEST_METHOD"] == "POST"){
+                                // Phone number validation
+                                $phone_pattern = '/^\+[0-9]{1,11}$/';
+                                $phone_number = $_POST['phone-number'];
+                                if (!preg_match($phone_pattern, $phone_number)) {
+                                echo "<script>alert('Invalid phone number. It must start with a + followed by 1 to 11 digits.'); window.location.href = '#phone_number';</script>";
+                                    }
+                               }
+                            ?>
                             </div>
                         </div>
                         <label for="exampleFormControlTextarea1" class="form-label"></label>
