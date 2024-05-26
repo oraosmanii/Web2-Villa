@@ -1,39 +1,39 @@
 <?php
 session_start();
 include 'db_connection.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Sanitize and validate form inputs
-  $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-  $country = htmlspecialchars($_POST['country']);
-  $city = htmlspecialchars($_POST['city']);
-  $phone = htmlspecialchars($_POST['phone']);
-  $price = filter_var($_POST['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-  $area = filter_var($_POST['area'], FILTER_SANITIZE_NUMBER_INT);
-  $bedrooms = filter_var($_POST['bedrooms'], FILTER_SANITIZE_NUMBER_INT);
-  $bathrooms = filter_var($_POST['bathrooms'], FILTER_SANITIZE_NUMBER_INT);
-  $description = htmlspecialchars($_POST['message']);
-  $type = htmlspecialchars($_POST['type']);
-  $images = [];
+    // Sanitize and validate form inputs
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $country = htmlspecialchars($_POST['country']);
+    $city = htmlspecialchars($_POST['city']);
+    $phone = htmlspecialchars($_POST['phone']);
+    $price = filter_var($_POST['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $area = filter_var($_POST['area'], FILTER_SANITIZE_NUMBER_INT);
+    $bedrooms = filter_var($_POST['bedrooms'], FILTER_SANITIZE_NUMBER_INT);
+    $bathrooms = filter_var($_POST['bathrooms'], FILTER_SANITIZE_NUMBER_INT);
+    $description = htmlspecialchars($_POST['message']);
+    $type = htmlspecialchars($_POST['type']);
+    $images = [];
 
-  if (isset($_FILES['add']) && count($_FILES['add']['name']) > 0) {
-    $total = count($_FILES['add']['name']);
-    for ($i = 0; $i < $total; $i++) {
-      if ($_FILES['add']['error'][$i] == 0) {
-        $target_dir = "./assets/images/";
-        $target_file = $target_dir . basename($_FILES["add"]["name"][$i]);
-        if (move_uploaded_file($_FILES["add"]["tmp_name"][$i], $target_file)) {
-          $images[] = $target_file;
-        } else {
-          echo "<p style='color: red; font-size: 16px;'>File upload failed.</p>";
-          exit();
+    if (isset($_FILES['add']) && count($_FILES['add']['name']) > 0) {
+        $total = count($_FILES['add']['name']);
+        for ($i = 0; $i < $total; $i++) {
+            if ($_FILES['add']['error'][$i] == 0) {
+                $target_dir = "./assets/images/";
+                $target_file = $target_dir . basename($_FILES["add"]["name"][$i]);
+                if (move_uploaded_file($_FILES["add"]["tmp_name"][$i], $target_file)) {
+                    $images[] = $target_file;
+                } else {
+                    echo "File upload failed.";
+                    exit();
+                }
+            }
         }
-      }
     }
-  }
 
-  $images_json = json_encode($images);
-  $date = date("Y-m-d");
-
+    $images_json = json_encode($images);
+    $date = date("Y-m-d");
 
     // Insert data into listings table
     $user_id = $_SESSION['USER_ID']; // Ensure the user ID is available from the session
@@ -41,12 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt2->bind_param("issssdiiiss", $user_id, $country, $city, $date, $images_json, $price, $bedrooms, $bathrooms, $area, $type, $description);
 
     if ($stmt2->execute()) {
-        echo "<script>alert('New record created successfully');</script>";
+        echo "New record created successfully";
     } else {
-        echo "<p style='color: red; font-size: 16px;'>Failed to insert into listings table: " . $stmt2->error . "</p>";
+        echo "Failed to insert into listings table: " . $stmt2->error;
     }
     $stmt2->close();
-
+    exit(); // Ensure no further output is sent
 }
 ?>
 
@@ -199,113 +199,103 @@ https://templatemo.com/tm-591-villa-agency
         <div class="col-lg-6">
 
 
-          <form id="contact-form" action="" method="post" enctype="multipart/form-data">
-            <div class="row">
-              
-              <div class="col-lg-12">
+        <form id="contact-form" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-12">
                 <fieldset>
-                  <label for="email">Email Address</label>
-                  <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." <?php 
-                  if (!empty($_SESSION['LogedIn'])){
-                    $email=$_SESSION['EMAIL'];
-                    echo "value='{$email}'";
-                  }
-                  ?> required="">
+                    <label for="email">Email Address</label>
+                    <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." 
+                    <?php if (!empty($_SESSION['LogedIn'])) {
+                        $email = $_SESSION['EMAIL'];
+                        echo "value='{$email}'";
+                    } ?> required="">
                 </fieldset>
-              </div>
-              <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="country">Country</label>
-                  <input type="text" name="country" id="country" placeholder="Country of property..." required >
+                    <label for="country">Country</label>
+                    <input type="text" name="country" id="country" placeholder="Country of property..." required>
                 </fieldset>
-              </div>
-              <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="city">City</label>
-                  <input type="text" name="city" id="city" placeholder="City of property..." required >
+                    <label for="city">City</label>
+                    <input type="text" name="city" id="city" placeholder="City of property..." required>
                 </fieldset>
-              </div>
-              <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="phone">Phone Number</label>
-                  <!-- pattern="[^ @]*@[^ @]*" -->
-                  <input type="phone" name="phone" id="phone"  placeholder="Your Phone Number (+....)" required> 
-                  <?php
-                  if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                    $pattern='/^\+[0-9]{1,11}$/';
-                    $phone=$_POST["phone"];
-                    if(!preg_match($pattern, $phone)){
-                      echo "<p style='color: red; font-size: 16px;'>invalid phone number.</p>
-                      <script>window.location.href = '#phone';</script>"
-                      ;
-                    }else{
-                       echo "<script>
-                       window.location.href = '#contact-form';
-                       </script>";
-                     }
-                  }
-                  ?>
+                    <label for="phone">Phone Number</label>
+                    <input type="phone" name="phone" id="phone" placeholder="Your Phone Number (+....)" required>
+                    <?php if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                        $pattern = '/^\+[0-9]{1,11}$/';
+                        $phone = $_POST["phone"];
+                        if (!preg_match($pattern, $phone)) {
+                            echo "<p style='color: red; font-size: 16px;'>Invalid phone number.</p>
+                            <script>window.location.href = '#phone';</script>";
+                        } else {
+                            echo "<script>window.location.href = '#contact-form';</script>";
+                        }
+                    } ?>
                 </fieldset>
-              </div>
-              <div class="col-lg-6">
-            <fieldset> 
-                <label for="type">Type</label> <br> 
-                <select name="type" id="type" required>
-                    <option value="Villa">Villa</option>
-                    <option value="Apartment">Apartment</option>
-                    <option value="Penthouse">Penthouse</option>
-                </select>
-            </fieldset>
-        </div>
-              <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="price">Price per night</label>
-                  <input type="number" name="price" id="price" placeholder="Price per night in $..." required >
+                    <label for="type">Type</label> <br>
+                    <select name="type" id="type" required>
+                        <option value="Villa">Villa</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Penthouse">Penthouse</option>
+                    </select>
                 </fieldset>
-              </div>
-              <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="area">Area</label>
-                  <input type="number" name="area" id="area" placeholder="Area in m2..." required >
+                    <label for="price">Price per night</label>
+                    <input type="number" name="price" id="price" placeholder="Price per night in $..." required>
                 </fieldset>
-              </div>
-              <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="bedrooms">Number of bedrooms</label>
-                  <input type="number" name="bedrooms" id="bedrooms" placeholder="Bedrooms of property..." required >
+                    <label for="area">Area</label>
+                    <input type="number" name="area" id="area" placeholder="Area in m2..." required>
                 </fieldset>
-              </div>
-              <div class="col-lg-6">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="bathrooms">Number of bathrooms</label>
-                  <input type="number" name="bathrooms" id="bathrooms" placeholder="Bathrooms of property..." required >
+                    <label for="bedrooms">Number of bedrooms</label>
+                    <input type="number" name="bedrooms" id="bedrooms" placeholder="Bedrooms of property..." required>
                 </fieldset>
-              </div>
-              
-              <div class="col-lg-12">
+            </div>
+            <div class="col-lg-6">
                 <fieldset>
-                  <label for="message">Description of the villa</label>
-                  <textarea name="message" id="message" placeholder="Describe in detail..."></textarea>
+                    <label for="bathrooms">Number of bathrooms</label>
+                    <input type="number" name="bathrooms" id="bathrooms" placeholder="Bathrooms of property..." required>
                 </fieldset>
-              </div>
-              <div class="col-md-12">
-            <br>
-            <div>
-                <label class="add" for="add">Add Photos</label>
-                <button class="chooseThePhoto" type="button" onclick="document.getElementById('getFile').click()" style="background-color:#f6f6f6;color: #757575;">
-                    Choose Photos
-                </button>
-                <input type="file" id="getFile" style="display:none" name="add[]" multiple>
+            </div>
+            <div class="col-lg-12">
+                <fieldset>
+                    <label for="message">Description of the villa</label>
+                    <textarea name="message" id="message" placeholder="Describe in detail..."></textarea>
+                </fieldset>
+            </div>
+            <div class="col-md-12">
+                <br>
+                <div>
+                    <label class="add" for="add">Add Photos</label>
+                    <button class="chooseThePhoto" type="button" onclick="document.getElementById('getFile').click()" style="background-color:#f6f6f6;color: #757575;">
+                        Choose Photos
+                    </button>
+                    <input type="file" id="getFile" style="display:none" name="add[]" multiple>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <fieldset>
+                    <button type="submit" id="form-submit" class="orange-button">Lease your property</button>
+                </fieldset>
             </div>
         </div>
-        <div class="col-lg-12">
-              <div class="col-lg-12">
-                <fieldset>
-                  <button type="submit" id="form-submit" class="orange-button">Lease your property</button>
-                </fieldset>
-              </div>
-            </div>
-          </form>
+    </form>
         </div>
    
       </div>
@@ -330,6 +320,30 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/owl-carousel.js"></script>
   <script src="assets/js/counter.js"></script>
   <script src="assets/js/custom.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#contact-form').submit(function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: '', // The PHP script is in the same file
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        alert(response); // Display the alert with the server response
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert('An error occurred: ' + textStatus + ' - ' + errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
 
   </body>
 </html>
