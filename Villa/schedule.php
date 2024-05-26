@@ -104,7 +104,7 @@ $errors = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $arrival_date = isset($_POST['arrival_date']) ? $_POST['arrival_date'] : '';
     $departure_date = isset($_POST['departure_date']) ? $_POST['departure_date'] : '';
-    $phone_number = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
+    $phone_number = isset($_POST['phone_number']) ? $_POST['phone_number'] : '';
     $payment_method = isset($_POST['payment']) ? $_POST['payment'] : '';
     $bank_number = isset($_POST['bank_number']) ? $_POST['bank_number'] : '';
     $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
@@ -120,14 +120,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($phone_number)) {
         $errors[] = "Phone number is required.";
+    } elseif (!preg_match('/^\+\d{11}$/', $phone_number)) {
+        $errors[] = "Invalid phone number format. Please enter a valid phone number.";
     }
 
     if (empty($payment_method)) {
         $errors[] = "Payment method is required.";
     }
 
-    if ($payment_method === 'bank' && empty($bank_number)) {
-        $errors[] = "Bank number is required when payment method is bank.";
+    if ($payment_method === 'bank') {
+        if (empty($bank_number)) {
+            $errors[] = "Bank number is required when payment method is bank.";
+        } elseif (!preg_match('/^\d{12,}$/', $bank_number)) {
+            $errors[] = "Invalid bank number format. Bank number must be at least 12 digits long.";
+        }
     }
 
     if (empty($errors)) {
@@ -136,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $property_id = $_GET['info']; // Assuming property_id is passed as a GET parameter
 
         $stmt = $conn->prepare("INSERT INTO bookings (user_id, property_id, arrival_date, departure_date, phone_number, payment_method, comment, total_price, bank_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iisssssd", $user_id, $property_id, $arrival_date, $departure_date, $phone_number, $payment_method, $comment, $total_price, $bank_number);
+        $stmt->bind_param("iisssssds", $user_id, $property_id, $arrival_date, $departure_date, $phone_number, $payment_method, $comment, $total_price, $bank_number);
 
         if ($stmt->execute()) {
             header("Location: mybookings.php");
@@ -148,6 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
     }
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -216,6 +224,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
 
             checkFormValidity(); // Initial check in case some fields are pre-filled
+        });
+    </script>
+    <script>
+       document.addEventListener("DOMContentLoaded", function() {
+            const phoneInput = document.getElementById("phone_number");
+            const bankInput = document.getElementById("bank_number");
+            const submitButton = document.getElementById("buttoni");
+            const paymentBankRadio = document.getElementById("bank");
+            const paymentCashRadio = document.getElementById("cash");
+
+            function validatePhoneNumber() {
+                const phonePattern = /^\+\d{11}$/;
+                const phoneNumber = phoneInput.value;
+                return phonePattern.test(phoneNumber);
+            }
+
+            function validateBankNumber() {
+                const bankPattern = /^\d{12,}$/;
+                const bankNumber = bankInput.value;
+                return bankPattern.test(bankNumber);
+            }
+
+            function validateForm() {
+                const isPhoneValid = validatePhoneNumber();
+                const isBankValid = paymentBankRadio.checked ? validateBankNumber() : true;
+                const isFormValid = isPhoneValid && isBankValid;
+                submitButton.disabled = !isFormValid;
+            }
+
+            phoneInput.addEventListener("input", validateForm);
+            bankInput.addEventListener("input", validateForm);
+            paymentBankRadio.addEventListener("change", function() {
+                bankInput.required = true;
+                validateForm();
+            });
+            paymentCashRadio.addEventListener("change", function() {
+                bankInput.required = false;
+                validateForm();
+            });
+
+            validateForm(); // Initial check
         });
     </script>
     </head>
@@ -303,17 +352,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label for="phone-number">Phone number:</label>
                             </div>
                             <div class="col-md-9">
-                                <input class="classinput" type="text" name="phone-number" id="phone-number" placeholder="Phone number" value="<?php echo $formattedPhoneNumber ?>">
-                                <?php
-                                if ($_SERVER["REQUEST_METHOD"] == "POST"){
-                                // Phone number validation
-                                $phone_pattern = '/^\+[0-9]{1,11}$/';
-                                $phone_number = $_POST['phone-number'];
-                                if (!preg_match($phone_pattern, $phone_number)) {
-                                echo "<script>alert('Invalid phone number. It must start with a + followed by 1 to 11 digits.'); window.location.href = '#phone_number';</script>";
-                                    }
-                               }
-                            ?>
+                                <input class="classinput" type="text" name="phone_number" id="phone_number" placeholder="Phone number" value="<?php echo $formattedPhoneNumber ?>">
                             </div>
                         </div>
                         <label for="exampleFormControlTextarea1" class="form-label"></label>
@@ -354,10 +393,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             var paymentMethod = document.querySelector('input[name="payment"]:checked');
             var bankNumber = document.getElementById('bank_number').value;
             var bankRadio = document.getElementById('bank').checked;
+            var phone_number=document.getElementById('phone-number');
+
 
             if (arrivalDate && departureDate && phoneNumber && paymentMethod && (!bankRadio || (bankRadio && bankNumber))) {
                 document.getElementById('buttoni').disabled = false;
-            } else {
+                
+            }
+            else {
                 document.getElementById('buttoni').disabled = true;
             }
         }
@@ -365,7 +408,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         window.onload = function() {
             document.getElementById('arrival_date').addEventListener('input', checkForm);
             document.getElementById('departure_date').addEventListener('input', checkForm);
-            document.querySelector('input[name="phone-number"]').addEventListener('input', checkForm);
+            document.querySelector('input[name="phone_number"]').addEventListener('input', checkForm);
             var paymentRadios = document.querySelectorAll('input[name="payment"]');
             paymentRadios.forEach(function(radio) {
                 radio.addEventListener('change', function() {
