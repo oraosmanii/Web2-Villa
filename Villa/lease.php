@@ -1,6 +1,51 @@
 <?php
 session_start();
+include 'db_connection.php';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Sanitize and validate form inputs
+  $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+  $country = htmlspecialchars($_POST['country']);
+  $city = htmlspecialchars($_POST['city']);
+  $phone = htmlspecialchars($_POST['phone']);
+  $price = filter_var($_POST['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+  $area = filter_var($_POST['area'], FILTER_SANITIZE_NUMBER_INT);
+  $bedrooms = filter_var($_POST['bedrooms'], FILTER_SANITIZE_NUMBER_INT);
+  $bathrooms = filter_var($_POST['bathrooms'], FILTER_SANITIZE_NUMBER_INT);
+  $description = htmlspecialchars($_POST['message']);
+  $type = htmlspecialchars($_POST['type']);
+  $images = [];
+
+  if (isset($_FILES['add']) && count($_FILES['add']['name']) > 0) {
+    $total = count($_FILES['add']['name']);
+    for ($i = 0; $i < $total; $i++) {
+      if ($_FILES['add']['error'][$i] == 0) {
+        $target_dir = "./assets/images/";
+        $target_file = $target_dir . basename($_FILES["add"]["name"][$i]);
+        if (move_uploaded_file($_FILES["add"]["tmp_name"][$i], $target_file)) {
+          $images[] = $target_file;
+        } else {
+          echo "<p style='color: red; font-size: 16px;'>File upload failed.</p>";
+          exit();
+        }
+      }
+    }
+  }
+
+  $images_json = json_encode($images);
+  $stmt = $conn->prepare("INSERT INTO properties (country, city, date, image, price, bedrooms, bathrooms, area, type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssdiisss", $country, $city, $date, $images_json, $price, $bedrooms, $bathrooms, $area, $type, $description);
+
+  $date = date("Y-m-d");
+
+  if ($stmt->execute()) {
+    echo "<p style='color: green; font-size: 16px;'>New record created successfully</p>";
+  } else {
+    echo "<p style='color: red; font-size: 16px;'>Error: " . $stmt->error . "</p>";
+  }
+  $stmt->close();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -68,7 +113,7 @@ https://templatemo.com/tm-591-villa-agency
   </div>
 
 
-  
+
   <!-- ***** Header Area Start ***** -->
   <header class="header-area header-sticky">
     <div class="container">
@@ -150,35 +195,9 @@ https://templatemo.com/tm-591-villa-agency
         <div class="col-lg-6">
 
 
-          <form id="contact-form" action="" method="post">
+          <form id="contact-form" action="" method="post" enctype="multipart/form-data">
             <div class="row">
-              <div class="col-lg-12">
-                <fieldset>
-                  <label for="name">Full Name</label>
-                  <input type="name" name="name" id="name" placeholder="Your Name..." autocomplete="on"  required>
-                   <?php
-                     function fixFullName($full_name) {
-                      
-                      $full_name = trim($full_name);
-                      
-                      $full_name = preg_replace('/\s+/', ' ', $full_name);
-                      
-                      $full_name = ucwords($full_name);
-                      
-                      return $full_name;
-                  }
-                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                    $name = $_POST["name"];
-                    if (preg_match('/\s\s+/', $name)) {
-                        echo "<p>Please fix the input: Double spaces or more are not allowed.</p>";
-                        echo "<script> window.location.href='#name';</script>";
-                    } else {
-                        $fixed_full_name = fixFullName($name);
-                    }
-                }
-                  ?>
-                </fieldset>
-              </div>
+              
               <div class="col-lg-12">
                 <fieldset>
                   <label for="email">Email Address</label>
@@ -190,7 +209,19 @@ https://templatemo.com/tm-591-villa-agency
                   ?> required="">
                 </fieldset>
               </div>
-              <div class="col-lg-12">
+              <div class="col-lg-6">
+                <fieldset>
+                  <label for="country">Country</label>
+                  <input type="text" name="country" id="country" placeholder="Country of property..." required >
+                </fieldset>
+              </div>
+              <div class="col-lg-6">
+                <fieldset>
+                  <label for="city">City</label>
+                  <input type="text" name="city" id="city" placeholder="City of property..." required >
+                </fieldset>
+              </div>
+              <div class="col-lg-6">
                 <fieldset>
                   <label for="phone">Phone Number</label>
                   <!-- pattern="[^ @]*@[^ @]*" -->
@@ -212,36 +243,58 @@ https://templatemo.com/tm-591-villa-agency
                   ?>
                 </fieldset>
               </div>
-              <div class="col-lg-12">
-                <fieldset>
-                  <label for="subject">Address</label>
-                  <input type="subject" name="subject" id="subject" placeholder="Address..." required >
-                </fieldset>
-              </div>
-              <div class="col-lg-12">
+              <div class="col-lg-6">
+            <fieldset> 
+                <label for="type">Type</label> <br> 
+                <select name="type" id="type" required>
+                    <option value="Villa">Villa</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Penthouse">Penthouse</option>
+                </select>
+            </fieldset>
+        </div>
+              <div class="col-lg-6">
                 <fieldset>
                   <label for="price">Price per night</label>
                   <input type="number" name="price" id="price" placeholder="Price per night in $..." required >
                 </fieldset>
               </div>
+              <div class="col-lg-6">
+                <fieldset>
+                  <label for="area">Area</label>
+                  <input type="number" name="area" id="area" placeholder="Area in m2..." required >
+                </fieldset>
+              </div>
+              <div class="col-lg-6">
+                <fieldset>
+                  <label for="bedrooms">Number of bedrooms</label>
+                  <input type="number" name="bedrooms" id="bedrooms" placeholder="Bedrooms of property..." required >
+                </fieldset>
+              </div>
+              <div class="col-lg-6">
+                <fieldset>
+                  <label for="bathrooms">Number of bathrooms</label>
+                  <input type="number" name="bathrooms" id="bathrooms" placeholder="Bathrooms of property..." required >
+                </fieldset>
+              </div>
+              
               <div class="col-lg-12">
                 <fieldset>
                   <label for="message">Description of the villa</label>
                   <textarea name="message" id="message" placeholder="Describe in detail..."></textarea>
                 </fieldset>
               </div>
-            <div class="col-md-12">
-                <br>
-                <div>
-                    <label class="add"for="add">Add Photos</label>
-                  
-                    <button class="chooseThePhoto" onclick="document.getElementById('getFile').click() " style="background-color:#f6f6f6;color: #757575;">
-                        Choose Photos</button>
-                        <input type='file' id="getFile" style="display:none" name = "add"multiple>
-                </div>
-            
-            
+              <div class="col-md-12">
+            <br>
+            <div>
+                <label class="add" for="add">Add Photos</label>
+                <button class="chooseThePhoto" type="button" onclick="document.getElementById('getFile').click()" style="background-color:#f6f6f6;color: #757575;">
+                    Choose Photos
+                </button>
+                <input type="file" id="getFile" style="display:none" name="add[]" multiple>
             </div>
+        </div>
+        <div class="col-lg-12">
               <div class="col-lg-12">
                 <fieldset>
                   <button type="submit" id="form-submit" class="orange-button">Send request for leasing</button>

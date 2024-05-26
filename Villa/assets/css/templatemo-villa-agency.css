@@ -29,8 +29,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: relative;
-  bottom: 270px;
-  left: 60px;
+
 }
 
 .card {
@@ -557,7 +556,6 @@ Header Style
 .header-area .main-nav .nav ul li a.active {
   color: #f35525;
 }
-
 
 
 .header-area .main-nav .menu-trigger {

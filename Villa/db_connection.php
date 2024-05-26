@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = ""; 
+$password = " "; 
 $dbname = "villadb"; 
 $port = 3307;
 
@@ -31,7 +31,8 @@ $tables = [
         bedrooms INT NOT NULL,
         bathrooms INT NOT NULL,
         area INT NOT NULL,
-        type VARCHAR(50) NOT NULL
+        type VARCHAR(50) NOT NULL,
+        description TEXT NOT NULL
     )",
     "bookings" => "CREATE TABLE IF NOT EXISTS bookings (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,6 +53,21 @@ $tables = [
         property_id INT NOT NULL,
         rating INT NOT NULL,
         UNIQUE KEY unique_rating (user_id, property_id),
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (property_id) REFERENCES properties(id)
+    )",
+    "listings" => "CREATE TABLE IF NOT EXISTS listings (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        property_id INT NOT NULL,
+        address NVARCHAR(200) NOT NULL,
+        phone_number INT NOT NULL,
+        price DECIMAL(10, 2) NOT NULL,
+        bedrooms INT NOT NULL,
+        bathrooms INT NOT NULL,
+        area INT NOT NULL,
+        description TEXT NOT NULL,
+        image VARCHAR(255) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (property_id) REFERENCES properties(id)
     )"

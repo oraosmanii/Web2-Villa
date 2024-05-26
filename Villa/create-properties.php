@@ -16,23 +16,28 @@ function createCard(&$array = [])
     global $conn;
 
     if (empty($_POST['sort'])) {
-        // fetch infot prej dbs
+        // fetch info from the database
         $result = $conn->query("SELECT * FROM properties");
-        
+
         while ($data = $result->fetch_assoc()) {
-            $cards = urlencode($data['id']); // prej id-s
+            $cards = urlencode($data['id']); // from id
 
             $type = strtoupper(trim($data['type']));
 
+            // Decode the JSON-encoded image paths
+            $images = json_decode($data['image'], true);
+            // Use the first image for the card (or handle as needed)
+            $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
+
             switch ($type) {
                 case 'VILLA':
-                    $booking = new Villa($data['country'], $data['city'], $data['date'], $data['image'], $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    $booking = new Villa($data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
                     break;
                 case 'APARTMENT':
-                    $booking = new Apartment($data['country'], $data['city'], $data['date'], $data['image'], $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    $booking = new Apartment($data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
                     break;
                 case 'PENTHOUSE':
-                    $booking = new Penthouse($data['country'], $data['city'], $data['date'], $data['image'], $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    $booking = new Penthouse($data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
                     break;
                 default:
                     echo "Invalid creation";
