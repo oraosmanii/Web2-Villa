@@ -250,24 +250,7 @@ if ($property) {
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#rating-form').on('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
 
-            $.ajax({
-                url: $(this).attr('action'), // Form action URL
-                type: $(this).attr('method'), // Form method (POST)
-                data: $(this).serialize(), // Serialize form data
-                dataType: 'json', // Expect JSON response
-                success: function(response) {
-                    alert(response.message); // Show alert with the response message
-                    if (response.redirect) {
-                        window.location.href = response.redirect; // Redirect if needed
-
-                    }
-                    ?>
-            </form>
         </div>
     </div>
 </div>
@@ -298,5 +281,25 @@ if ($property) {
     <script src="assets/js/custom.js"></script>
 
 </body>
+<script>
+$(document).ready(function() {
+    $('#rating-form').on('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        $.ajax({
+            url: $(this).attr('action'), // Form action URL
+            type: $(this).attr('method'), // Form method (POST)
+            data: $(this).serialize(), // Serialize form data
+            dataType: 'json', // Expect JSON response
+            success: function(response) {
+                alert(response.message); // Show alert with the response message
+                if (response.redirect) {
+                    window.location.href = response.redirect; // Redirect if needed
+                }
+            }
+        });
+    });
+});
+</script>
 
 </html>
