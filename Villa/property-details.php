@@ -7,20 +7,36 @@ $info = null;
 
 if (isset($_GET['info'])) {
     $info = urldecode($_GET['info']);
+    get_property_info($property, $info, $conn);
+    $avg_rating = get_avg_rating($info, $conn);
+}
+
+function get_property_info(&$property, $info, $conn) {
     $stmt = $conn->prepare("SELECT id, country, city, image, price, bathrooms, bedrooms, area, type, description FROM properties WHERE id = ?");
     $stmt->bind_param("i", $info);
     $stmt->execute();
     $result = $stmt->get_result();
     $property = $result->fetch_assoc();
     $stmt->close();
+}
 
+function &get_avg_rating($info, $conn) {
     $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE property_id = ?");
     $stmt->bind_param("i", $info);
     $stmt->execute();
     $stmt->bind_result($avg_rating);
     $stmt->fetch();
     $stmt->close();
+    return $avg_rating;
 }
+
+function process_booking(&$total_price) {
+ 
+    $total_price += 50; 
+}
+
+
+unset($property);
 ?>
 
 <!DOCTYPE html>
@@ -30,23 +46,15 @@ if (isset($_GET['info'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
     <title>Villa Agency - Property Detail Page</title>
-
-    <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Additional CSS Files -->
     <link rel="stylesheet" href="assets/css/fontawesome.css">
     <link rel="stylesheet" href="assets/css/templatemo-villa-agency.css">
     <link rel="stylesheet" href="assets/css/owl.css">
-    <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
 </head>
 
 <body>
-
-    <!-- ***** Preloader Start ***** -->
     <div id="js-preloader" class="js-preloader">
         <div class="preloader-inner">
             <span class="dot"></span>
@@ -57,7 +65,6 @@ if (isset($_GET['info'])) {
             </div>
         </div>
     </div>
-    <!-- ***** Preloader End ***** -->
 
     <div class="sub-header">
         <div class="container">
@@ -80,18 +87,14 @@ if (isset($_GET['info'])) {
         </div>
     </div>
 
-    <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <nav class="main-nav">
-                        <!-- ***** Logo Start ***** -->
                         <a href="index.php" class="logo">
                             <h1>Villa</h1>
                         </a>
-                        <!-- ***** Logo End ***** -->
-                        <!-- ***** Menu Start ***** -->
                         <ul class="nav">
                             <li><a href="index.php">Home</a></li>
                             <li><a href="properties.php">Properties</a></li>
@@ -122,13 +125,11 @@ if (isset($_GET['info'])) {
                         <a class='menu-trigger'>
                             <span>Menu</span>
                         </a>
-                        <!-- ***** Menu End ***** -->
                     </nav>
                 </div>
             </div>
         </div>
     </header>
-    <!-- ***** Header Area End ***** -->
 
     <div class="page-heading header-text">
         <div class="container">
@@ -146,19 +147,7 @@ if (isset($_GET['info'])) {
 if ($property) {
             $images = json_decode($property['image'], true);
             $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
-    // fetch
-    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE property_id = ?");
-    $stmt->bind_param("i", $info);
-    $stmt->execute();
-    $stmt->bind_result($avg_rating);
-    $stmt->fetch();
-    $stmt->close();
-
-    $avg_rating = round($avg_rating, 1); // round
-      // Decode the JSON-encoded image paths
-      $images = json_decode($property['image'], true);
-      // Use the first image for the card (or handle as needed)
-      $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
+    $avg_rating = round($avg_rating, 1);
 
     echo "<div class='single-property section'>
     <div class='container'>
@@ -211,7 +200,6 @@ if ($property) {
         </div>
     </div>
 
-    <!-- RATING SECTION -->
     <div class="rating-section">
     <div class="card">
         <div class="card-header">
@@ -267,8 +255,6 @@ if ($property) {
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/isotope.min.js"></script>
@@ -280,17 +266,17 @@ if ($property) {
 <script>
 $(document).ready(function() {
     $('#rating-form').on('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault(); 
 
         $.ajax({
-            url: $(this).attr('action'), // Form action URL
-            type: $(this).attr('method'), // Form method (POST)
-            data: $(this).serialize(), // Serialize form data
-            dataType: 'json', // Expect JSON response
+            url: $(this).attr('action'), 
+            type: $(this).attr('method'), 
+            data: $(this).serialize(),
+            dataType: 'json', 
             success: function(response) {
-                alert(response.message); // Show alert with the response message
+                alert(response.message); 
                 if (response.redirect) {
-                    window.location.href = response.redirect; // Redirect if needed
+                    window.location.href = response.redirect; 
                 }
             }
         });
