@@ -17,7 +17,7 @@ function createCard(&$array = [])
 
     if (empty($_POST['sort'])) {
         // fetch info from the database
-        $result = $conn->query("SELECT * FROM properties");
+        $result = $conn->query("SELECT * FROM listings");
 
         while ($data = $result->fetch_assoc()) {
             $cards = urlencode($data['id']); // from id

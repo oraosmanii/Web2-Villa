@@ -22,7 +22,7 @@ function formatPhoneNumber()
 $property_id = isset($_GET['info']) ? intval($_GET['info']) : 0;
 
 if ($property_id > 0) {
-    $stmt = $conn->prepare("SELECT * FROM properties WHERE id = ?");
+    $stmt = $conn->prepare("SELECT * FROM listings WHERE id = ?");
     $stmt->bind_param("i", $property_id);
     $stmt->execute();
     $result = $stmt->get_result();

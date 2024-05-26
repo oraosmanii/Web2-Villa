@@ -8,7 +8,7 @@ include 'db_connection.php';
 $properties = [];
 
 // Fetch properties from the database
-$sql = "SELECT * FROM properties";
+$sql = "SELECT * FROM listings";
 $result = $conn->query($sql);
 
 // Loop ne cdo rresht

@@ -11,7 +11,7 @@ if (!isset($_SESSION['index_visits'])) {
 // fetch
 $stmt = $conn->prepare("
     SELECT p.*, AVG(r.rating) as avg_rating 
-    FROM properties p 
+    FROM listings p 
     JOIN ratings r ON p.id = r.property_id 
     GROUP BY p.id 
     ORDER BY avg_rating DESC 

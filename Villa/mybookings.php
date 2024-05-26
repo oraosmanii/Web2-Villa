@@ -10,7 +10,7 @@ if (!isset($_SESSION['USER_ID'])) {
 $user_id = $_SESSION['USER_ID'];
 
 // fetch from login
-$stmt = $conn->prepare("SELECT bookings.*, properties.country, properties.city, properties.image, properties.price FROM bookings INNER JOIN properties ON bookings.property_id = properties.id WHERE bookings.user_id = ?");
+$stmt = $conn->prepare("SELECT bookings.*, listings.country, listings.city, listings.image, listings.price FROM bookings INNER JOIN listings ON bookings.property_id = listings.id WHERE bookings.user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();

@@ -3,7 +3,7 @@ $servername = "localhost";
 $username = "root";
 $password = "Password"; 
 $dbname = "villadb"; 
-$port = 3307;
+$port = 3306;
 
 
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
@@ -21,8 +21,9 @@ $tables = [
         password VARCHAR(255) NOT NULL,
         salt VARCHAR(255) NOT NULL
     )",
-    "properties" => "CREATE TABLE IF NOT EXISTS properties (
+    "listings" => "CREATE TABLE IF NOT EXISTS listings (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
         country VARCHAR(255) NOT NULL,
         city VARCHAR(255) NOT NULL,
         date DATE NOT NULL,
@@ -32,7 +33,8 @@ $tables = [
         bathrooms INT NOT NULL,
         area INT NOT NULL,
         type VARCHAR(50) NOT NULL,
-        description TEXT NOT NULL
+        description TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id)
     )",
     "bookings" => "CREATE TABLE IF NOT EXISTS bookings (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,7 +47,7 @@ $tables = [
         comment TEXT,
         total_price DECIMAL(10, 2) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (property_id) REFERENCES properties(id)
+        FOREIGN KEY (property_id) REFERENCES listings(id)
     )",
     "ratings" => "CREATE TABLE IF NOT EXISTS ratings (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,23 +56,9 @@ $tables = [
         rating INT NOT NULL,
         UNIQUE KEY unique_rating (user_id, property_id),
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (property_id) REFERENCES properties(id)
-    )",
-    "listings" => "CREATE TABLE IF NOT EXISTS listings (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
-        property_id INT NOT NULL,
-        country VARCHAR(255) NOT NULL,
-        city VARCHAR(255) NOT NULL,
-        date DATE NOT NULL,
-        image VARCHAR(255) NOT NULL,
-        price DECIMAL(10, 2) NOT NULL,
-        bedrooms INT NOT NULL,
-        bathrooms INT NOT NULL,
-        area INT NOT NULL,
-        type VARCHAR(50) NOT NULL,
-        description TEXT NOT NULL
+        FOREIGN KEY (property_id) REFERENCES listings(id)
     )"
+    
 ];
 foreach ($tables as $sql) {
     $conn->query($sql);

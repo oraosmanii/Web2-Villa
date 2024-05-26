@@ -19,13 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($result->num_rows > 0) {
         // Listing belongs to the user, proceed to delete
-        $stmt = $conn->prepare("DELETE listings, properties FROM listings INNER JOIN properties ON listings.property_id = properties.id WHERE listings.id = ? AND listings.user_id = ?");
+        $stmt = $conn->prepare("DELETE FROM listings WHERE id = ? AND user_id = ?");
         $stmt->bind_param("ii", $listing_id, $user_id);
         
         if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Listing and corresponding property deleted successfully.']);
+            echo json_encode(['success' => true, 'message' => 'Listing deleted successfully.']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to delete listing and corresponding property.']);
+            echo json_encode(['success' => false, 'message' => 'Failed to delete listing.']);
         }
         $stmt->close();
     } else {
