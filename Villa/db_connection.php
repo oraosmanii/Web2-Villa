@@ -56,7 +56,7 @@ $tables = [
         rating INT NOT NULL,
         UNIQUE KEY unique_rating (user_id, property_id),
         FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (property_id) REFERENCES listings(id)
+        FOREIGN KEY (property_id) REFERENCES listings(id) on delete cascade
     )"
     
 ];
