@@ -154,10 +154,10 @@ if ($property) {
     $stmt->fetch();
     $stmt->close();
 
-    $avg_rating = round($avg_rating, 1); // round
-      // Decode the JSON-encoded image paths
+    $avg_rating = round($avg_rating, 1);
+      
       $images = json_decode($property['image'], true);
-      // Use the first image for the card (or handle as needed)
+
       $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
 
     echo "<div class='single-property section'>
