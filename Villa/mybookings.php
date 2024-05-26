@@ -20,8 +20,6 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,25 +127,30 @@ $stmt->close();
         <div class="col-md-12">
           <h2 class="mb-4">My Bookings:</h2>
           <div class="booked-items" id="booked-items">
-            <?php if (empty($bookings)): ?>
-              <p class="text-center">You don't have any bookings yet.</p>
-            <?php else: ?>
-              <?php foreach ($bookings as $booking): ?>
-                <div class="cart-item d-flex justify-content-between align-items-center mb-3">
-                  <div class="d-flex align-items-center" style="flex-grow: 1;">
-                    <img src="<?php echo $booking['image']; ?>" alt="Place in <?php echo $booking['country'] . ', ' . $booking['city']; ?>" class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
-                    <div>
-                      <h5 class="fw-bold mb-1"><?php echo $booking['country'] . ', ' . $booking['city']; ?></h5>
-                      <p class="text-muted mb-0">Arrival: <?php echo $booking['arrival_date']; ?></p>
-                      <p class="text-muted mb-0">Departure: <?php echo $booking['departure_date']; ?></p>
-                      <p class="text-muted mb-0">Total Price: $<?php echo $booking['total_price']; ?></p>
-                    </div>
-                  </div>
-                  <button onclick="cancelBooking(<?php echo $booking['id']; ?>)" class="btn btn-danger btn-sm">Cancel Booking</button>
+          <?php if (empty($bookings)): ?>
+    <p class="text-center">You don't have any bookings yet.</p>
+<?php else: ?>
+    <?php foreach ($bookings as $booking): ?>
+        <?php 
+            // Decode the JSON-encoded image data
+            $images = json_decode($booking['image'], true);
+            // Use the first image if available, otherwise use a default image
+            $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg'; 
+        ?>
+        <div class="cart-item d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center" style="flex-grow: 1;">
+                <img src="<?php echo $imagePath; ?>" alt="Place in <?php echo $booking['country'] . ', ' . $booking['city']; ?>" class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
+                <div>
+                    <h5 class="fw-bold mb-1"><?php echo $booking['country'] . ', ' . $booking['city']; ?></h5>
+                    <p class="text-muted mb-0">Arrival: <?php echo $booking['arrival_date']; ?></p>
+                    <p class="text-muted mb-0">Departure: <?php echo $booking['departure_date']; ?></p>
+                    <p class="text-muted mb-0">Total Price: $<?php echo $booking['total_price']; ?></p>
                 </div>
-              <?php endforeach; ?>
-            <?php endif; ?>
-          </div>
+            </div>
+            <button onclick="cancelBooking(<?php echo $booking['id']; ?>)" class="btn btn-danger btn-sm">Cancel Booking</button>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
         </div>
         <hr>
         <div class="col-md-12">

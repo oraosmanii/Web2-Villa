@@ -142,60 +142,69 @@ if (isset($_GET['info'])) {
     </div>
 
     <?php
-    if ($property) {
-        // fetch
-        $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE property_id = ?");
-        $stmt->bind_param("i", $info);
-        $stmt->execute();
-        $stmt->bind_result($avg_rating);
-        $stmt->fetch();
-        $stmt->close();
 
-        $avg_rating = round($avg_rating, 1); // round
+if ($property) {
+      // Decode the JSON-encoded image paths
+            $images = json_decode($property['image'], true);
+            // Use the first image for the card (or handle as needed)
+            $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
+    // fetch
+    $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE property_id = ?");
+    $stmt->bind_param("i", $info);
+    $stmt->execute();
+    $stmt->bind_result($avg_rating);
+    $stmt->fetch();
+    $stmt->close();
 
-        echo "<div class='single-property section'>
-        <div class='container'>
-          <div class='row'>
-            <div class='col-lg-8'>
-              <div class='main-image'>
-                <img src='{$property['image']}' alt='' height='490'>
-              </div>
-              <div class='main-content'>
-                <span class='category'>{$property['type']}</span>
-                <h4>{$property['country']} {$property['city']}</h4>
-                <p>Average Rating: {$avg_rating}</p>
-                <p>Step into the comfort of modern living with <strong>our premier real estate offerings</strong>. Our carefully curated selections bring you the finest homes that blend luxury with coziness, designed to exceed your expectations. With an eye for exceptional properties, we ensure that every listing provides a unique glimpse into the lifestyle you desire.<br><br></p>
-    
-                <p>Browse our collection to find your sanctuary amidst the city's hustle or a tranquil retreat in the countryside. Our team is here to provide <strong>tailored support</strong>, ensuring a smooth transition into your new home. Trust in our expertise to navigate the market and secure your future residence with confidence.</p>
-                
-                </div> 
-            </div>
-            <div class='col-lg-4'>
-        <div class='info-table-and-button-wrapper'>
-          <div class='info-table'>
-            <ul>
-              <li>
-                <img src='assets/images/info-icon-01.png' alt='' style='max-width: 52px;'>
-                <h4>{$property['area']} m2<br><span>Total Flat Space</span></h4>
-              </li>
-              <li>
-                <img src='assets/images/info-icon-02.png' alt='' style='max-width: 52px;'>
-                <h4>{$property['bedrooms']}<br><span>Bedrooms</span></h4>
-              </li>
-              <li>
-                <img src='assets/images/info-icon-04.png' alt='' style='max-width: 52px;'>
-                <h4>{$property['bathrooms']}<br><span>Bathrooms</span></h4>
-              </li>
-              <li>
-                <img src='assets/images/info-icon-03.png' alt='' style='max-width: 52px;'>
-                <h4>$ {$property['price']}<br><span>Price</span></h4>
-              </li>
-            </ul>
-          </div>";
-    } else {
-        echo "Information not provided";
-    }
-    ?>
+    $avg_rating = round($avg_rating, 1); // round
+      // Decode the JSON-encoded image paths
+      $images = json_decode($property['image'], true);
+      // Use the first image for the card (or handle as needed)
+      $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
+
+    echo "<div class='single-property section'>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-lg-8'>
+          <div class='main-image'>
+            <img src='{$imagePath}' alt='' height='490'>
+          </div>
+          <div class='main-content'>
+            <span class='category'>{$property['type']}</span>
+            <h4>{$property['country']} {$property['city']}</h4>
+            <p>Average Rating: {$avg_rating}</p>
+            <p>Step into the comfort of modern living with <strong>our premier real estate offerings</strong>. Our carefully curated selections bring you the finest homes that blend luxury with coziness, designed to exceed your expectations. With an eye for exceptional properties, we ensure that every listing provides a unique glimpse into the lifestyle you desire.<br><br></p>
+
+            <p>Browse our collection to find your sanctuary amidst the city's hustle or a tranquil retreat in the countryside. Our team is here to provide <strong>tailored support</strong>, ensuring a smooth transition into your new home. Trust in our expertise to navigate the market and secure your future residence with confidence.</p>
+            
+            </div> 
+        </div>
+        <div class='col-lg-4'>
+    <div class='info-table-and-button-wrapper'>
+      <div class='info-table'>
+        <ul>
+          <li>
+            <img src='assets/images/info-icon-01.png' alt='' style='max-width: 52px;'>
+            <h4>{$property['area']} m2<br><span>Total Flat Space</span></h4>
+          </li>
+          <li>
+            <img src='assets/images/info-icon-02.png' alt='' style='max-width: 52px;'>
+            <h4>{$property['bedrooms']}<br><span>Bedrooms</span></h4>
+          </li>
+          <li>
+            <img src='assets/images/info-icon-04.png' alt='' style='max-width: 52px;'>
+            <h4>{$property['bathrooms']}<br><span>Bathrooms</span></h4>
+          </li>
+          <li>
+            <img src='assets/images/info-icon-03.png' alt='' style='max-width: 52px;'>
+            <h4>$ {$property['price']}<br><span>Price</span></h4>
+          </li>
+        </ul>
+      </div>";
+} else {
+    echo "Information not provided";
+}
+?>
     
         <div class="icon-button" style="text-align: center; margin-top: 50px; height: 100px;">
             <a href="<?php if (!empty($_SESSION['LogedIn'])) {
@@ -213,6 +222,7 @@ if (isset($_GET['info'])) {
             <h3>Rate this property</h3>
         </div>
         <div class="card-body">
+
     <form id="rating-form" action="submit_rating.php" method="post">
         <input type="hidden" name="property_id" value="<?php echo htmlspecialchars($info); ?>">
         <label for="rating">Rating:</label>
@@ -240,29 +250,8 @@ if (isset($_GET['info'])) {
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#rating-form').on('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
 
-            $.ajax({
-                url: $(this).attr('action'), // Form action URL
-                type: $(this).attr('method'), // Form method (POST)
-                data: $(this).serialize(), // Serialize form data
-                dataType: 'json', // Expect JSON response
-                success: function(response) {
-                    alert(response.message); // Show alert with the response message
-                    if (response.redirect) {
-                        window.location.href = response.redirect; // Redirect if needed
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert('An error occurred: ' + error); // Handle error
-                }
-            });
-        });
-    });
-</script>
+        </div>
     </div>
 </div>
 
@@ -292,5 +281,25 @@ if (isset($_GET['info'])) {
     <script src="assets/js/custom.js"></script>
 
 </body>
+<script>
+$(document).ready(function() {
+    $('#rating-form').on('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        $.ajax({
+            url: $(this).attr('action'), // Form action URL
+            type: $(this).attr('method'), // Form method (POST)
+            data: $(this).serialize(), // Serialize form data
+            dataType: 'json', // Expect JSON response
+            success: function(response) {
+                alert(response.message); // Show alert with the response message
+                if (response.redirect) {
+                    window.location.href = response.redirect; // Redirect if needed
+                }
+            }
+        });
+    });
+});
+</script>
 
 </html>
