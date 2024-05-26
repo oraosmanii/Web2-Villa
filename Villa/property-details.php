@@ -222,6 +222,7 @@ if ($property) {
             <h3>Rate this property</h3>
         </div>
         <div class="card-body">
+<<<<<<< HEAD
             <form id="rating-form" action="submit_rating.php" method="post">
                 <input type="hidden" name="property_id" value="<?php echo htmlspecialchars($info); ?>">
                 <label for="rating">Rating:</label>
@@ -243,6 +244,49 @@ if ($property) {
                         echo "<a href='logincopy.php'>Log in first to rate</a></div>";
                     } else {
                         echo "<button type='submit' class='btn btn-danger' style='position: relative; bottom: 30px;'>Submit</button>";
+=======
+    <form id="rating-form" action="submit_rating.php" method="post">
+        <input type="hidden" name="property_id" value="<?php echo htmlspecialchars($info); ?>">
+        <label for="rating">Rating:</label>
+        <div class="yjet">
+            <input type="radio" id="star5" name="rating" value="5">
+            <label for="star5"></label>
+            <input type="radio" id="star4" name="rating" value="4">
+            <label for="star4"></label>
+            <input type="radio" id="star3" name="rating" value="3">
+            <label for="star3"></label>
+            <input type="radio" id="star2" name="rating" value="2">
+            <label for="star2"></label>
+            <input type="radio" id="star1" name="rating" value="1">
+            <label for="star1"></label>
+        </div>
+        <div class='login-first'>
+            <?php
+            if (empty($_SESSION['LogedIn'])) {
+                echo "<a href='logincopy.php'>Log in first to rate</a></div>";
+            } else {
+                echo "<button type='submit' class='btn-submit btn btn-danger' style='position: relative; bottom: 15px; right: 25px'>Submit</button>";
+            }
+            ?>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#rating-form').on('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            $.ajax({
+                url: $(this).attr('action'), // Form action URL
+                type: $(this).attr('method'), // Form method (POST)
+                data: $(this).serialize(), // Serialize form data
+                dataType: 'json', // Expect JSON response
+                success: function(response) {
+                    alert(response.message); // Show alert with the response message
+                    if (response.redirect) {
+                        window.location.href = response.redirect; // Redirect if needed
+>>>>>>> 1762d973bb2faf39b8cbcb79a9a509edb0344a02
                     }
                     ?>
             </form>
