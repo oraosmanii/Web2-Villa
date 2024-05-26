@@ -31,13 +31,13 @@ function createCard(&$array = [])
 
             switch ($type) {
                 case 'VILLA':
-                    $booking = new Villa($data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    $booking = new Villa($data['user_id'],$data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
                     break;
                 case 'APARTMENT':
-                    $booking = new Apartment($data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    $booking = new Apartment($data['user_id'],$data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
                     break;
                 case 'PENTHOUSE':
-                    $booking = new Penthouse($data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
+                    $booking = new Penthouse($data['user_id'],$data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
                     break;
                 default:
                     echo "Invalid creation";

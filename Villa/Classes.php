@@ -1,14 +1,16 @@
 <?php
 class Bookings {
       protected $id;
+      protected $userId;
       protected $country;
       protected $city;
       protected $date;
       protected $imgpath;
       protected $price;
 
-      function __construct( $country, $city, $date, $imgpath, $price) {
+      function __construct($userId, $country, $city, $date, $imgpath, $price) {
         $this->id = uniqid();
+        $this->userId=$userId;
         $this->country=$country;
         $this->city=$city;
         $this->date=$date;
@@ -44,8 +46,9 @@ class Villa extends Bookings{
       private $type="Villa";
 
 
-      function __construct($country, $city, $date, $imgpath, $price,$bedrooms,$bathrooms,$area){
+      function __construct($userId,$country, $city, $date, $imgpath, $price,$bedrooms,$bathrooms,$area){
         $this->id = uniqid();
+        $this->userId= $userId;
         $this->country=$country;
         $this->city=$city;
         $this->date=$date;
@@ -86,8 +89,9 @@ class Apartment extends Bookings{
       private $type="Apartment";
 
 
-      function __construct($country, $city, $date, $imgpath, $price,$bedrooms,$bathrooms,$area){
+      function __construct($userId,$country, $city, $date, $imgpath, $price,$bedrooms,$bathrooms,$area){
         $this->id = uniqid();
+        $this->userId= $userId;
         $this->country=$country;
         $this->city=$city;
         $this->date=$date;
@@ -129,8 +133,9 @@ class Penthouse extends Bookings{
       private $type ="Penthouse";
 
 
-      function __construct($country, $city, $date, $imgpath, $price,$bedrooms,$bathrooms,$area){
+      function __construct($userId,$country, $city, $date, $imgpath, $price,$bedrooms,$bathrooms,$area){
         $this->id = uniqid();
+        $this->userId= $userId;
         $this->country=$country;
         $this->city=$city;
         $this->date=$date;
@@ -180,13 +185,13 @@ class Penthouse extends Bookings{
           
           switch($type){
             case 'VILLA':
-                return new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
+                return new Villa($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7],$data[8]);
                 break;
             case 'APARTMENT':
-              return new Apartment($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
+              return new Apartment($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7],$data[8]);
               break;
             case 'PENTHOUSE':
-              return new Penthouse($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7]);
+              return new Penthouse($data[0],$data[1],$data[2],$data[3],$data[4],$data[5],$data[6],$data[7],$data[8]);
               break;
             default:
               echo "Invalid info";

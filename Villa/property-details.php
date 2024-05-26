@@ -7,9 +7,9 @@ $info = null;
 
 if (isset($_GET['info'])) {
     $info = urldecode($_GET['info']);
-    $stmt = $conn->prepare("SELECT id, country, city, image, price, bathrooms, bedrooms, area, type, description FROM listings WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, user_id, country, city, image, price, bathrooms, bedrooms, area, type, description FROM listings WHERE id = ?");
     $stmt->bind_param("i", $info);
-    $stmt->execute();
+    $stmt->execute(); 
     $result = $stmt->get_result();
     $property = $result->fetch_assoc();
     $stmt->close();
@@ -203,11 +203,22 @@ if ($property) {
 ?>
     
         <div class="icon-button" style="text-align: center; margin-top: 50px; height: 100px;">
-            <a href="<?php if (!empty($_SESSION['LogedIn'])) {
-                            echo "schedule.php?info={$info}";
-                        } else {
-                            echo "#";
-                        } ?>" style="font-size: 23px;"><i class="fa fa-calendar"></i> Book Now</a>
+        <?php
+            if (isset($_SESSION['USER_ID']) && isset($property['user_id']) && $_SESSION['USER_ID'] != $property['user_id']) {
+                echo '<a href="';
+                if (!empty($_SESSION['LogedIn'])) {
+                    echo "schedule.php?info={$info}";
+                } else {
+                    echo "#";
+                }
+                echo '" style="font-size: 23px;"><i class="fa fa-calendar"></i>Book Now</a>';
+                
+                // Correctly escape the console log statement
+                echo "<script>console.log('" . $_SESSION['USER_ID'] . "');</script>";
+            }
+            else{
+                echo '<span style="color: grey;">This is your own listing</span>';}
+            ?>
         </div>
     </div>
 
