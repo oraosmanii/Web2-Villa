@@ -225,9 +225,9 @@ $stmt->close();
     }
   }
 
-    function cancelListing(listingId) {
+    function cancelBooking(bookingId) {
       if (confirm("Are you sure you want to cancel this listing?")) {
-        $.post('cancel_listing.php', { listing_id: listingId }, function(response) {
+        $.post('cancel_booking.php', { booking_id: bookingId }, function(response) {
           if (response.success) {
             location.reload(); // reload page
           } else {
