@@ -1,9 +1,9 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = " "; 
+$password = "Password"; 
 $dbname = "villadb"; 
-$port = 3307;
+$port = 3306;
 
 
 $conn = new mysqli($servername, $username, $password, $dbname, $port);
@@ -60,16 +60,16 @@ $tables = [
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
         property_id INT NOT NULL,
-        address NVARCHAR(200) NOT NULL,
-        phone_number INT NOT NULL,
+        country VARCHAR(255) NOT NULL,
+        city VARCHAR(255) NOT NULL,
+        date DATE NOT NULL,
+        image VARCHAR(255) NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
         bedrooms INT NOT NULL,
         bathrooms INT NOT NULL,
         area INT NOT NULL,
-        description TEXT NOT NULL,
-        image VARCHAR(255) NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (property_id) REFERENCES properties(id)
+        type VARCHAR(50) NOT NULL,
+        description TEXT NOT NULL
     )"
 ];
 foreach ($tables as $sql) {
