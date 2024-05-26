@@ -7,7 +7,7 @@ $info = null;
 
 if (isset($_GET['info'])) {
     $info = urldecode($_GET['info']);
-    $stmt = $conn->prepare("SELECT id, country, city, image, price, bathrooms, bedrooms, area, type FROM properties WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, country, city, image, price, bathrooms, bedrooms, area, type, description FROM properties WHERE id = ?");
     $stmt->bind_param("i", $info);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -93,7 +93,7 @@ if (isset($_GET['info'])) {
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li><a href="index.php" class="active">Home</a></li>
+                            <li><a href="index.php">Home</a></li>
                             <li><a href="properties.php">Properties</a></li>
                             <li><a href="<?php
                                           if (!empty($_SESSION['LogedIn'])) {
@@ -173,9 +173,7 @@ if ($property) {
             <span class='category'>{$property['type']}</span>
             <h4>{$property['country']} {$property['city']}</h4>
             <p>Average Rating: {$avg_rating}</p>
-            <p>Step into the comfort of modern living with <strong>our premier real estate offerings</strong>. Our carefully curated selections bring you the finest homes that blend luxury with coziness, designed to exceed your expectations. With an eye for exceptional properties, we ensure that every listing provides a unique glimpse into the lifestyle you desire.<br><br></p>
-
-            <p>Browse our collection to find your sanctuary amidst the city's hustle or a tranquil retreat in the countryside. Our team is here to provide <strong>tailored support</strong>, ensuring a smooth transition into your new home. Trust in our expertise to navigate the market and secure your future residence with confidence.</p>
+            <p> {$property['description']}</p>
             
             </div> 
         </div>
