@@ -144,9 +144,7 @@ if (isset($_GET['info'])) {
     <?php
 
 if ($property) {
-      // Decode the JSON-encoded image paths
             $images = json_decode($property['image'], true);
-            // Use the first image for the card (or handle as needed)
             $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
     // fetch
     $stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE property_id = ?");

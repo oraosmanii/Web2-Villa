@@ -293,8 +293,12 @@ https://templatemo.com/tm-591-villa-agency
       <div class="row">
           <div class="col-lg-4">
               <div class="left-image">
-                  <?php if ($topRatedProperty): ?>
-                      <img src="<?php echo htmlspecialchars($topRatedProperty['image']); ?>" alt="">
+                  <?php if ($topRatedProperty):
+                     $images = json_decode($topRatedProperty['image'], true);
+                     // Use the first image for the card (or handle as needed)
+                     $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
+             // fetch ?>
+                      <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="">
                       <a href="property-details.php?info=<?php echo htmlspecialchars($topRatedProperty['id']); ?>"><img src="assets/images/featured-icon.png" alt="" style="max-width: 60px; padding: 0px;"></a>
                   <?php else: ?>
                       <img src="assets/images/default-property.jpg" alt="">
