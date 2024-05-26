@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Failed to insert into listings table: " . $stmt2->error;
     }
     $stmt2->close();
-    exit(); // Ensure no further output is sent
+    exit();
 }
 ?>
 
@@ -322,25 +322,26 @@ https://templatemo.com/tm-591-villa-agency
   <script src="assets/js/custom.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#contact-form').submit(function(event) {
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission
 
-                var formData = new FormData(this);
-
-                $.ajax({
-                    url: '', // The PHP script is in the same file
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        alert(response); // Display the alert with the server response
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        alert('An error occurred: ' + textStatus + ' - ' + errorThrown);
+                var xhr = new XMLHttpRequest(); //Objekti XMLHttpRequest
+                xhr.open("POST", "", true); //Inicon nje kerkese ne server
+                xhr.onload = function() { //kur kerkesa perfundon me sukses
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        alert(xhr.responseText);
+                    } else {
+                        alert('An error occurred: ' + xhr.statusText);
                     }
-                });
+                };
+
+                xhr.onerror = function() { //nese kerkesa perfundon me deshtim
+                    alert('An error occurred during the request.');
+                };
+
+                var formData = new FormData(this);
+                xhr.send(formData); // dergon te dhenat ne server
             });
         });
     </script>
