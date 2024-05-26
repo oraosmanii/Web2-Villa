@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db_connection.php'; 
+include 'db_connection.php';
 
 define('TVSH', '0.18');
 
@@ -18,7 +18,6 @@ function formatPhoneNumber()
     }
     return '';
 }
-
 
 function &getBookedDates($property_id)
 {
@@ -45,7 +44,7 @@ if ($property_id > 0) {
     $property = $result->fetch_assoc();
     $stmt->close();
 
-
+    // Fetch booked dates for the property
     $booked_dates = &getBookedDates($property_id);
 }
 
@@ -57,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $user_id = &$_SESSION['USER_ID']; 
+    $user_id = &$_SESSION['USER_ID'];
     $arrival_date = $_POST['arrival_date'];
     $departure_date = $_POST['departure_date'];
     $payment_method = $_POST['payment'];
@@ -70,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // Check for date overlap
     $stmt = $conn->prepare("
         SELECT COUNT(*) FROM bookings 
         WHERE property_id = ? AND 
@@ -98,9 +98,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $stmt->close();
-    unset($user_id); 
+}
 
 $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
+
 ?>
 
 <!DOCTYPE html>
@@ -175,8 +176,8 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
         <br>
         <h1 class="book-title"><b>Book your dream villa<b></b></h1>
         <p class="book-caption">WE ALWAYS AIM TO CONFIRM YOUR RESERVATION WITHIN 1 HOUR</p> <br> <br>
-        <form id="booking-form" action="#" method="post">
-            <input type="hidden" id="total_price_input" name="total_price" value=""> 
+        <form id="booking-form" action="#" method="POST">
+            <input type="hidden" id="total_price_input" name="total_price" value=""> <!-- Hidden input for total price -->
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-1"></div>
@@ -254,18 +255,59 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
             </div>
         </form>
         <script>
+        function checkForm() {
+            var arrivalDate = document.getElementById('arrival_date').value;
+            var departureDate = document.getElementById('departure_date').value;
+            var phoneNumber = document.getElementById('phone_number').value;
+            var paymentMethod = document.querySelector('input[name="payment"]:checked');
+            var bankNumber = document.getElementById('bank_number').value;
+            var bankRadio = document.getElementById('bank').checked;
+
+            if (arrivalDate && departureDate && phoneNumber && paymentMethod && (!bankRadio || (bankRadio && bankNumber))) {
+                document.getElementById('buttoni').disabled = false;
+            } else {
+                document.getElementById('buttoni').disabled = true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('booking-form').addEventListener('submit', function(event) {
+                var phoneNumber = document.getElementById('phone_number').value;
+                var phonePattern = /^\+\d{11}$/;
+
+                if (!phonePattern.test(phoneNumber)) {
+                    alert("Please enter a valid phone number.");
+                    event.preventDefault();
+                }
+            });
+
+            document.getElementById('arrival_date').addEventListener('input', checkForm);
+            document.getElementById('departure_date').addEventListener('input', checkForm);
+            document.getElementById('phone_number').addEventListener('input', checkForm);
+            var paymentRadios = document.querySelectorAll('input[name="payment"]');
+            paymentRadios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'bank') {
+                        document.getElementById('bank_number').required = true;
+                    } else {
+                        document.getElementById('bank_number').required = false;
+                        document.getElementById('bank_number').value = '';
+                    }
+                    checkForm();
+                });
+            });
+            document.getElementById('bank_number').addEventListener('input', checkForm);
+            checkForm();
+        });
+        </script>
+        <script src="assets/js/book.js"></script>
+        <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const form = document.getElementById('booking-form');
-                const submitButton = document.getElementById('buttoni');
-                const phoneInput = document.getElementById('phone_number');
-                const bankInput = document.getElementById('bank_number');
-                const paymentBankRadio = document.getElementById('bank');
-                const paymentCashRadio = document.getElementById('cash');
                 const arrivalDateInput = $('#arrival_date');
                 const departureDateInput = $('#departure_date');
                 const propertyPriceInput = document.getElementById('property_price');
                 const totalPriceContainer = document.getElementById('total_price');
-                const totalPriceInput = document.getElementById('total_price_input');
+                const totalPriceInput = document.getElementById('total_price_input');  // Hidden input for total price
                 const TVSH = parseFloat("<?php echo TVSH; ?>");
 
                 const today = new Date().toISOString().split('T')[0];
@@ -347,24 +389,6 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                         totalPriceInput.value = "";  
                     }
                 }
-
-                function validatePhoneNumber() {
-                    const phonePattern = /^\+\d{11}$/;
-                    const phoneNumber = phoneInput.value;
-                    return phonePattern.test(phoneNumber);
-                }
-
-                form.addEventListener('submit', function(event) {
-                    if (!validatePhoneNumber()) {
-                        alert('Invalid phone number format. Please enter a valid phone number.');
-                        event.preventDefault();
-                        return;
-                    }
-                    if (paymentBankRadio.checked && !bankInput.value.match(/^\d{12,}$/)) {
-                        alert('Invalid bank number format. Bank number must be at least 12 digits long.');
-                        event.preventDefault();
-                    }
-                });
             });
         </script>
     </main>
