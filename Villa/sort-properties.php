@@ -13,13 +13,16 @@ $result = $conn->query($sql);
 
 // Loop ne cdo rresht
 while ($row = $result->fetch_assoc()) {
-    $cards = urlencode($row['id']); // Use the ID for the link
+    $cards = urlencode($row['id']); 
+   
+    $images = json_decode($row['image'], true);
+    $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
 
     $property = [     // varg asociativ
         'country' => $row['country'],
         'city' => $row['city'],
         'date' => $row['date'],
-        'image' => $row['image'],
+        'image' => $imagePath,
         'price' => (int)$row['price'],
         'bathrooms' => (int)$row['bathrooms'],
         'bedrooms' => (int)$row['bedrooms'],
