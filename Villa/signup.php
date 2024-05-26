@@ -1,6 +1,15 @@
 <?php
 include 'db_connection.php'; // databaza
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+
+
+
 define("minlength", 8);
 $message = ''; // mesazhi
 
@@ -9,6 +18,7 @@ if (isset($_POST['signup'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirmpassword = $_POST['confirmpassword'];
+
 
     // check email
     $stmt = $conn->prepare("SELECT email FROM users WHERE email = ?");
@@ -46,12 +56,42 @@ if (isset($_POST['signup'])) {
         $stmt = $conn->prepare("INSERT INTO users (email, username, password, salt) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $email, $username, $hashed_password, $salt);
 
-        if ($stmt->execute()) {
+if ($stmt->execute()) {
             $message = "<p style='color: green; font-size: 16px;'>Account created successfully.</p>";
+
+            // Send confirmation email
+            $mail = new PHPMailer(true);
+            try {
+                // Server settings
+                $mail->SMTPDebug = 0;                                 // Enable verbose debug output
+                $mail->isSMTP();                                      // Set mailer to use SMTP
+                $mail->Host = 'smtp.gmail.com';                       // Specify main and backup SMTP servers
+                $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                $mail->Username = 'villaweb2324@gmail.com';             // SMTP username
+                $mail->Password = 'nuun jheb tjsy wrdc';              // SMTP password
+                $mail->SMTPSecure = 'ssl';   // Enable TLS encryption, `ssl` also accepted
+                $mail->Port = 465;                                    // TCP port to connect to
+
+                // Recipients
+                $mail->setFrom('villaweb2324@gmail.com', 'Villa');  // Replace with your email and name
+                $mail->addAddress($email, $username);                 // Add a recipient
+
+                // Content
+                $mail->isHTML(true);                                  // Set email format to HTML
+                $mail->Subject = 'Welcome to Our Property Rental Service';
+                $mail->Body    = "<html><body>
+                                  <h2>Welcome, $username!</h2>
+                                  <p>Thank you for signing up. We are excited to have you with us.</p>
+                                  </body></html>";
+
+                $mail->send();
+                $message .= "<p style='color: green; font-size: 16px;'>A confirmation email has been sent to your email address.</p>";
+            } catch (Exception $e) {
+                $message .= "<p style='color: red; font-size: 16px;'>Confirmation email could not be sent. Mailer Error: {$mail->ErrorInfo}</p>";
+            }
         } else {
             $message = "<p style='color: red; font-size: 16px;'>Error: " . $stmt->error . "</p>";
         }
-
         $stmt->close();
     }
 
