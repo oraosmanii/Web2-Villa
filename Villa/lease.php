@@ -38,9 +38,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $date = date("Y-m-d");
 
   if ($stmt->execute()) {
-    echo "<script>alert('New record created successfully');</script>";
+    // Get the last inserted property ID
+    $property_id = $stmt->insert_id;
+
+    // Insert data into listings table
+    $user_id = $_SESSION['USER_ID']; // Ensure the user ID is available from the session
+    $stmt2 = $conn->prepare("INSERT INTO listings (user_id, property_id, country, city, date, image, price, bedrooms, bathrooms, area, type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt2->bind_param("iissssdiiiss", $user_id, $property_id, $country, $city, $date, $images_json, $price, $bedrooms, $bathrooms, $area, $type, $description);
+
+    if ($stmt2->execute()) {
+        echo "<script>alert('New record created successfully');</script>";
+    } else {
+        echo "<p style='color: red; font-size: 16px;'>Failed to insert into listings table: " . $stmt2->error . "</p>";
+    }
+    $stmt2->close();
 } else {
-    echo $stmt->error;
+    echo "<p style='color: red; font-size: 16px;'>Failed to insert into properties table: " . $stmt->error . "</p>";
 }
 $stmt->close();
 }

@@ -19,6 +19,16 @@ while ($row = $result->fetch_assoc()) {
     $bookings[] = $row;
 }
 $stmt->close();
+// Fetch listings from the database
+$stmt = $conn->prepare("SELECT * FROM listings WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$listings = [];
+while ($row = $result->fetch_assoc()) {
+    $listings[] = $row;
+}
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -132,9 +142,7 @@ $stmt->close();
 <?php else: ?>
     <?php foreach ($bookings as $booking): ?>
         <?php 
-            // Decode the JSON-encoded image data
             $images = json_decode($booking['image'], true);
-            // Use the first image if available, otherwise use a default image
             $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg'; 
         ?>
         <div class="cart-item d-flex justify-content-between align-items-center mb-3">
@@ -154,11 +162,30 @@ $stmt->close();
         </div>
         <hr>
         <div class="col-md-12">
-          <h2 class="mb-4">My Listings:</h2>
-          <div class="listed-items" id="listed-items">
-            <!-- qetu shtohen items -->
-          </div>
-        </div>
+    <h2 class="mb-4">My Listings:</h2>
+    <div class="listed-items" id="listed-items">
+        <?php if (empty($listings)): ?>
+            <p class="text-center">You don't have any listings yet.</p>
+        <?php else: ?>
+            <?php foreach ($listings as $listing): 
+                          $images = json_decode($listing['image'], true);
+                          $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg'; ?>
+                <div class="cart-item d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center" style="flex-grow: 1;">
+                        <img src="<?php echo $imagePath; ?>" alt="Place in <?php echo $listing['country'] . ', ' . $listing['city']; ?>" class="img-fluid rounded" style="width: 100px; height: auto; margin-right: 20px;">
+                        <div>
+                            <h5 class="fw-bold mb-1"><?php echo $listing['country'] . ', ' . $listing['city']; ?></h5>
+                            <p class="text-muted mb-0">Date of Leasing: <?php echo $listing['date']; ?></p>
+                            <p class="text-muted mb-0">Price per night: $<?php echo $listing['price']; ?></p>
+                            <p class="text-muted mb-0">Type: <?php echo $listing['type']; ?></p>
+                        </div>
+                    </div>
+                    <button onclick="cancelListing(<?php echo $listing['id']; ?>)" class="btn btn-danger btn-sm">Cancel Listing</button>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
       </div>
     </div>
   </section>
@@ -183,6 +210,18 @@ $stmt->close();
   <script src="assets/js/custom.js"></script>
 
   <script>
+    function cancelListing(listingId) {
+            if (confirm("Are you sure you want to cancel this listing?")) {
+                // ajax request
+                $.post('cancel_listing.php', { listing_id: listingId }, function(response) {
+                    if (response.success) {
+                        location.reload(); // reload page
+                    } else {
+                        alert("Failed to cancel the listing. Please try again.");
+                    }
+                }, 'json');
+            }
+        }
     function cancelBooking(bookingId) {
       if (confirm("Are you sure you want to cancel this booking?")) {
         // ajax request
