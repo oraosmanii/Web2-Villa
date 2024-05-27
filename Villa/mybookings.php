@@ -1,7 +1,9 @@
 <?php
 session_start();
 include 'db_connection.php'; // include database connection
+include "errors.php";
 
+global $errors;
 if (!isset($_SESSION['USER_ID'])) {
     header("Location: logincopy.php");
     exit();
@@ -216,11 +218,11 @@ $stmt->close();
             if (response.success) {
                 location.reload(); // Reload the page to reflect the changes
             } else {
-                alert("Failed to cancel the listing. Please try again.");
+                alert($errors['E010']);
             }
         }, 'json').fail(function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX request failed:", textStatus, errorThrown);
-            alert("An error occurred while processing the request. Please try again.");
+            alert($errors['E009']);
         });
     }
   }
@@ -231,7 +233,7 @@ $stmt->close();
           if (response.success) {
             location.reload(); // reload page
           } else {
-            alert("Failed to cancel the listing. Please try again.");
+            alert($errors['E011']);
           }
         }, 'json');
       }

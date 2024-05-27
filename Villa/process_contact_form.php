@@ -1,4 +1,6 @@
 <?php
+include "errors.php";
+global $errors;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
@@ -22,10 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mail($to, $subject, $full_message, $headers)) {
             echo "Message was sent. Thanks for contacting us!";
         } else {
-            echo "Failed to send email. Please try again later.";
+            echo $errors['E015'];
         }
     } else {
-        $error_message = "Invalid email address!";
+        $error_message = $errors['E014'];
         echo $error_message;
     }
 }

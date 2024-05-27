@@ -1,6 +1,7 @@
 <?php
 include "db_connection.php"; 
 include "Classes.php";
+include "errors.php";
 
 function getLink($id)
 {
@@ -13,20 +14,21 @@ function getLink($id)
 
 function createCard(&$array = [])
 {
-    global $conn;
+    global $conn, $errors;
 
     if (empty($_POST['sort'])) {
         // fetch info from the database
         $result = $conn->query("SELECT * FROM listings");
 
+        if ($result === false) {
+            echo $errors['E001']; // Example: error when creating card
+            return;
+        }
+
         while ($data = $result->fetch_assoc()) {
             $cards = urlencode($data['id']); // from id
-
             $type = strtoupper(trim($data['type']));
-
-            // Decode the JSON-encoded image paths
             $images = json_decode($data['image'], true);
-            // Use the first image for the card (or handle as needed)
             $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
 
             switch ($type) {
@@ -40,7 +42,7 @@ function createCard(&$array = [])
                     $booking = new Penthouse($data['user_id'],$data['country'], $data['city'], $data['date'], $imagePath, $data['price'], $data['bedrooms'], $data['bathrooms'], $data['area']);
                     break;
                 default:
-                    echo "Invalid creation";
+                    echo $errors['E007'];
             }
 
             $Link = getLink($cards);

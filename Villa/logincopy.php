@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'db_connection.php';
+include "errors.php";
+global $errors;
 
 if (isset($_POST['login'])) {
     if (!empty($_POST["email"]) && !empty($_POST["password"])) {
@@ -23,10 +25,10 @@ if (isset($_POST['login'])) {
             header("Location: index.php");
             exit();
         } else {
-            $message = "Your credentials are not valid!";
+            $message = $errors['E006'];
         }
     } else {
-        $message = "Please fill in all fields.";
+        $message = $errors['E005'];
     }
 }
 ?>

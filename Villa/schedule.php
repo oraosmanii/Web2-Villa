@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'db_connection.php';
+include "errors.php";
+global $errors;
 
 define('TVSH', '0.18');
 
@@ -52,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $formattedPhoneNumber = formatPhoneNumber();
 
     if (!isset($_SESSION['USER_ID'])) {
-        echo "Error: User not logged in.";
+        echo $errors['E017'];
         exit();
     }
 
@@ -65,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $today = date('Y-m-d');
     if ($arrival_date < $today || $departure_date <= $arrival_date) {
-        echo "Error: Invalid dates selected.";
+        echo $errors['E012'];
         exit();
     }
 
@@ -83,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 
     if ($count > 0) {
-        echo "Error: Selected dates are not available.";
+        echo $errors['E013'];
         exit();
     }
 
