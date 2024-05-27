@@ -1,0 +1,1 @@
+User ID: 1, Country: Kosovo, City: Pejë, Price: 111, Bedrooms: 1, Bathrooms: 2, Area: 110 m², Type: Villa, Description: as, Total Image Size: 0.06 MB
