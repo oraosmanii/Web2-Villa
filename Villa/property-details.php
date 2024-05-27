@@ -238,19 +238,14 @@ if ($property) {
         <div class="icon-button" style="text-align: center; margin-top: 50px; height: 100px;">
         <?php
             if (isset($_SESSION['USER_ID']) && isset($property['user_id']) && $_SESSION['USER_ID'] != $property['user_id']) {
-                echo '<a href="';
-                if (!empty($_SESSION['LogedIn'])) {
-                    echo "schedule.php?info={$info}";
-                } else {
-                    echo "#";
-                }
-                echo '" style="font-size: 23px;"><i class="fa fa-calendar"></i>Book Now</a>';
-                
-                // Correctly escape the console log statement
-                echo "<script>console.log('" . $_SESSION['USER_ID'] . "');</script>";
+                echo '<a href="schedule.php?info={$info}" style="font-size: 23px;"><i class="fa fa-calendar"></i>Book Now</a>';
+            }
+            else if(isset($_SESSION['USER_ID']) && isset($property['user_id']) && $_SESSION['USER_ID'] == $property['user_id']){
+                echo '<a href="EditProperty.php" style="font-size: 23px;"><i class="fa fa-calendar"></i>Edit</a>';
             }
             else{
-                echo '<span style="color: grey;">This is your own listing</span>';}
+                echo '<a href="logincopy.php" style="font-size: 23px;"><i class="fa fa-calendar"></i>Log In</a>';
+            }
             ?>
         </div>
     </div>
