@@ -199,14 +199,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="row">
                             <div class="col-lg-12">
                                 <fieldset>
-                                    <h3>Username: <span style="color: #EE626B;"><?php echo "{$_SESSION['USERNAME']}" ?></span></h3>
+                                    <h3 style="margin-bottom: 10px;">Username: <span style="color: #EE626B;"><?php echo "{$_SESSION['USERNAME']}" ?></span></h3>
                                 </fieldset>
                             </div>
                             <hr>
                             <div class="col-lg-12">
                                 <fieldset>
                                     <label for="username_change">Change Username</label>
-                                    <input type="text" name="username_change" id="username_change" placeholder="New Username" required>
+                                    <input type="text" name="username_change" id="username_change" placeholder="New Username" required style="margin-top: 10px;">
                                 </fieldset>
                             </div>
                             <div class="col-lg-12">
