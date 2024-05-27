@@ -30,7 +30,7 @@ while ($row = $result->fetch_assoc()) {
         'type' => ucwords($row['type']),
         'card' => $cards
     ];
-    $properties[$row['country']][] = $property; // Vendoset ne array
+    $properties[$row['id']][] = $property; // Vendoset ne array
 }
 
 // Nese forma behet submit
