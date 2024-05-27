@@ -16,6 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type = htmlspecialchars($_POST['type']);
     $images = [];
 
+    // Phone number validation
+    if (!preg_match('/^\+[0-9]{1,11}$/', $phone)) {
+      $error_message = "Invalid phone number format.";
+      echo "<script>alert('$error_message');</script>";
+      trigger_error($error_message, E_USER_ERROR);
+      exit();
+    }
+
     if (isset($_FILES['add']) && count($_FILES['add']['name']) > 0) {
         $total = count($_FILES['add']['name']);
         for ($i = 0; $i < $total; $i++) {
@@ -48,6 +56,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt2->close();
     exit();
 }
+?>
+
+<?php
+
+// Custom error handler function
+function custom_error_handler($errno, $errstr, $errfile, $errline, $errcontext) {
+    // Define an associative array of error types
+    $error_types = array(
+        E_ERROR => 'Error',
+        E_WARNING => 'Warning',
+        E_PARSE => 'Parse Error',
+        E_NOTICE => 'Notice',
+        E_CORE_ERROR => 'Core Error',
+        E_CORE_WARNING => 'Core Warning',
+        E_COMPILE_ERROR => 'Compile Error',
+        E_COMPILE_WARNING => 'Compile Warning',
+        E_USER_ERROR => 'User Error',
+        E_USER_WARNING => 'User Warning',
+        E_USER_NOTICE => 'User Notice',
+        E_STRICT => 'Runtime Notice',
+        E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
+    );
+
+    // Check if the error type exists in the array, otherwise set it to Unknown
+    $error_type = isset($error_types[$errno]) ? $error_types[$errno] : 'Unknown Error';
+
+    $error_message = "$error_type: $errstr in $errfile on line $errline";
+
+    echo "$error_type: $errstr in $errfile on line $errline";
+}
+
+// Set the custom error handler
+set_error_handler('custom_error_handler');
 ?>
 
 <!DOCTYPE html>
@@ -199,103 +240,104 @@ https://templatemo.com/tm-591-villa-agency
         <div class="col-lg-6">
 
 
-        <form id="contact-form" method="post" enctype="multipart/form-data">
-        <div class="row">
-            <div class="col-lg-12">
-                <fieldset>
-                    <label for="email">Email Address</label>
-                    <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." 
-                    <?php if (!empty($_SESSION['LogedIn'])) {
-                        $email = $_SESSION['EMAIL'];
-                        echo "value='{$email}'";
-                    } ?> required="">
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="country">Country</label>
-                    <input type="text" name="country" id="country" placeholder="Country of property..." required>
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="city">City</label>
-                    <input type="text" name="city" id="city" placeholder="City of property..." required>
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="phone">Phone Number</label>
-                    <input type="phone" name="phone" id="phone" placeholder="Your Phone Number (+....)" required>
-                    <?php if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                        $pattern = '/^\+[0-9]{1,11}$/';
-                        $phone = $_POST["phone"];
-                        if (!preg_match($pattern, $phone)) {
-                            echo "<p style='color: red; font-size: 16px;'>Invalid phone number.</p>
-                            <script>window.location.href = '#phone';</script>";
-                        } else {
-                            echo "<script>window.location.href = '#contact-form';</script>";
-                        }
-                    } ?>
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="type">Type</label> <br>
-                    <select name="type" id="type" required>
-                        <option value="Villa">Villa</option>
-                        <option value="Apartment">Apartment</option>
-                        <option value="Penthouse">Penthouse</option>
-                    </select>
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="price">Price per night</label>
-                    <input type="number" name="price" id="price" placeholder="Price per night in $..." required>
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="area">Area</label>
-                    <input type="number" name="area" id="area" placeholder="Area in m2..." required>
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="bedrooms">Number of bedrooms</label>
-                    <input type="number" name="bedrooms" id="bedrooms" placeholder="Bedrooms of property..." required>
-                </fieldset>
-            </div>
-            <div class="col-lg-6">
-                <fieldset>
-                    <label for="bathrooms">Number of bathrooms</label>
-                    <input type="number" name="bathrooms" id="bathrooms" placeholder="Bathrooms of property..." required>
-                </fieldset>
-            </div>
-            <div class="col-lg-12">
-                <fieldset>
-                    <label for="message">Description of the villa</label>
-                    <textarea name="message" id="message" placeholder="Describe in detail..."></textarea>
-                </fieldset>
-            </div>
-            <div class="col-md-12">
-                <br>
-                <div>
-                    <label class="add" for="add">Add Photos</label>
-                    <button class="chooseThePhoto" type="button" onclick="document.getElementById('getFile').click()" style="background-color:#f6f6f6;color: #757575;">
-                        Choose Photos
-                    </button>
-                    <input type="file" id="getFile" style="display:none" name="add[]" multiple>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <fieldset>
-                    <button type="submit" id="form-submit" class="orange-button">Lease your property</button>
-                </fieldset>
-            </div>
-        </div>
-    </form>
+          <form id="contact-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+          <div class="row">
+              <div class="col-lg-12">
+                  <fieldset>
+                      <label for="email">Email Address</label>
+                      <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." 
+                      <?php if (!empty($_SESSION['LogedIn'])) {
+                          $email = $_SESSION['EMAIL'];
+                          echo "value='{$email}'";
+                      } ?> required="">
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="country">Country</label>
+                      <input type="text" name="country" id="country" placeholder="Country of property..." required>
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="city">City</label>
+                      <input type="text" name="city" id="city" placeholder="City of property..." required>
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="phone">Phone Number</label>
+                      <input type="phone" name="phone" id="phone" placeholder="Your Phone Number (+....)" required>
+                      <?php if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                          $pattern = '/^\+[0-9]{1,11}$/';
+                          $phone = $_POST["phone"];
+                          if (!preg_match($pattern, $phone)) {
+                              echo "<p style='color: red; font-size: 16px;'>Invalid phone number.</p>
+                              <script>window.location.href = '#phone';</script>";
+                              trigger_error("Invalid phone number", E_USER_ERROR);
+                          } else {
+                              echo "<script>window.location.href = '#contact-form';</script>";
+                          }
+                      } ?>
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="type">Type</label> <br>
+                      <select name="type" id="type" required>
+                          <option value="Villa">Villa</option>
+                          <option value="Apartment">Apartment</option>
+                          <option value="Penthouse">Penthouse</option>
+                      </select>
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="price">Price per night</label>
+                      <input type="number" name="price" id="price" placeholder="Price per night in $..." required>
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="area">Area</label>
+                      <input type="number" name="area" id="area" placeholder="Area in m2..." required>
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="bedrooms">Number of bedrooms</label>
+                      <input type="number" name="bedrooms" id="bedrooms" placeholder="Bedrooms of property..." required>
+                  </fieldset>
+              </div>
+              <div class="col-lg-6">
+                  <fieldset>
+                      <label for="bathrooms">Number of bathrooms</label>
+                      <input type="number" name="bathrooms" id="bathrooms" placeholder="Bathrooms of property..." required>
+                  </fieldset>
+              </div>
+              <div class="col-lg-12">
+                  <fieldset>
+                      <label for="message">Description of the villa</label>
+                      <textarea name="message" id="message" placeholder="Describe in detail..."></textarea>
+                  </fieldset>
+              </div>
+              <div class="col-md-12">
+                  <br>
+                  <div>
+                      <label class="add" for="add">Add Photos</label>
+                      <button class="chooseThePhoto" type="button" onclick="document.getElementById('getFile').click()" style="background-color:#f6f6f6;color: #757575;">
+                          Choose Photos
+                      </button>
+                      <input type="file" id="getFile" style="display:none" name="add[]" multiple>
+                  </div>
+              </div>
+              <div class="col-lg-12">
+                  <fieldset>
+                      <button type="submit" id="form-submit" class="orange-button">Lease your property</button>
+                  </fieldset>
+              </div>
+          </div>
+      </form>
         </div>
    
       </div>
@@ -345,6 +387,5 @@ https://templatemo.com/tm-591-villa-agency
             });
         });
     </script>
-
   </body>
 </html>
