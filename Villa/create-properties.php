@@ -65,12 +65,13 @@ function createCard(&$array = [])
                             if (isset($_SESSION['USER_ID']) && isset($data['user_id']) && $_SESSION['USER_ID'] != $data['user_id']) {
                                 echo "Book Now";
                             } else if (isset($_SESSION['USER_ID']) && isset($data['user_id']) && $_SESSION['USER_ID'] == $data['user_id']){
-                                echo "Inspect";
+                                echo "View";
                             }else{
-                                echo "Log In";
+                                echo "Log In to Book";
                             }
                         
-                        echo "</div>
+                        echo "</a>
+                        </div>
                     </div>
                 </div>";    
         }
@@ -92,7 +93,15 @@ function createCard(&$array = [])
                     <li>Area: <span>{$info['area']}m2</span></li>
                     </ul>
                     <div class='main-button'>
-                        <a href='{$Link}'>Book Now</a>
+                        <a href='{$Link}'>";
+                        if (isset($_SESSION['USER_ID']) && isset($info['user_id']) && $_SESSION['USER_ID'] != $info['user_id']) {
+                            echo "Book Now";
+                        } else if (isset($_SESSION['USER_ID']) && isset($info['user_id']) && $_SESSION['USER_ID'] == $info['user_id']){
+                            echo "View";
+                        }else{
+                            echo "Log In to Book";
+                        }
+                        echo "</a>
                     </div>
                 </div>
             </div>";
