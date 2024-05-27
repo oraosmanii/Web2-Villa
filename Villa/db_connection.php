@@ -1,12 +1,12 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = ""; 
+$password = "Password"; 
 $dbname = "villadb"; 
 
 
 
-$conn = new mysqli($servername, $username, $password, $dbname,3307);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 
 if ($conn->connect_error) {
