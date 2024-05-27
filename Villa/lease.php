@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db_connection.php';
+require 'log_lease.php'; // Include the logging script
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and validate form inputs
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       echo "All fields must be filled out.";
       //trigger_error("Please fill all fields", E_WARNING);
       exit();
-  }
+    }
 
     // Phone number validation
     if (!preg_match('/^\+[0-9]{1,11}$/', $phone)) {
@@ -49,13 +50,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $images_json = json_encode($images);
     $date = date("Y-m-d");
 
-    // Insert data into listings table
-    $user_id = $_SESSION['USER_ID']; // Ensure the user ID is available from the session
+    $user_id = $_SESSION['USER_ID']; 
     $stmt2 = $conn->prepare("INSERT INTO listings (user_id, country, city, date, image, price, bedrooms, bathrooms, area, type, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt2->bind_param("issssdiiiss", $user_id, $country, $city, $date, $images_json, $price, $bedrooms, $bathrooms, $area, $type, $description);
 
     if ($stmt2->execute()) {
         echo "New record created successfully";
+        
+        
+        log_lease($user_id, $country, $city, $price, $bedrooms, $bathrooms, $area, $type, $description, $images);
+        
     } else {
         echo "Failed to insert into listings table: " . $stmt2->error;
     }
@@ -63,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
 }
 ?>
+
 
 <?php
 
