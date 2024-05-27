@@ -239,7 +239,7 @@ https://templatemo.com/tm-591-villa-agency
                       <?php
                       if(!empty($_SESSION['LogedIn'])){
                         $username=$_SESSION['USERNAME'];
-                        echo "<li><a href='#'>{$username}</a></li><li>
+                        echo "<li><a href='UserPage.php'>{$username}</a></li><li>
                         <a href='logout.php'>Log Out</a></li>";
                       }
                       else{

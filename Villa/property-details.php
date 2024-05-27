@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <?php
                             if (!empty($_SESSION['LogedIn'])) {
                                 $username = $_SESSION['USERNAME'];
-                                echo "<li><a href='#'>{$username}</a></li><li>
+                                echo "<li><a href='UserPage.php'>{$username}</a></li><li>
                         <a href='logout.php'>Log Out</a></li>";
                             } else {
                                 echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
@@ -241,7 +241,7 @@ if ($property) {
                 echo '<a href="schedule.php?info={$info}" style="font-size: 23px;"><i class="fa fa-calendar"></i>Book Now</a>';
             }
             else if(isset($_SESSION['USER_ID']) && isset($property['user_id']) && $_SESSION['USER_ID'] == $property['user_id']){
-                echo '<a href="EditProperty.php" style="font-size: 23px;"><i class="fa fa-calendar"></i>Edit</a>';
+                echo '<span style="color: grey;">This is your own listing (Editing will come soon) </span>';
             }
             else{
                 echo '<a href="logincopy.php" style="font-size: 23px;"><i class="fa fa-calendar"></i>Log In</a>';

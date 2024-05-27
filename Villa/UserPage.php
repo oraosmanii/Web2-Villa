@@ -1,5 +1,50 @@
 <?php
 session_start();
+include 'db_connection.php';
+
+$response = [
+    'success' => false,
+    'message' => ''
+];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $new_username = trim($_POST['username_change']);
+    $user_id = $_SESSION['USER_ID'];
+
+    if (empty($new_username)) {
+        $response['message'] = 'New username cannot be empty.';
+        echo json_encode($response);
+        exit();
+    }
+
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt->bind_param("s", $new_username);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $response['message'] = 'Username is already taken.';
+        $stmt->close();
+        echo json_encode($response);
+        exit();
+    }
+
+    $stmt->close();
+
+
+    $stmt = $conn->prepare("UPDATE users SET username = ? WHERE id = ?");
+    $stmt->bind_param("si", $new_username, $user_id);
+
+    if ($stmt->execute()) {
+        $_SESSION['USERNAME'] = $new_username;
+        $response['success'] = true;
+        $response['message'] = 'Username changed successfully.';
+    } else {
+        $response['message'] = 'Error updating username. Please try again.';
+    }
+
+    $stmt->close();
+}
 ?>
 
 
@@ -93,7 +138,7 @@ session_start();
                             <?php
                             if (!empty($_SESSION['LogedIn'])) {
                                 $username = $_SESSION['USERNAME'];
-                                echo "<li><a href='#'>{$username}</a></li><li>
+                                echo "<li><a href='UserPage.php'>{$username}</a></li><li>
                         <a href='logout.php'>Log Out</a></li>";
                             } else {
                                 echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
@@ -115,8 +160,8 @@ session_start();
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <span class="breadcrumb"><a href="#">Home</a> / Edit</span>
-          <h3>Edit</h3>
+          <span class="breadcrumb"><a href="#">Home</a> / User</span>
+          <h3>User Info</h3>
         </div>
       </div>
     </div>
@@ -127,10 +172,10 @@ session_start();
       <div class="row">
         <div class="col-lg-6">
           <div class="section-heading">
-            <h6>| Edit your villa</h6>
-            <h2>Small changes to a bigger experience</h2>
+            <h6>| Express yourself</h6>
+            <h2>How you present yourself reflects on what you list</h2>
           </div>
-          <p>If you have any questions regarding how the edit page works, please contact us using the information below:</p>
+          <p>If you have any questions regarding how this page, please contact us using the information below:</p>
           <div class="row">
             <div class="col-lg-12">
               <div class="item phone">
@@ -138,7 +183,7 @@ session_start();
                 <h6>010-020-0340<br><span>Phone Number</span></h6>
               </div>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-bottom: 10vh;">
               <div class="item email">
                 <img src="assets/images/email-icon.png" alt="" style="max-width: 52px;">
                 <h6>info@villa.co<br><span>Business Email</span></h6>
@@ -154,98 +199,23 @@ session_start();
 
           <form id="contact-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
           <div class="row">
+             
+          <div class="col-lg-12">
+                  <fieldset>
+                      <h3>Username: <span style="color: #EE626B;"><?php echo "{$_SESSION['USERNAME']}"?></span></h3>
+                  </fieldset>
+              </div><hr>
+            
               <div class="col-lg-12">
                   <fieldset>
-                      <label for="email">Email Address</label>
-                      <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." 
-                      <?php if (!empty($_SESSION['LogedIn'])) {
-                          $email = $_SESSION['EMAIL'];
-                          echo "value='{$email}'";
-                      } ?> required="">
+                      <label for="username_change">Change Username</label>
+                      <input type="text" name="username_change" id="username_change" placeholder="New Username" required>
                   </fieldset>
               </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="country">Country</label>
-                      <input type="text" name="country" id="country" placeholder="Country of property..." required>
-                  </fieldset>
-              </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="city">City</label>
-                      <input type="text" name="city" id="city" placeholder="City of property..." required>
-                  </fieldset>
-              </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="phone">Phone Number</label>
-                      <input type="phone" name="phone" id="phone" placeholder="Your Phone Number (+....)" required>
-                      <?php if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                          $pattern = '/^\+[0-9]{1,11}$/';
-                          $phone = $_POST["phone"];
-                          if (!preg_match($pattern, $phone)) {
-                              echo "<p style='color: red; font-size: 16px;'>Invalid phone number.</p>
-                              <script>window.location.href = '#phone';</script>";
-                              trigger_error("Invalid phone number", E_USER_ERROR);
-                          } else {
-                              echo "<script>window.location.href = '#contact-form';</script>";
-                          }
-                      } ?>
-                  </fieldset>
-              </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="type">Type</label> <br>
-                      <select name="type" id="type" required>
-                          <option value="Villa">Villa</option>
-                          <option value="Apartment">Apartment</option>
-                          <option value="Penthouse">Penthouse</option>
-                      </select>
-                  </fieldset>
-              </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="price">Price per night</label>
-                      <input type="number" name="price" id="price" placeholder="Price per night in $..." required>
-                  </fieldset>
-              </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="area">Area</label>
-                      <input type="number" name="area" id="area" placeholder="Area in m2..." required>
-                  </fieldset>
-              </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="bedrooms">Number of bedrooms</label>
-                      <input type="number" name="bedrooms" id="bedrooms" placeholder="Bedrooms of property..." required>
-                  </fieldset>
-              </div>
-              <div class="col-lg-6">
-                  <fieldset>
-                      <label for="bathrooms">Number of bathrooms</label>
-                      <input type="number" name="bathrooms" id="bathrooms" placeholder="Bathrooms of property..." required>
-                  </fieldset>
-              </div>
+              
               <div class="col-lg-12">
                   <fieldset>
-                      <label for="message">Description of the villa</label>
-                      <textarea name="message" id="message" placeholder="Describe in detail..."></textarea>
-                  </fieldset>
-              </div>
-              <div class="col-md-12">
-                  <br>
-                  <div>
-                      <label class="add" for="add">Add Photos</label>
-                      <button class="chooseThePhoto" type="button" onclick="document.getElementById('getFile').click()" style="background-color:#f6f6f6;color: #757575;">
-                          Choose Photos
-                      </button>
-                      <input type="file" id="getFile" style="display:none" name="add[]" multiple>
-                  </div>
-              </div>
-              <div class="col-lg-12">
-                  <fieldset>
-                      <button type="submit" id="form-submit" class="orange-button">Lease your property</button>
+                      <button type="submit" id="change-submit" class="orange-button">Change</button>
                   </fieldset>
               </div>
           </div>
@@ -280,3 +250,6 @@ session_start();
     <script src="assets/js/counter.js"></script>
     <script src="assets/js/custom.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</body>
+</html>

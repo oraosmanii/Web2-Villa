@@ -159,7 +159,7 @@ $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] :
                                 <?php
                                 if (!empty($_SESSION['LogedIn'])) {
                                     $username = $_SESSION['USERNAME'];
-                                    echo "<li><a href='#'>{$username}</a></li><li>
+                                    echo "<li><a href='UserPage.php'>{$username}</a></li><li>
                                           <a href='logout.php'>Log Out</a></li>";
                                 } else {
                                     echo "<li><a href='logincopy.php'>Log in | Sign up</a></li>";
