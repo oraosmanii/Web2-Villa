@@ -1,7 +1,8 @@
 <?php
 session_start();
 include 'db_connection.php'; 
-
+include "errors.php";
+global $errors;
 if (!isset($_SESSION['index_visits'])) {
   $_SESSION['index_visits'] = 1; 
 } else {
@@ -295,7 +296,6 @@ https://templatemo.com/tm-591-villa-agency
               <div class="left-image">
                   <?php if ($topRatedProperty):
                      $images = json_decode($topRatedProperty['image'], true);
-                     // Use the first image for the card (or handle as needed)
                      $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
              // fetch ?>
                       <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="">
@@ -314,7 +314,7 @@ https://templatemo.com/tm-591-villa-agency
                       if ($topRatedProperty) {
                           echo htmlspecialchars($topRatedProperty['city']) . ", " . htmlspecialchars($topRatedProperty['country']);
                       } else {
-                          echo "No top-rated property available";
+                          echo $errors['E008'];
                       }
                       ?>
                   </h2>

@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'db_connection.php';
+include "errors.php";
+global $errors;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_SESSION['USER_ID']; 
@@ -11,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $current_date = date('Y-m-d');
     if ($arrival_date < $current_date || $departure_date <= $arrival_date) {
-        echo json_encode(["message" => "Invalid date range.", "redirect" => false]);
+        echo json_encode(["message" => $errors['E012'], "redirect" => false]);
         exit;
     }
 
@@ -28,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 
     if ($count > 0) {
-        echo json_encode(["message" => "Selected dates are already booked.", "redirect" => false]);
+        echo json_encode(["message" => $errors['E013'], "redirect" => false]);
         exit;
     }
 

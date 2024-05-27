@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'db_connection.php';
+include "errors.php";
+global $errors;
 
 header('Content-Type: application/json');
 
@@ -30,7 +32,7 @@ try {
             $stmt->execute();
             $stmt->close();
         } else {
-            $response['message'] = 'You have already rated this property.';
+            $response['message'] = $errors['E018'];
             echo json_encode($response);
             exit();
         }
@@ -48,7 +50,7 @@ try {
         $response['message'] = 'Thank you for your feedback!';
         $response['redirect'] = 'property-details.php?info=' . urlencode($property_id);
     } else {
-        $response['message'] = 'Invalid request.';
+        $response['message'] = $errors['E019'];
     }
 } catch (Exception $e) {
     $response['message'] = $e->getMessage();

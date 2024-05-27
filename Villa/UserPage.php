@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'db_connection.php';
+include "errors.php";
+global $errors;
 
 $response = [
     'success' => false,
@@ -12,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_SESSION['USER_ID'];
 
     if (empty($new_username)) {
-        $response['message'] = 'New username cannot be empty.';
+        $response['message'] = $errors['E020'];
         echo json_encode($response);
         exit();
     }
@@ -23,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $response['message'] = 'Username is already taken.';
+        $response['message'] = $errors['E021'];
         $stmt->close();
         echo json_encode($response);
         exit();
@@ -40,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response['success'] = true;
         $response['message'] = 'Username changed successfully.';
     } else {
-        $response['message'] = 'Error updating username. Please try again.';
+        $response['message'] = $errors['E022'];
     }
 
     $stmt->close();

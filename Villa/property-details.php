@@ -175,6 +175,8 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
 
     <?php
+    include "errors.php";
+    global $errors;
 
 if ($property) {
             $images = json_decode($property['image'], true);
@@ -231,7 +233,7 @@ if ($property) {
         </ul>
       </div>";
 } else {
-    echo "Information not provided";
+    echo $errors['E016'];
 }
 ?>
     

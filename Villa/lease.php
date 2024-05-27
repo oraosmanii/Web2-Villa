@@ -1,7 +1,8 @@
 <?php
 session_start();
 include 'db_connection.php';
-
+include "errors.php";
+global $errors;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and validate form inputs
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -17,14 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $images = [];
 
     if (empty($email) || empty($country) || empty($city) || empty($phone) || empty($price) || empty($area) || empty($bedrooms) || empty($bathrooms) || empty($description) || empty($type)) {
-      echo "All fields must be filled out.";
+      echo $errors['E005'];
       //trigger_error("Please fill all fields", E_WARNING);
       exit();
   }
 
     // Phone number validation
     if (!preg_match('/^\+[0-9]{1,11}$/', $phone)) {
-      $error_message = "Invalid phone number format.";
+      $error_message = $errors['E004'];
       echo "<script>alert('$error_message');</script>";
       trigger_error($error_message, E_USER_ERROR);
       exit();
@@ -39,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (move_uploaded_file($_FILES["add"]["tmp_name"][$i], $target_file)) {
                     $images[] = $target_file;
                 } else {
-                    echo "File upload failed.";
+                    echo $errors['E002'];
                     exit();
                 }
             }
@@ -57,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt2->execute()) {
         echo "New record created successfully";
     } else {
-        echo "Failed to insert into listings table: " . $stmt2->error;
+        echo $errors['E003'] . $stmt2->error;
     }
     $stmt2->close();
     exit();
@@ -274,17 +275,6 @@ https://templatemo.com/tm-591-villa-agency
                   <fieldset>
                       <label for="phone">Phone Number</label>
                       <input type="phone" name="phone" id="phone" placeholder="Your Phone Number (+....)" required>
-                      <?php if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                          $pattern = '/^\+[0-9]{1,11}$/';
-                          $phone = $_POST["phone"];
-                          if (!preg_match($pattern, $phone)) {
-                              echo "<p style='color: red; font-size: 16px;'>Invalid phone number.</p>
-                              <script>window.location.href = '#phone';</script>";
-                              trigger_error("Invalid phone number", E_USER_ERROR);
-                          } else {
-                              echo "<script>window.location.href = '#contact-form';</script>";
-                          }
-                      } ?>
                   </fieldset>
               </div>
               <div class="col-lg-6">
@@ -385,7 +375,7 @@ https://templatemo.com/tm-591-villa-agency
                 };
 
                 xhr.onerror = function() { //nese kerkesa perfundon me deshtim
-                    alert('An error occurred during the request.');
+                    alert($errors['E009']);
                 };
 
                 var formData = new FormData(this);
