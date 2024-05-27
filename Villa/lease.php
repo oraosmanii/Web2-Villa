@@ -16,6 +16,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type = htmlspecialchars($_POST['type']);
     $images = [];
 
+    if (empty($email) || empty($country) || empty($city) || empty($phone) || empty($price) || empty($area) || empty($bedrooms) || empty($bathrooms) || empty($description) || empty($type)) {
+      echo "All fields must be filled out.";
+      //trigger_error("Please fill all fields", E_WARNING);
+      exit();
+  }
+
     // Phone number validation
     if (!preg_match('/^\+[0-9]{1,11}$/', $phone)) {
       $error_message = "Invalid phone number format.";

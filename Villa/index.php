@@ -464,6 +464,7 @@ https://templatemo.com/tm-591-villa-agency
                             //echo "This form is submitted " . $form_submission_count . " times!";
                         }
                         ?>
+                       
          <form id="contact-form" action="process_contact_form.php" method="POST">
     <div class="row">
         <div class="col-lg-12">
@@ -490,6 +491,7 @@ https://templatemo.com/tm-591-villa-agency
                 <textarea name="message" id="message" placeholder="Your Message"></textarea>
             </fieldset>
         </div>
+        <div style="color: green; margin-bottom: 10px;" class="col-lg-12" id="response"></div>
         <div class="col-lg-12">
             <fieldset>
                 <button type="submit" id="form-submit" name="submit" class="orange-button">Send Message</button>
@@ -539,6 +541,26 @@ https://templatemo.com/tm-591-villa-agency
             }
         }
     </script>
+    <script>
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(document.getElementById('contact-form'));
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'process_contact_form.php', true);
+
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            document.getElementById('response').innerHTML = xhr.responseText;
+        } else {
+            document.getElementById('response').innerHTML = 'Error: ' + xhr.statusText;
+        }
+    };
+
+    xhr.send(formData);
+});
+</script>
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
   <script src="assets/js/isotope.min.js"></script>
