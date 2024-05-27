@@ -13,7 +13,7 @@ $result = $conn->query($sql);
 
 // Loop ne cdo rresht
 while ($row = $result->fetch_assoc()) {
-    $cards = &urlencode($row['id']); 
+    $cards = urlencode($row['id']); 
     
    
     $images = json_decode($row['image'], true);
