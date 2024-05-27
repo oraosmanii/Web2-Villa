@@ -1,1 +1,2 @@
 User ID: 1, Country: Kosovo, City: Pejë, Price: 111, Bedrooms: 1, Bathrooms: 2, Area: 110 m², Type: Villa, Description: as, Total Image Size: 0.06 MB
+User ID: 1, Country: France, City: Paris, Price: 45, Bedrooms: 1, Bathrooms: 1, Area: 80 m², Type: Apartment, Description: Apartment in Paris! OUI OUI BAGUETTE 🥖, Total Image Size: 0.13 MB

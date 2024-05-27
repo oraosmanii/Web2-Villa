@@ -19,6 +19,7 @@ while ($row = $result->fetch_assoc()) {
     $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
 
     $property = [     // varg asociativ
+        'user_id' => $row['user_id'],
         'country' => $row['country'],
         'city' => $row['city'],
         'date' => $row['date'],
