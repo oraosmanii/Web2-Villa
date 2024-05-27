@@ -37,16 +37,18 @@ function &getBookedDates($property_id)
 }
 
 $property_id = isset($_GET['info']) ? intval($_GET['info']) : 0;
+$property = null;
 
 if ($property_id > 0) {
     $stmt = $conn->prepare("SELECT * FROM listings WHERE id = ?");
     $stmt->bind_param("i", $property_id);
     $stmt->execute();
     $result = $stmt->get_result();
-    $property = $result->fetch_assoc();
+    if ($result->num_rows > 0) {
+        $property = $result->fetch_assoc();
+    }
     $stmt->close();
 
-    // Fetch booked dates for the property
     $booked_dates = &getBookedDates($property_id);
 }
 
@@ -54,7 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $formattedPhoneNumber = formatPhoneNumber();
 
     if (!isset($_SESSION['USER_ID'])) {
-        echo $errors['E017'];
+        $referrer = $_SERVER['HTTP_REFERER'];
+        echo "<script>alert('{$errors['E017']}'); window.location.href='$referrer';</script>";
         exit();
     }
 
@@ -67,11 +70,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $today = date('Y-m-d');
     if ($arrival_date < $today || $departure_date <= $arrival_date) {
-        echo $errors['E012'];
+        $referrer = $_SERVER['HTTP_REFERER'];
+        echo "<script>alert('{$errors['E012']}'); window.location.href='$referrer';</script>";
         exit();
     }
 
-    // Check for date overlap
+
     $stmt = $conn->prepare("
         SELECT COUNT(*) FROM bookings 
         WHERE property_id = ? AND 
@@ -85,7 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 
     if ($count > 0) {
-        echo $errors['E013'];
+        $referrer = $_SERVER['HTTP_REFERER'];
+        echo "<script>alert('{$errors['E013']}'); window.location.href='$referrer';</script>";
         exit();
     }
 
@@ -105,6 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
