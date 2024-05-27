@@ -3,11 +3,13 @@ include "db_connection.php";
 include "Classes.php";
 include "errors.php";
 
-function getLink($id)
+function getLink($id,$user)
 {
-    if (!empty($_SESSION['LogedIn'])) {
+    if (isset($_SESSION['USER_ID']) && isset($user) && $_SESSION['USER_ID'] != $user) {
         return "schedule.php?info=$id";
-    } else {
+    } else if (isset($_SESSION['USER_ID']) && isset($user) && $_SESSION['USER_ID'] == $user){
+        return "property-details.php?info=$id";
+    }else{
         return "logincopy.php";
     }
 }
@@ -27,6 +29,7 @@ function createCard(&$array = [])
 
         while ($data = $result->fetch_assoc()) {
             $cards = urlencode($data['id']); // from id
+            $user= urlencode($data['user_id']);
             $type = strtoupper(trim($data['type']));
             $images = json_decode($data['image'], true);
             $imagePath = !empty($images) ? $images[0] : 'default-image-path.jpg';
@@ -45,7 +48,7 @@ function createCard(&$array = [])
                     echo $errors['E007'];
             }
 
-            $Link = getLink($cards);
+            $Link = getLink($cards,$user);
             echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$booking->get_type()}'>
                     <div class='item'> 
                         <a href='property-details.php?info={$cards}'><img src='{$booking->get_image()}' height='300' alt=''></a>
@@ -58,17 +61,25 @@ function createCard(&$array = [])
                         <li>Area: <span>{$booking->get_area()}m2</span></li>
                         </ul>
                         <div class='main-button'>
-                            <a href='{$Link}'>Book Now</a>
-                        </div>
+                            <a href='{$Link}'>";
+                            if (isset($_SESSION['USER_ID']) && isset($data['user_id']) && $_SESSION['USER_ID'] != $data['user_id']) {
+                                echo "Book Now";
+                            } else if (isset($_SESSION['USER_ID']) && isset($data['user_id']) && $_SESSION['USER_ID'] == $data['user_id']){
+                                echo "Inspect";
+                            }else{
+                                echo "Log In";
+                            }
+                        
+                        echo "</div>
                     </div>
-                </div>";
+                </div>";    
         }
 
         $result->free();
     } else {
         foreach ($array as $objects) {
             $info = $objects[0];
-            $Link = getLink($info['card']);
+            $Link = getLink($info['card'],$info['user_id']);
             echo "<div class='col-lg-4 col-md-6 align-self-center mb-30 properties-items col-md-6 {$info['type']}'>
                 <div class='item'> 
                     <a href='property-details.php?info={$info['card']}'><img src='{$info['image']}' height='300' alt=''></a>
