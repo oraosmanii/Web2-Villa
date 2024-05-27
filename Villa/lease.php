@@ -5,6 +5,8 @@ include "errors.php";
 global $errors;
 require 'log_lease.php'; 
 
+set_error_handler("customErrorHandler");
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and validate form inputs
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -20,16 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $images = [];
 
     if (empty($email) || empty($country) || empty($city) || empty($phone) || empty($price) || empty($area) || empty($bedrooms) || empty($bathrooms) || empty($description) || empty($type)) {
-      echo $errors['E005'];
-      //trigger_error("Please fill all fields", E_WARNING);
+      $error_message= $errors['E005'];
+      trigger_error($error_message);
       exit();
     }
 
     // Phone number validation
     if (!preg_match('/^\+[0-9]{1,11}$/', $phone)) {
       $error_message = $errors['E004'];
-      echo "<script>alert('$error_message');</script>";
-      trigger_error($error_message, E_USER_ERROR);
+      trigger_error($error_message);  
       exit();
     }
 
@@ -73,35 +74,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
 
-// Custom error handler function
-function custom_error_handler($errno, $errstr, $errfile, $errline, $errcontext) {
-    // Define an associative array of error types
-    $error_types = array(
-        E_ERROR => 'Error',
-        E_WARNING => 'Warning',
-        E_PARSE => 'Parse Error',
-        E_NOTICE => 'Notice',
-        E_CORE_ERROR => 'Core Error',
-        E_CORE_WARNING => 'Core Warning',
-        E_COMPILE_ERROR => 'Compile Error',
-        E_COMPILE_WARNING => 'Compile Warning',
-        E_USER_ERROR => 'User Error',
-        E_USER_WARNING => 'User Warning',
-        E_USER_NOTICE => 'User Notice',
-        E_STRICT => 'Runtime Notice',
-        E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
-    );
+function customErrorHandler($errno, $errstr, $errfile, $errline) {
+  // Define an array to map error types to user-friendly names
+  $error_types = array(
+      E_ERROR => 'Error',
+      E_WARNING => 'Warning',
+      E_PARSE => 'Parse Error',
+      E_NOTICE => 'Notice',
+      E_CORE_ERROR => 'Core Error',
+      E_CORE_WARNING => 'Core Warning',
+      E_COMPILE_ERROR => 'Compile Error',
+      E_COMPILE_WARNING => 'Compile Warning',
+      E_USER_ERROR => 'User Error',
+      E_USER_WARNING => 'User Warning',
+      E_USER_NOTICE => 'User Notice',
+      E_STRICT => 'Runtime Notice',
+      E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
+  );
 
-    // Check if the error type exists in the array, otherwise set it to Unknown
-    $error_type = isset($error_types[$errno]) ? $error_types[$errno] : 'Unknown Error';
+  
+  $error_type = isset($error_types[$errno]) ? $error_types[$errno] : 'Unknown Error';
 
-    $error_message = "$error_type: $errstr in $errfile on line $errline";
+ 
+  $error_message = "[$error_type] $errstr";
 
-    echo "$error_type: $errstr in $errfile on line $errline";
+  
+  echo "$error_message";
+
+  if ($errno == E_USER_ERROR || $errno == E_ERROR) {
+      exit(1);
+  }
 }
 
-// Set the custom error handler
-set_error_handler('custom_error_handler');
+set_error_handler('customErrorHandler');
 ?>
 
 <!DOCTYPE html>
