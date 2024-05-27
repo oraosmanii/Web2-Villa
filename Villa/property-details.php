@@ -43,12 +43,105 @@ if (isset($_GET['info'])) {
     <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
 
+    <style>
+    #weather{
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 150px;
+    width: 350px;
+    position: relative;
+    bottom: 450px;
+    left: 60px;
+    background-color: #63617d;
+}
+
+#weather .weather-card-title {
+    margin-bottom: 10px;
+    margin-left: 20px;
+    color: white;
+}
+
+#weather img {
+    width: 120px;
+    height: 120px;
+    float: right;
+   position: relative;
+   bottom: 20px;
+   right: 10px;
+}
+
+#weather p {
+    margin-bottom: 10px;
+    margin-left: 20px;
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+}
+
+.rating-section {
+  width: 350px;
+  height: 260px;
+  margin: 0;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  bottom: 430px;
+
+}
+
+.rating-card {
+  border: none;
+}
+
+.rating-card-header {
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.rating-card-body {
+    padding: 20px;
+}
+
+.yjet {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.yjet input[type="radio"] {
+  display: none;
+}
+
+.yjet label {
+  float: right;
+  margin: 0 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.yjet label:before {
+  content: "\2605";
+  font-size: 30px;
+  color: #ccc;
+}
+
+.yjet input[type="radio"]:checked ~ label:before {
+  color: #f00;
+}
+    </style>
+
+
     <!-- WEATHER API SCRIPT -->
     <script>
 document.addEventListener("DOMContentLoaded", function() {
     const city = "<?php echo $property['city']; ?>";
     const country = "<?php echo $property['country']; ?>";
-    const apiKey = "c8264818d37ac96a61cb2a99e282729a"; // Replace with your actual API key
+    const apiKey = "c8264818d37ac96a61cb2a99e282729a"; // Your API key
 
     const getWeather = async (city, country) => {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiKey}`;
@@ -66,9 +159,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (weather) {
             const description = weather.weather[0].description;
             const temp = (weather.main.temp - 273.15).toFixed(1); // Convert Kelvin to Celsius
+            const iconCode = weather.weather[0].icon;
+            const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
             document.getElementById('weather-description').innerText = description;
             document.getElementById('weather-temp').innerText = `${temp}°C`;
+            const weatherIcon = document.getElementById('weather-icon');
+            weatherIcon.src = iconUrl;
+            weatherIcon.style.display = 'block';
         } else {
             document.getElementById('weather-description').innerText = 'Weather data not available';
         }
@@ -252,22 +350,23 @@ if ($property) {
 
 
     <!-- RATING SECTION -->
-    <div class="rating-section">
-    <div class="card">
+  
         <div id="weather">
-                <h3 class=>Current Weather</h3>
-            <div class="card-body">
+                <h3 class="weather-card-title">Current Weather</h3>
+            <div class="weather-card-body">
+                <img id="weather-icon" alt="Weather Icon" style="display: none;">
                 <p id="weather-description"></p>
                 <p id="weather-temp"></p>
             </div>      
         </div>
-    </div>
 
-    <div class="card">
-        <div class="card-header">
+    
+    <div class="rating-section">
+    <div class="rating-card">
+        <div class="rating-card-header">
             <h3>Rate this property</h3>
         </div>
-        <div class="card-body">
+        <div class="rating-card-body">
 
     <form id="rating-form" action="submit_rating.php" method="post">
         <input type="hidden" name="property_id" value="<?php echo htmlspecialchars($info); ?>">
