@@ -341,7 +341,7 @@ if ($property) {
             echo '<a href="schedule.php?info=' . urlencode($info) . '" style="font-size: 23px;"><i class="fa fa-calendar"></i> Book Now</a>';
         }
         else if (isset($_SESSION['USER_ID']) && isset($property['user_id']) && $_SESSION['USER_ID'] == $property['user_id']) {
-            echo '<span style="color: grey;">This is your own listing (Editing will come soon) </span>';
+            echo '<span style="color: #EE626B;">This is your own listing </span>';
         } else {
             echo '<a href="logincopy.php" style="font-size: 23px;"><i class="fa fa-calendar"></i> Log In</a>';
         }

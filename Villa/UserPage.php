@@ -267,5 +267,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
         });
     </script>
+    <script>
+        // Clear the form data from the cache when the page is loaded
+        window.onload = function() {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        };
+    </script>
 </body>
 </html>
