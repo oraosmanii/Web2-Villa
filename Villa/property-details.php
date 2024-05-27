@@ -42,6 +42,39 @@ if (isset($_GET['info'])) {
     <link rel="stylesheet" href="assets/css/owl.css">
     <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+
+    <!-- WEATHER API SCRIPT -->
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const city = "<?php echo $property['city']; ?>";
+    const country = "<?php echo $property['country']; ?>";
+    const apiKey = "c8264818d37ac96a61cb2a99e282729a"; // Replace with your actual API key
+
+    const getWeather = async (city, country) => {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiKey}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+            return null; // Return null on error
+        }
+    };
+
+    getWeather(city, country).then(weather => {
+        if (weather) {
+            const description = weather.weather[0].description;
+            const temp = (weather.main.temp - 273.15).toFixed(1); // Convert Kelvin to Celsius
+
+            document.getElementById('weather-description').innerText = description;
+            document.getElementById('weather-temp').innerText = `${temp}°C`;
+        } else {
+            document.getElementById('weather-description').innerText = 'Weather data not available';
+        }
+    });
+});
+</script>
 </head>
 
 <body>
@@ -222,8 +255,19 @@ if ($property) {
         </div>
     </div>
 
+
     <!-- RATING SECTION -->
     <div class="rating-section">
+    <div class="card">
+        <div id="weather">
+                <h3 class=>Current Weather</h3>
+            <div class="card-body">
+                <p id="weather-description"></p>
+                <p id="weather-temp"></p>
+            </div>      
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header">
             <h3>Rate this property</h3>
@@ -255,21 +299,16 @@ if ($property) {
             ?>
     </form>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
         </div>
     </div>
 </div>
-
-
     </div>
     </div>
     </div>
     </div>
 
     <footer class="footer-no-gap">
-        <div class="container">
+        <div  class="container">
             <div class="col-lg-12">
                 <p>Copyright © 2048 Villa Agency Co., Ltd. All rights reserved.
 
@@ -286,9 +325,8 @@ if ($property) {
     <script src="assets/js/owl-carousel.js"></script>
     <script src="assets/js/counter.js"></script>
     <script src="assets/js/custom.js"></script>
-
-</body>
-<script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
 $(document).ready(function() {
     $('#rating-form').on('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
@@ -308,5 +346,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
+</body>
 
 </html>
