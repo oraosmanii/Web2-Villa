@@ -5,8 +5,8 @@ define("MINLENGTH", 8);
 $message = ''; // Message
 
 if (isset($_POST['signup'])) {
-    $email = $_POST['email'];
-    $username = $_POST['username'];
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
     $password = $_POST['password'];
     $confirmpassword = $_POST['confirmpassword'];
 
@@ -49,7 +49,7 @@ if (isset($_POST['signup'])) {
         if ($stmt->execute()) {
             $message = "<p style='color: green; font-size: 16px;'>Account created successfully.</p>";
 
-            // Send confirmation email
+            // Emaili konfirmues
             $to = $email;
             $subject = 'Welcome to Our Property Rental Service';
             $body = "<html><body>
@@ -70,6 +70,7 @@ if (isset($_POST['signup'])) {
         }
         $stmt->close();
     }
+
 
     $conn->close();
 }
