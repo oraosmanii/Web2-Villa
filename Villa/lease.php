@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
 
-function customErrorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+function customErrorHandler($errno, $errstr, $errfile, $errline, $errcontext = null) {
   $error_types = array(
       E_ERROR => 'Error',
       E_WARNING => 'Warning',
