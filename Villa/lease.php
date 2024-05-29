@@ -74,8 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <?php
 
-function customErrorHandler($errno, $errstr, $errfile, $errline) {
-  // Define an array to map error types to user-friendly names
+function customErrorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
   $error_types = array(
       E_ERROR => 'Error',
       E_WARNING => 'Warning',
@@ -91,14 +90,11 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
       E_STRICT => 'Runtime Notice',
       E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
   );
-
   
   $error_type = isset($error_types[$errno]) ? $error_types[$errno] : 'Unknown Error';
 
- 
   $error_message = "[$error_type] $errstr";
 
-  
   echo "$error_message";
 
   if ($errno == E_USER_ERROR || $errno == E_ERROR) {
