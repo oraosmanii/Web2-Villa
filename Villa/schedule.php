@@ -6,6 +6,11 @@ global $errors;
 
 define('TVSH', '0.18');
 
+
+function &getUserID() {
+    return $_SESSION['USER_ID'];
+}
+
 function formatPhoneNumber()
 {
     if (isset($_POST['phone-number'])) {
@@ -61,7 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $user_id = &$_SESSION['USER_ID'];
+    // Use the getUserID function to get the user ID by reference
+    $user_id = &getUserID();
     $arrival_date = $_POST['arrival_date'];
     $departure_date = $_POST['departure_date'];
     $payment_method = $_POST['payment'];
@@ -74,7 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('{$errors['E012']}'); window.location.href='$referrer';</script>";
         exit();
     }
-
 
     $stmt = $conn->prepare("
         SELECT COUNT(*) FROM bookings 
@@ -105,6 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $stmt->close();
+    unset($_SESSION['USER_ID']);  
 }
 
 $formattedPhoneNumber = isset($_POST['phone-number']) ? $_POST['phone-number'] : '';

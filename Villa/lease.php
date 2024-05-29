@@ -8,7 +8,7 @@ require 'log_lease.php';
 set_error_handler("customErrorHandler");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and validate form inputs
+
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     $country = htmlspecialchars($_POST['country']);
     $city = htmlspecialchars($_POST['city']);
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       exit();
     }
 
-    // Phone number validation
+    
     if (!preg_match('/^\+[0-9]{1,11}$/', $phone)) {
       $error_message = $errors['E004'];
       trigger_error($error_message);  
