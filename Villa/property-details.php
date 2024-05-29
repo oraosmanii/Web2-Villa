@@ -92,6 +92,7 @@ if (isset($_GET['info'])) {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
   bottom: 430px;
+  left: 60px;
 
 }
 
